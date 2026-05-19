@@ -20,6 +20,7 @@ Drop these files into any repo and AI will know how to build your project. Each 
 | **LEARNINGS.md** | Empty log for solutions and gotchas | Minimal — just start using it |
 | **.clinerules** | Quality rules for Cline (VS Code) | Yes — add tech-specific rules |
 | **CLAUDE.md** | Quality rules for Claude Code (CLI) | Yes — same content as .clinerules |
+| **GLOBAL_MEMORY.md** | User preferences and universal rules (cross-project) — lives at `~/.cline/` | Yes — fill in your preferences |
 | **TASK_TEMPLATE.md** | Format for individual task specifications | Light customization |
 | **SPRINT_PLAN_TEMPLATE.md** | Format for sprint planning documents | Light customization |
 | **SPRINT_RULES.md** | Rules for sizing sprints, writing tasks, managing scope | Review and adjust |

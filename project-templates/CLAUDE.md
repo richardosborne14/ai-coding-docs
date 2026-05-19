@@ -7,7 +7,13 @@ Read these files first:
 1. `ARCHITECTURE.md` — system design and schema
 2. `README.md` — project scope and current phase
 3. `LEARNINGS.md` — known gotchas and solutions
-4. Current sprint plan in `dev-docs/sprints/`
+4. `~/.cline/GLOBAL_MEMORY.md` — user preferences and universal rules
+5. Current sprint plan in `dev-docs/sprints/`
+
+Then query project memory (if MCP memory server is available):
+6. `memory_check_patterns` — any repeated failures in this task area?
+7. `memory_query_solutions` — any relevant prior solutions for this task's tags?
+8. If `memory_check_patterns` returns 2+ failures in the same area → STOP. Suggest a self-audit before proceeding. The problem may be in the instructions, not the code.
 
 ## Iron-Clad Developer Rules
 
@@ -23,7 +29,7 @@ Read these files first:
 - **Plan mode FIRST** — use `plan` mode or propose an approach before writing code
 - **One task at a time** — don't work on side issues. Document them for a separate task.
 - **Commit working code** — never commit if tests fail
-- **Update docs after every task** — LEARNINGS.md, sprint plan status, ARCHITECTURE.md if structure changed
+- **Update docs after every task** — LEARNINGS.md for gotchas (only entries that pass the 30-minute test), sprint plan status, ARCHITECTURE.md if structure changed
 - **Ask questions when anything is unclear** — if a task spec is ambiguous or a requirement contradicts the architecture, ask before building
 - **Never start serious development without a task document** — small bug fixes (2-3) in plan mode are acceptable, but substantial work must have a task doc first. Document all fixes in LEARNINGS.md or as an annex to the relevant task doc.
 - **Handle API timeout errors gracefully** — if file writes time out, break the task into smaller chunks (e.g., write CSS first, then HTML body in sections, then footer)
@@ -181,6 +187,30 @@ Read these files first:
 - Set up `.gitignore` from the start and review it regularly — no API keys, SSH keys, `.env` files, or credentials in the repo
 - When adding new env vars, update `.env.example` with the variable name and a description (not the secret)
 - Before any git push, verify `.gitignore` covers all sensitive files
+
+### Project Memory & Self-Improvement
+
+**LEARNINGS.md hygiene:**
+- Apply the **30-minute test** before adding entries: "Would a fresh session waste 30+ minutes without this?" If no, don't add it.
+- Maximum ~30 active entries. When approaching the limit, suggest graduating resolved entries to the MCP memory database.
+- Do NOT add general observations, progress updates, task completion notes, or architectural decisions.
+- If an entry describes a pattern that should become a permanent rule → suggest adding it to `CLAUDE.md` instead.
+
+**Session end protocol (if MCP memory server is available):**
+- At the end of every session, call `memory_store_session` with: task reference (or "ad-hoc: [description]" for spontaneous work), summary, outcome (completed/partial/failed), files touched, errors encountered, approaches tried.
+- If any reusable solutions were discovered → call `memory_store_solution` with problem, solution, root cause, and tags.
+- If the session discovered something that applies to ALL projects → call `memory_global_store`.
+- If a LEARNINGS.md entry was resolved → suggest graduating it to warm storage.
+
+**Self-audit triggers:**
+- If `memory_check_patterns` shows 2+ sessions failed in the same code area → suggest self-audit before proceeding.
+- If the same error has appeared in 3+ sessions → suggest self-audit.
+- If a solution was applied but the problem recurred → suggest self-audit.
+- **Self-audit means:** Review `CLAUDE.md`, `ARCHITECTURE.md`, `LEARNINGS.md`, and prior session solutions. The problem may be in the instructions, not the code. Report findings and suggest updates to rules/docs before retrying the fix.
+
+**Document lifecycle:**
+- When a sprint is completed, suggest running `memory_archive_sprint` to move completed task docs to cold storage and clean the dev-docs folder.
+- Only the active sprint's materials should remain as markdown files in the repo.
 
 ## Confidence Scoring
 

@@ -89,6 +89,10 @@ You see every command before it runs. This prevents disasters.
 
 **Disable checkpoints.** Turn off "checkpoints" in Cline settings. This causes Cline to slow down significantly, and only an advanced user would know how to make best use of it. Keep it off until you're comfortable with the basic workflow.
 
+**Enable Background Edit.** In Cline settings, turn on "Background edit." Cline will then edit code files silently in the background rather than visibly rewriting open tabs. This keeps the editor calm, prevents accidental typing mid-edit, and stops edited files from consuming tokens as open tabs. Recommended for all users, especially beginners.
+
+**Set Terminal Execution Mode to Background Exec.** In Cline settings, go to the **Terminal** tab and set "Terminal Execution Mode" to **Background Exec.** This eliminates terminal length limitations, prevents a proliferation of terminal tabs, and gives Cline cleaner access to command output for analysis. Particularly valuable for users who don't want to manually follow terminal output or run their own commands.
+
 **Manage your chat history.** After a dozen or so task conversations, check the conversation history (the history button at the top of the Cline panel). There's a red "Delete all history" button at the bottom that shows the total size of stored conversations — this can reach 100MB+ quickly during a project. If your `.clinerules` are set right and Cline has been documenting its work properly, deleting history is safe to do regularly to free up disk space and memory. If a conversation is only half-finished, go into the history and star it first — clicking "Delete all history" will then show a modal offering "Delete all except favourites" so you can clean out completed conversations without losing work in progress.
 
 ---

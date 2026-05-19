@@ -7,7 +7,13 @@ Read these files first:
 1. `ARCHITECTURE.md` — system design and schema
 2. `README.md` — project scope and current phase
 3. `LEARNINGS.md` — known gotchas and solutions
-4. Current sprint plan in `dev-docs/sprints/`
+4. `~/.cline/GLOBAL_MEMORY.md` — user preferences and universal rules
+5. Current sprint plan in `dev-docs/sprints/`
+
+Then query project memory (if MCP memory server is available):
+6. `memory_check_patterns` — any repeated failures in this task area?
+7. `memory_query_solutions` — any relevant prior solutions for this task's tags?
+8. If `memory_check_patterns` returns 2+ failures in the same area → STOP. Suggest a self-audit before proceeding. The problem may be in the instructions, not the code.
 
 ## Iron-Clad Developer Rules
 
@@ -23,7 +29,7 @@ Read these files first:
 - **Plan mode FIRST** — always propose an approach and get approval before writing code
 - **One task at a time** — do not start working on side issues discovered during a task. Document them for later.
 - **Commit working code** — never commit broken code. If tests fail, fix them before committing.
-- **Update docs after every task** — LEARNINGS.md for gotchas, sprint plan for status, ARCHITECTURE.md if structure changed.
+- **Update docs after every task** — LEARNINGS.md for gotchas (only entries that pass the 30-minute test), sprint plan for status, ARCHITECTURE.md if structure changed.
 - **Ask questions when anything is unclear** — if a task spec is ambiguous, a requirement contradicts the architecture, or you're unsure about the user's intent, ask before building. A 30-second question beats 30 minutes of rework.
 - **Never start serious development without a task document** — diagnosing and fixing 2-3 small bugs in plan mode is acceptable, but any substantial work must have a task doc first. Even bug fixes should be documented in LEARNINGS.md or as an annex to the relevant task doc, recording what the bug was and what the fix was. This makes the dev-docs folder large on complex projects, but it's worth it as a map of how the project was built for any future AI work on the codebase.
 - **Handle API timeout errors gracefully** — if you receive timeout errors when writing to a file, break the task into smaller chunks. For example, write the CSS head first, then the body HTML in sections, then the footer. Don't keep retrying the same large write.
@@ -181,6 +187,30 @@ Read these files first:
 - **Set up `.gitignore` from the start** and review it regularly — no API keys, SSH keys, `.env` files, or credentials should ever reach the repository
 - When adding new environment variables, always update `.env.example` with the variable name and a description (not the actual secret value)
 - Before any git push, verify that `.gitignore` is covering all sensitive files
+
+### Project Memory & Self-Improvement
+
+**LEARNINGS.md hygiene:**
+- Apply the **30-minute test** before adding entries: "Would a fresh session waste 30+ minutes without this?" If no, don't add it.
+- Maximum ~30 active entries. When approaching the limit, suggest graduating resolved entries to the MCP memory database.
+- Do NOT add general observations, progress updates, task completion notes, or architectural decisions.
+- If an entry describes a pattern that should become a permanent rule → suggest adding it to `.clinerules` instead.
+
+**Session end protocol (if MCP memory server is available):**
+- At the end of every session, call `memory_store_session` with: task reference (or "ad-hoc: [description]" for spontaneous work), summary, outcome (completed/partial/failed), files touched, errors encountered, approaches tried.
+- If any reusable solutions were discovered → call `memory_store_solution` with problem, solution, root cause, and tags.
+- If the session discovered something that applies to ALL projects → call `memory_global_store`.
+- If a LEARNINGS.md entry was resolved → suggest graduating it to warm storage.
+
+**Self-audit triggers:**
+- If `memory_check_patterns` shows 2+ sessions failed in the same code area → suggest self-audit before proceeding.
+- If the same error has appeared in 3+ sessions → suggest self-audit.
+- If a solution was applied but the problem recurred → suggest self-audit.
+- **Self-audit means:** Review `.clinerules`, `ARCHITECTURE.md`, `LEARNINGS.md`, and prior session solutions. The problem may be in the instructions, not the code. Report findings and suggest updates to rules/docs before retrying the fix.
+
+**Document lifecycle:**
+- When a sprint is completed, suggest running `memory_archive_sprint` to move completed task docs to cold storage and clean the dev-docs folder.
+- Only the active sprint's materials should remain as markdown files in the repo.
 
 ## Confidence Scoring
 

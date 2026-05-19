@@ -230,6 +230,53 @@ See [Docker Image Cleanup: The Silent Disk Killer](/part-5/deployment-platforms#
 
 ---
 
+## Pitfall 11: The Groundhog Day Bug
+
+**What happens:**
+You've had three separate Cline sessions trying to fix the same bug. Each session, Cline tries similar approaches, hits similar walls, and ends with a partial fix or workaround. There's no connection between sessions — Cline doesn't know it's been here before. It never occurs to Cline to question whether its own instructions or the project architecture might be the root cause.
+
+**Signs:**
+- Same bug keeps reappearing across multiple sessions
+- Cline tries similar (failing) approaches each time
+- The fix works temporarily but the problem comes back
+- Nobody's questioning *why* this keeps happening
+
+**Why it's different from Pitfall 3:**
+Pitfall 3 (going in circles) is within a single session. The Groundhog Day Bug is across sessions — the kind of problem that only becomes visible when you have memory between conversations.
+
+**Recovery:**
+1. If you have the [MCP memory server](/part-5/project-memory) set up, `memory_check_patterns` will catch this automatically after 2+ failed sessions on the same area
+2. Trigger a **self-audit**: Cline reviews `.clinerules`, `ARCHITECTURE.md`, `LEARNINGS.md`, and prior session solutions
+3. The problem is often in the instructions, not the code — contradictory rules, outdated architecture docs, or a LEARNINGS.md entry that's not being applied
+4. Fix the root cause (update rules/docs), not just the symptom
+
+**Prevention:**
+Set up [project memory](/part-5/project-memory). The self-audit trigger catches this pattern before it costs you five sessions instead of two.
+
+---
+
+## Pitfall 12: Dev-Docs Bloat
+
+**What happens:**
+Your project is on Sprint 4. The `dev-docs/` folder has 40+ files — old sprint plans, completed task specs, changelogs. You try to sync the repo with Claude Chat for a phase audit, but there's too much noise. The audit is shallow because Claude is processing 40 stale task docs alongside the 5 that matter.
+
+**Signs:**
+- `dev-docs/` folder has more than 15 files
+- Claude Chat audits feel unfocused or surface-level
+- You can't remember which sprint plan is current
+- Old task docs that will never be referenced again still sit in the repo
+- `.clineignore` has to exclude dev-docs to control token costs
+
+**Recovery:**
+1. Set up the [MCP memory server](/part-5/project-memory) and run `memory_archive_sprint` for completed sprints
+2. Move completed sprint folders to `.archive/` or delete them (their content lives in the database)
+3. Only the active sprint's materials should remain as markdown
+
+**Prevention:**
+Build document lifecycle management into your workflow from Sprint 1. When a sprint completes, archive it. See [Project Memory — The Document Lifecycle](/part-5/project-memory#the-document-lifecycle) for the full pattern.
+
+---
+
 ## Quick Recovery Checklist
 
 When a project feels off-track:
@@ -242,6 +289,8 @@ When a project feels off-track:
 6. [ ] Did I skip plan mode? → Go back to plan mode
 7. [ ] Is scope still reasonable? → Check sprint plan
 8. [ ] Did my deploy actually work? → Check `/api/build-info` SHA
+9. [ ] Is this the same bug from a previous session? → Check project memory, trigger self-audit
+10. [ ] Is my dev-docs folder bloated? → Archive completed sprints
 
 Most problems resolve with: **stop, write a task doc, start a fresh conversation.**
 

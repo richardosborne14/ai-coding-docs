@@ -177,6 +177,30 @@ This gives the new conversation everything it needs without carrying the weight 
 
 ---
 
+## Session Continuity via Project Memory
+
+Starting fresh conversations is the right move — but it creates a gap: **what happened in previous sessions?** Without continuity, Cline approaches every problem as if it's brand new, even if you solved something similar last week.
+
+The [Project Memory system](/part-5/project-memory) bridges this gap with an MCP-backed database that persists session data across conversations:
+
+**At the start of each session**, Cline queries project memory:
+- "Have we had recent failures in this area?" → catches the [Groundhog Day Bug](/part-5/pitfalls-recovery#pitfall-11-the-groundhog-day-bug)
+- "Are there prior solutions tagged for this task?" → avoids rediscovering known fixes
+- "Should I self-audit before proceeding?" → catches systematic issues in rules or architecture
+
+**At the end of each session**, Cline logs:
+- What was attempted and the outcome
+- Any reusable solutions discovered
+- Errors encountered and approaches tried
+
+This means every fresh conversation gets the *benefits* of continuity (prior solutions, pattern detection) without the *costs* of long-running conversations (context pollution, token waste). The best of both worlds.
+
+**Ad-hoc sessions are captured too.** Previously, "just fix this bug" sessions were invisible — no task doc, no record. With session memory, even spontaneous debugging sessions leave a trace that future sessions can learn from.
+
+See [Project Memory & Self-Improvement](/part-5/project-memory) for the full architecture.
+
+---
+
 ## Quick Reference
 
 | Situation | Action |
@@ -187,6 +211,7 @@ This gives the new conversation everything it needs without carrying the weight 
 | Conversation 2+ hours old | Consider starting fresh |
 | AI quality dropping | Start fresh immediately |
 | Quick follow-up to just-completed work | Continue (exception to the rule) |
+| Same bug across multiple sessions | Check project memory, trigger self-audit |
 
 **When in doubt, start fresh.** The cost of reloading context is always lower than the cost of confused AI.
 

@@ -26,13 +26,15 @@ Generate all of the following:
    - Prohibited behaviors (no skipping tests, no scope creep, no untyped code, no installing deps without checking latest versions first)
    - Git & security hygiene (.gitignore from the start, no secrets in code, .env.example maintenance)
    - Dev/prod environment separation rules
+   - Project Memory & Self-Improvement rules: LEARNINGS.md hygiene (30-minute test, max ~30 entries, graduation to database), session end protocol (log sessions via MCP memory server), self-audit triggers (2+ failures in same area → audit rules and docs, not just code), document lifecycle (archive completed sprints to cold storage)
    - Confidence scoring format (8/10 minimum)
    - When to ask the human
     - Tech-specific rules for our chosen stack (use the SvelteKit and Drizzle examples from the templates if applicable)
     - SvelteKit cache and staleness prevention (hooks.server.ts cache headers, nginx config, clean builds, service worker cleanup, build versioning)
-5. **SPRINT_RULES.md** — Rules for sizing sprints, writing tasks, handling discovered work, finishing tasks
-6. **TASK_TEMPLATE.md** — Template for individual task specifications
-7. **Sprint 1 Plan** — The initial sprint plan with task index, execution order, dependencies, and definition of done
+5. **GLOBAL_MEMORY.md** — Cross-project user preferences and universal rules. This file lives at `~/.cline/GLOBAL_MEMORY.md` and is referenced by every project's .clinerules/CLAUDE.md. Include: user communication preferences, universal development rules, global gotchas from past experience. See the Project Memory & Self-Improvement chapter for the full architecture.
+6. **SPRINT_RULES.md** — Rules for sizing sprints, writing tasks, handling discovered work, finishing tasks
+7. **TASK_TEMPLATE.md** — Template for individual task specifications
+8. **Sprint 1 Plan** — The initial sprint plan with task index, execution order, dependencies, and definition of done
 
 Also generate any foundational code files that you know should exist from the start to avoid common mistakes — things like:
 - Project config files (tsconfig, eslint, prettier, etc.)

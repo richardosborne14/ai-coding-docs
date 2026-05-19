@@ -101,13 +101,17 @@ For most users starting out, the Cline credit system is simpler and gets you bui
 
 ## Critical Settings for Beginners
 
-Open Cline's settings (gear icon in the Cline panel). These three settings matter:
+Open Cline's settings (gear icon in the Cline panel). These five settings matter:
 
 **Auto-approve commands: OFF.** This is the most important setting. When it's off, Cline will show you every terminal command before running it and wait for you to click Approve. This means you see exactly what it's doing. Never turn this on until you're very comfortable with what terminal commands look like.
 
 **Sub-agents: OFF.** Sub-agents let Cline spawn additional AI conversations to handle sub-tasks. In practice, this causes more confusion and errors than it saves time. Keep it off.
 
 **Checkpoints: OFF.** Checkpoints save snapshots of your project between Cline actions so you can roll back. Sounds useful, but it significantly slows Cline down and the interface is confusing for beginners. Keep it off — Git is your undo system.
+
+**Background Edit: ON.** In Cline settings, enable "Background edit." This makes Cline edit code files silently in the background rather than opening and visibly rewriting them in front of you. Three reasons this matters: beginners won't be unsettled watching code get rewritten in real-time in tabs they have no reason to follow, nobody can accidentally type in a file mid-edit and corrupt what Cline is doing, and open tabs stop consuming tokens since files aren't being held open during edits. Turn this on from day one.
+
+**Terminal Execution Mode: Background Exec.** In Cline settings, go to the **Terminal** tab and set "Terminal Execution Mode" to **Background Exec.** This avoids terminal output length limitations, stops dozens of terminal tabs from piling up for no reason, and gives Cline better access to analyse terminal output after commands run. Especially useful for beginners and non-technical users who have no interest in manually reading terminal output or typing their own terminal commands.
 
 ---
 

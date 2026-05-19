@@ -93,6 +93,7 @@ export default defineConfig({
         collapsed: true,
         items: [
           { text: 'Context Management', link: '/part-5/context-management' },
+          { text: 'Project Memory & Self-Improvement', link: '/part-5/project-memory' },
           { text: 'Common Pitfalls', link: '/part-5/pitfalls-recovery' },
           { text: 'Team Workflows', link: '/part-5/team-workflows' },
           { text: 'The Project Control Panel', link: '/part-5/control-panel' },
