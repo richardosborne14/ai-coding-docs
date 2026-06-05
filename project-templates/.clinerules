@@ -129,6 +129,37 @@ Then query project memory (if MCP memory server is available):
 - All API routes (except public webhooks) must verify authentication
 - Error responses must not leak stack traces
 
+### Observability (Sprint 1 defaults — non-negotiable)
+
+These are Foundation-phase items. Wire them in Sprint 1 even for a prototype.
+You do NOT need to build dashboards or alerts yet — only the plumbing.
+
+1. **Enable error capture** in the existing analytics SDK. For PostHog, set
+   `capture_exceptions` in `posthog.init(...)`. Do not add a second error vendor
+   (Sentry) unless ARCHITECTURE.md explicitly calls for a self-hosted tracker.
+
+2. **Source maps are IRREVERSIBLE.** The deploy script MUST upload source maps to
+   the error tracker at build time. A production error from a build whose maps were
+   never uploaded cannot be de-minified later. Never skip this to "do it at launch."
+
+3. **Release/version tagging is IRREVERSIBLE.** Every deploy MUST record a release
+   identifier (version + commit SHA, plus build number for mobile). You cannot tag
+   an error against a release that was never recorded.
+
+4. **Split environments.** Tag every event with dev/staging/prod. Never let prod and
+   dev errors land in the same bucket.
+
+5. **Do NOT use Prometheus/Grafana for application-error alerting.** That is infra
+   monitoring — a different axis. Application errors and alerts live in the error
+   tracker. Infra/uptime monitoring, if any, is a separate, later concern.
+
+6. **When an error fires, investigate before guessing.** Use the error tracker's
+   grouped issue (PostHog MCP server) to read the real stack trace. Do not invent
+   a cause from the minified message.
+
+7. **Update the Observability table in ARCHITECTURE.md** whenever you wire one of
+   these items.
+
 ### Frontend Tweaker Conventions (all projects with a UI)
 
 **Text management (i18n):**

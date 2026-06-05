@@ -239,6 +239,41 @@ SvelteKit app on a Hetzner VPS, Directus CMS in Docker, n8n being migrated to Sv
 
 ---
 
+## The Eight-Gap Production Launch (Observability)
+
+**Project:** Client web app approaching production launch
+**Complexity:** Low (the fix was ~15 minutes of plumbing)
+**What it demonstrates:** Why source-map upload and release tagging are Foundation items, not launch items
+
+### The Setup
+
+An app built fast for early testing. Approaching production launch, the client identified eight observability gaps — no error tracking, no source maps, no alerting, no grouping, no release tagging, no environment split, no session replay link, no native crash reporting. The instinct was to treat this as eight projects to tackle before launch.
+
+### The Honest Framing
+
+Most of the eight didn't matter during prototyping — and that's exactly why they were never set up. Error alerting, session replay linking, grouping tuning — all of that is genuinely skippable while you're iterating with five test users.
+
+### The Bite
+
+Two of them were the kind you can't fix after the fact. Source maps from the builds already shipped were never captured — every production error was `a.b.c is not a function at vm:1:12345`, permanently. Release tags were never recorded at deploy time, so there was no way to say "this bug started after which deploy."
+
+### The Fix
+
+Switch on PostHog error tracking (already present for session replay), wire source-map upload + release tagging into the deploy script, split environments. About 15 minutes of plumbing that should have been Sprint 1.
+
+### Numbers
+
+| Metric | Value |
+|--------|-------|
+| Observability gaps found at launch | 8 |
+| Irreversible (couldn't be fixed retroactively) | 2 |
+| Foundation plumbing setup cost (had it been Sprint 1) | ~15 min |
+| Builds shipped with undebuggable stack traces | [multiple weeks of builds] |
+
+**The principle:** Separate the plumbing from the dashboard. The plumbing is cheap, reversible, and irreversible if *missing*. The dashboard is optional attention you can always switch on later. See [Observability & Error Tracking](/part-5/observability) for the full maturity model.
+
+---
+
 ## Patterns Across Projects
 
 **What consistently works:**

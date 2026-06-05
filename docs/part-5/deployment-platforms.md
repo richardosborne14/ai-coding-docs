@@ -491,6 +491,27 @@ Claude and Cline's training data can be months out of date. When installing depe
 
 ---
 
+## Observability Wiring (Do This in Sprint 1)
+
+Your deploy script must upload source maps and record a release at build time. This is the irreversible plumbing — if a build ships without its source maps captured, every production error from that build is permanently minified gibberish. You cannot go back and fix it.
+
+The ordering guarantee is: **generate → upload → strip → package.**
+
+1. **Generate** — build the app with source maps enabled (don't disable them in the prod build config)
+2. **Upload** — send the `.map` files + a release identifier (version + commit SHA) to your error tracker
+3. **Strip** — delete `.map` files from the build output so they're never served publicly
+4. **Package** — deploy the stripped build (Docker image, pm2 restart, etc.)
+
+Getting this ordering wrong is the risk. A build that strips or disables source maps *before* upload produces an upload with nothing to symbolicate. A build that ships `.map` files publicly leaks your source code.
+
+The `scripts/deploy.sh` template includes this step. It uses `posthog-cli sourcemap upload` by default — verify the exact flags against the [current PostHog docs](https://posthog.com/docs/error-tracking/upload-source-maps) before first use. If the project uses a different tracker (Sentry, GlitchTip), the shape is the same: `sentry-cli sourcemaps upload` + `sentry-cli releases`.
+
+The non-polling deploy principle still applies: the upload runs once as part of the one-shot deploy script, logs the result, and the script moves on. No looping to check upload status.
+
+See [Observability & Error Tracking](/part-5/observability) for the full reasoning — why these two items (source maps and release tagging) belong in the foundation, and why everything else can wait.
+
+---
+
 ## CI/CD Pipeline Verification
 
 Before deploying, always verify your CI pipeline actually built the image you're about to pull:

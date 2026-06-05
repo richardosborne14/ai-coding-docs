@@ -158,6 +158,10 @@ Building the minimum to validate [core concept].
 ## Control Panel (if applicable)
 [Convention files, routes, and registered automation flows]
 [See The Project Control Panel](/part-5/control-panel) for the full pattern]
+
+## Observability & Error Tracking (if applicable)
+[Maturity checklist with Phase and "Irreversible if missing" columns]
+[See Observability & Error Tracking](/part-5/observability) for the full pattern]
 ```
 
 ---
@@ -211,6 +215,10 @@ After each task: rate 1-10, 8 minimum to proceed.
 ### Control Panel Conventions (if project has a backend)
 [Deployment monitoring, automation flow annotations, user journey testing, security checks]
 [See The Project Control Panel](/part-5/control-panel) for the full rules]
+
+### Observability (Sprint 1 defaults — non-negotiable)
+[7 rules: error capture, source maps (irreversible), release tagging (irreversible), environment split, no Prometheus for app errors, investigate before guessing, update ARCHITECTURE.md]
+[See Observability & Error Tracking](/part-5/observability) for the full rules]
 
 ### Frontend Tweaker Conventions (all projects with a UI)
 [i18n text management, @tweak style tokens, link management, SEO meta content]

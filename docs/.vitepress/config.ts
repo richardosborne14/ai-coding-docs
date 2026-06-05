@@ -97,6 +97,7 @@ export default defineConfig({
           { text: 'Common Pitfalls', link: '/part-5/pitfalls-recovery' },
           { text: 'Team Workflows', link: '/part-5/team-workflows' },
           { text: 'The Project Control Panel', link: '/part-5/control-panel' },
+          { text: 'Observability & Error Tracking', link: '/part-5/observability' },
           { text: 'The Frontend Tweaker', link: '/part-5/frontend-tweaker' },
           { text: 'Token Economics', link: '/part-5/token-economics' },
           { text: 'Deployment & Platform Targets', link: '/part-5/deployment-platforms' },

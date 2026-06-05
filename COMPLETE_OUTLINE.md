@@ -607,6 +607,15 @@ This document provides detailed outlines for all remaining chapters. Each can be
 
 ### Chapter 12c: The Frontend Tweaker ✅ COMPLETE
 
+### Chapter 12f: Observability & Error Tracking ✅ COMPLETE
+
+**File:** `docs/part-5/observability.md`
+**Status:** Written and published
+
+A chapter teaching observability as a maturity model — what must be wired into the foundation (source-map upload and release tagging, both irreversible if missing), versus what can be deferred. Recommends PostHog as the consolidation (projects already use it for session replay), explicitly rejects Prometheus for application-error alerting, and provides a four-phase ladder (Foundation / Early / Pre-launch / Scale). The Foundation plumbing is baked into `.clinerules`, `CLAUDE.md`, `ARCHITECTURE.md`, and `scripts/deploy.sh` as Sprint 1 defaults.
+
+---
+
 **File:** `docs/part-5/control-panel.md`
 **Status:** Written and published
 

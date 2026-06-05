@@ -160,3 +160,32 @@ users 1──▶ N sessions      (user_id FK)
 | `src/config/meta.json` | Page titles, meta descriptions, OG content | AI coder (on new pages) |
 
 See [The Frontend Tweaker](/part-5/frontend-tweaker) for the full pattern.
+
+## Observability & Error Tracking
+
+> Declare the plan from Sprint 1. Most boxes stay unchecked early — that's expected.
+> The Phase column tells you (and the AI) when each item should be addressed.
+> The two items marked **irreversible** must be wired before the builds you'll later need to debug.
+
+**Error tracker:** [PostHog | GlitchTip (self-hosted) | other] — [project URL]
+**Current maturity level:** [Foundation | Early | Pre-launch | Scale]
+
+| Item | Phase | Status | Irreversible if missing |
+|------|-------|--------|------------------------|
+| SDK error capture enabled | Foundation | [ ] | — |
+| Source-map upload wired into deploy | Foundation | [ ] | **Yes** |
+| Release / version tagging at deploy | Foundation | [ ] | **Yes** |
+| Environment split (dev/staging/prod) | Foundation | [ ] | — |
+| Alerting → Slack/webhook | Early | [ ] | — |
+| User/session/breadcrumb context | Early | [ ] | — |
+| Session replay linked to errors | Pre-launch | [ ] | — |
+| Issue grouping tuned | Pre-launch | [ ] | — |
+| Native crash reporting (Capacitor only) | Conditional | [ ] | — |
+| Infra/uptime monitoring (separate axis) | Pre-launch / Scale | [ ] | — |
+
+### Two axes — keep separate
+- **Application errors** (exceptions, stack traces, grouping, error alerting): [error tracker]
+- **Infrastructure / uptime** (CPU, memory, latency, container health): [uptime pinger | Prometheus+Grafana if at scale]
+
+### AI rule
+Update this table's Status column whenever an observability item is wired. When an error fires in production, investigate it via the error tracker (PostHog MCP server) before guessing.

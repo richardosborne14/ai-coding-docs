@@ -50,6 +50,9 @@ design-assets/
 !public/**/*.png
 !public/**/*.jpg
 
+# Source maps (uploaded to error tracker at build time, then stripped)
+*.map
+
 # Test fixtures and recordings
 __snapshots__/
 __fixtures__/

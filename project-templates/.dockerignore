@@ -29,6 +29,14 @@ dev-tasks/
 *.md
 !README.md
 
+# Source maps — uploaded to error tracker before Docker build; never serve publicly.
+# The deploy script ordering is: generate → upload → strip → package.
+# If maps are stripped before the Docker context is assembled (the default in
+# scripts/deploy.sh), this line is a safety net. If your build runs inside
+# Docker, move the upload step into the Dockerfile builder stage BEFORE the
+# production stage copies the output.
+*.map
+
 # Tests and fixtures (image runtime doesn't need them)
 __tests__/
 __snapshots__/
