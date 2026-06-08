@@ -21,6 +21,7 @@ Then query project memory (if MCP memory server is available):
 - **Unit tests are mandatory** — write tests for every piece of business logic, every utility function, every API endpoint. No exceptions.
 - **Smoke test after every change** — after any development, debugging, or fix, run the app and verify it works end-to-end. No stone unturned.
 - **Browser/UI testing required** — for any frontend change, verify visually in the browser. Describe what should appear and confirm it does.
+- **Assume an authenticated session exists** — when using the browser to test, navigate directly to the target URL of the feature under test, NOT the login page. The human uses a persistent remote browser connection that preserves login state. If the app redirects to login, authenticate then — but never pre-emptively navigate to `/login` or `/auth`. For flows that require a logged-out state (signup, onboarding, password reset), explicitly log out first or note that a clean session is needed.
 - **Handle errors explicitly** — no silent failures, no empty catch blocks. Log meaningful messages. Return proper error responses.
 - **Comment the "why"** — every non-obvious decision gets a comment explaining WHY, not what. Aim for heavy commenting on business logic.
 - **Every function gets a docstring** — parameters, return type, purpose. No exceptions for public functions.

@@ -175,6 +175,7 @@ Building the minimum to validate [core concept].
 - Unit tests mandatory for all business logic
 - Smoke test after every change
 - Browser testing for UI changes
+- Assume authenticated session exists — navigate to the target URL, not the login page. The human uses Cline's remote browser connection to preserve login state. Only authenticate if bounced. Log out explicitly for signup/onboarding tests.
 - Handle errors explicitly — no silent failures
 - Comment the "why" on non-obvious decisions
 - Every function gets a docstring

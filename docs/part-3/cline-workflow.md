@@ -162,6 +162,16 @@ When testing locally, you don't always need to describe problems in words. Cline
 
 **The combination is powerful:** Screenshot of what's wrong + console output of the error = Cline can usually diagnose and fix the issue in one conversation turn instead of three.
 
+::: tip Use a Remote Browser Connection to Preserve Login Sessions
+Cline can launch its own browser to test your app, but by default it starts a fresh instance every time — which means fighting through login screens, losing session state if you accidentally close it, and wasting tokens on authentication flows that have nothing to do with the feature you're testing.
+
+**The fix:** In Cline's settings, enable **"Use remote browser connection"**. There's a button right there to **launch a local debugging Chrome instance**, and an indicator showing whether it's connected or not. Once enabled, Cline drives your existing browser session — the one where you're already logged in. No more re-authenticating on every test cycle.
+
+This pairs with a `.clinerules` convention: tell Cline to **assume an authenticated session already exists** and navigate directly to the target URL of the feature under test, not the login page. If the app bounces Cline to login, it authenticates then — but it never pre-emptively goes to `/login`. For signup, onboarding, or password-reset testing where you need a logged-out state, explicitly log out first or note that a clean session is needed.
+
+The token savings add up fast. Every avoided login flow is one less round-trip that contributes nothing to the actual test.
+:::
+
 ---
 
 ## When Things Go Wrong
