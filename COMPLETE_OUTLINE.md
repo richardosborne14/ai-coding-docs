@@ -648,6 +648,15 @@ Covers Docker for local dev, Netlify/Vercel for static frontends, Hetzner for VP
 
 ---
 
+### Chapter 12g: The Project Brain ✅ COMPLETE
+
+**File:** `docs/part-5/project-brain.md`
+**Status:** Written and published.
+
+A method-first chapter on keeping the human's mental model intact while an agent builds the app. Frames the loss of comprehension as a *comprehension* problem, not a documentation one, and fixes it by rendering the source of truth visually and keeping it live (the way n8n rendered the actual workflow graph). The core thesis is an inversion of low-code: instead of building visually so code falls out, the agent writes code and a visual model falls out. Covers the three-layer architecture (per-project MCP spine + `.brain/` data, thin per-agent enforcement adapter, standalone viewer), the authored-vs-derived principle (structural views derived from OpenAPI/migrations/graph exports so they can't drift; only narrative is authored), the context flywheel (the same brain is queryable by the agent via `query_context`), soft-vs-hard enforcement (recommend soft-first), and the distribution story (add an MCP, install a plugin, run a viewer — no forking the agent). Includes a placeholder link to the forthcoming reference implementation.
+
+---
+
 ## Part VI: Practical Resources
 
 ### Chapter 13: Complete Template Library
