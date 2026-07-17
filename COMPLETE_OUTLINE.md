@@ -657,6 +657,15 @@ A method-first chapter on keeping the human's mental model intact while an agent
 
 ---
 
+### Chapter 12h: The In-App Feedback Loop ✅ COMPLETE
+
+**File:** `docs/part-5/feedback-loop.md`
+**Status:** Written and published.
+
+The dev-phase counterpart to Observability. A dev-only feedback hotkey mounted in the app: press a key, a modal captures free-text feedback plus a 1–5 priority, and on submit auto-captures a screenshot and a JSON snapshot of app state (route, device, browser, params, current state) to a gitignored `.feedback/` folder. The payoff is the prompt — "fix the highest-priority open feedback" — which lets the AI select the top open item, read the context, look at the screenshot, fix it, and mark it done. Distinguishes this internal vibe-coding tool from customer-facing analytics (PostHog/Hotjar). Covers the context-snapshot design, the resolve-not-delete history rule, an optional dev-only admin page listing all reports with screenshot thumbnails, `.clinerules` additions, and when to build it (Sprint 1, sibling to the control panel).
+
+---
+
 ## Part VI: Practical Resources
 
 ### Chapter 13: Complete Template Library
