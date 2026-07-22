@@ -129,7 +129,7 @@ If a fix or feature starts going in circles, ask AI to write a task doc capturin
 - Basic understanding of software development
 - Comfort with command line and Git
 - Claude access (Pro, Team, or API) — **Opus strongly recommended for brainstorming**
-- Cline extension for VS Code (primary) or Claude Code as an alternative
+- Claude Code (**the beginner-friendly, budget option**) or the Cline extension for VS Code (full inline visibility, faster) — see [Tool Selection](/part-1/tool-selection)
 - Willingness to document before coding
 
 ---
