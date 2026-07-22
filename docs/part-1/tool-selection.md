@@ -11,7 +11,7 @@ description: Choosing the right AI tools for each phase of development
 
 **Use Cline in VS Code** for execution. It's a surgical coding tool — you watch the reasoning, you control the flow, you learn as it works. This guide is written for the Cline workflow throughout.
 
-**Claude Code Desktop** is an alternative for people who prefer a "sit back and let it handle things" style — but most of this guide won't apply to that workflow.
+**Claude Code is a genuine peer, not a lesser option.** With a good `CLAUDE.md`, it produces quality comparable to Cline with a good `.clinerules` — the same methodology applies. It's dramatically cheaper and can run parallel sessions, but it's slower and hides terminal/browser output unless you run the CLI. **For beginners and tight budgets it's the no-brainer starting point.** See the honest comparison below.
 
 **Use Claude Projects** for ongoing context. Sync your GitHub repo so Claude always knows where the project stands.
 
@@ -97,43 +97,82 @@ You see every command before it runs. This prevents disasters.
 
 ---
 
-## Claude Code: The Alternatives
+## Claude Code vs Cline: An Honest Comparison
 
-Claude Code comes in two very different flavours, and it's important to understand which is which.
+The old advice was "Cline for real work, Claude Code if you want to sit back and vibe." That's wrong, and it's worth correcting.
 
-### Claude Code Desktop (Beginner-Friendly Alternative)
+**With the right `CLAUDE.md`, Claude Code produces quality comparable to Cline with a good `.clinerules`.** Same methodology — plan first, one task per conversation, task docs, confidence scoring. Claude Code reads `CLAUDE.md` automatically, exactly as Cline reads `.clinerules`. This isn't a lesser tool; it's a different set of trade-offs.
 
-Claude Code Desktop is a standalone application — you don't need VS Code or a terminal. It's designed for people who want to describe what they want and let the AI handle the rest.
+::: info Field experience, not a benchmark
+The cost and speed figures below come from daily full-time use of both tools since January 2026 — not from controlled testing. They're consistent and they held across projects, but they're one practitioner's numbers on one set of projects. Treat them as a strong signal, not a published statistic. Proper empirical comparison is still needed.
+:::
 
-**The philosophy is different from Cline.** Claude Code Desktop is much more of a "just sit back and let me handle it" tool. It doesn't reveal its coding or reasoning in the chat the way Cline does. It seems designed for people who want to go with the vibes and see what happens.
+### Where Claude Code wins
 
-**If that's your style, that's fine.** But be aware:
-- Most of this guide's methodology (watching reasoning, surgical control, plan/act workflow, catching mistakes in real-time) doesn't apply to Claude Code Desktop
-- You won't build the same intuition for AI-assisted coding because you're not watching the process
-- You have less control over what changes are being made and why
+**Price.** This is the headline, and it's not a small margin — it's roughly **10x**.
 
-**Our recommendation:** If you're just getting started and want the easiest possible entry point, Claude Code Desktop works. But if you want to actually learn how AI-assisted development works — and be able to guide it, correct it, and get better results over time — Cline in VS Code is the better investment of your time.
+Real numbers from a working setup: a Claude Pro subscription at **€90/month** (~€22.50/week) shipping about the same number of features per week that was previously averaging **~$1000/month** (~$250/week) in Cline. Same developer, same projects — several of them started in Cline and switched mid-build, so the comparison is on identical codebases.
 
-### Claude Code CLI (Advanced Users)
+If cost is the thing stopping you from building, nothing else in this comparison matters as much.
 
-The Claude Code CLI is a terminal-based tool for developers who prefer working in the command line. It's powerful and our methodology works well with it, but it requires significantly more coding and development experience to handle effectively.
+**Parallel sessions.** You can run several Claude Code sessions at once on distinct tasks that don't step on each other. On a project with independent workstreams, that's a big time saver Cline can't easily match.
+
+**Confidence and explanation.** When a decision comes up, Claude Code's recommendations are sharp, and it's genuinely good at explaining the choice so you understand the trade-off rather than just rubber-stamping it.
+
+### Where Cline wins
+
+**Speed.** Claude Code is slow. Watching both tools work all day, Cline is comfortably **5x faster minimum** on the same tasks — often more.
+
+This is a like-for-like comparison, not a model mismatch: Sonnet for coding and Opus for planning on *both* sides, the same medium-to-high reasoning effort on both, no fast mode and no 1M context on either. Same models, same settings, same tasks — Claude Code just takes far longer to think and build. We don't have a verified explanation for why, so we won't invent one.
+
+When time is of the essence, this is the deciding factor.
+
+**You can see it think.** This is the sharpest difference, and it's easy to underrate until you've worked both ways.
+
+Cline streams the reasoning, the terminal commands, and their output directly into the panel. You read *why* it's doing something as it happens — which is how you catch it turning in circles, missing information, or heading down the wrong path, and hit Cancel before it wastes your money.
+
+Claude Code's GUI doesn't give you that. It exposes its plan and some of the ephemeral files it writes during a session, but the actual reasoning is hidden behind a `Clauding… Jiggling… Gibberting…` spinner. You can't watch it think.
+
+The **CLI does stream the live reasoning by default** — that's the one place you get Cline-style visibility. But the CLI is an advanced environment (see below), so this is a real trade: the friendly surface hides the thinking, and the surface that shows the thinking is the demanding one.
+
+**Open source.** Cline's real edge here is that it's open source — you can read it, fork it, and build your own extensions on top. Claude Code isn't, and you can't.
+
+But "Cline is more customisable" is too broad a claim. Claude Code is deeply configurable through `CLAUDE.md`, hooks, skills, subagents, MCP servers and `settings.json` — in some respects it's *more* programmable, just not forkable. See [Claude Code: Setup & Customisation](/part-0/claude-code-setup).
+
+**Documentation discipline.** With identical system instructions, Claude Code tends to be less strict about documentation than Cline — it sometimes needs a reminder to finish the docs when executing or wrapping up a task.
+
+The good news: you can stop relying on reminders. A **`Stop` hook** can block Claude Code from finishing a task until the docs are updated — enforcement rather than guidance. [Details here](/part-0/claude-code-setup#enforce-your-own-rules-with-hooks).
+
+### Want to see it think? Run the CLI — but know what you're signing up for
+
+The reasoning that's hidden in the GUI streams live in the **CLI**, by default. Run it inside VS Code's integrated terminal and you keep your editor and file tree:
 
 ```bash
-$ claude "plan task 3.2 from the sprint plan"
+npm install -g @anthropic-ai/claude-code   # the extension bundles its own private copy
+claude
 ```
 
-**Key features for this methodology:**
-- **Plan mode** — `claude --plan` or ask it to plan before acting
-- **CLAUDE.md** — Claude Code reads this file automatically. Same role as `.clinerules` for Cline.
-- **Project context** — reads your repo structure and docs
+::: warning The CLI is an advanced environment, not a friendlier GUI
+Don't sell this to a beginner as "the GUI but with more output." Living in the CLI means being fluent with VS Code, file-tree navigation, keyboard shortcuts and the terminal. Attaching a file is real work — you `@`-mention it, and that autocomplete is **scoped to the project** (referencing something outside the repo is awkward at best). Some shortcuts don't behave on non-US keyboard layouts. It's a place for people who want to see the heart of the beast and are happy to trade convenience for it — not the on-ramp.
 
-**When the CLI makes sense:**
-- You're an experienced developer comfortable reviewing diffs in the terminal
-- You want tighter Git integration
-- Quick fixes and small tasks where VS Code feels heavy
-- You're already a terminal-native developer
+`Ctrl+O`, by the way, opens a **read-only transcript** of steps so far — it does *not* toggle the live thinking (that's already streaming). Full setup, file-attach and keyboard notes in [Claude Code: Setup & Customisation](/part-0/claude-code-setup).
+:::
 
-**This guide doesn't cover the CLI workflow in detail.** The principles are the same (plan before acting, one task per conversation, confidence scoring) but the interface is different. If you're experienced enough to prefer the CLI, you're experienced enough to adapt the methodology.
+### Which to use
+
+The cleanest way to think about it:
+
+- **Claude Code GUI (desktop / VS Code extension)** — for **beginner-to-intermediate** builders. Cheap, calm, simple. The right on-ramp. Its cost is that you can't watch it reason.
+- **Claude Code CLI** — for **advanced** users who want to see it think and are fluent enough to live in the terminal.
+- **Cline** — when speed and full inline visibility matter more than cost, and you have the budget for it.
+
+**Beginner?** Start with the Claude Code GUI. The price and simplicity let you build without being scared off by terminal output and streaming code changes.
+
+**Time-critical, and fluent enough to monitor the tool as it codes?** Run the **Claude Code CLI**, or switch to **Cline** and prepare a healthy budget.
+
+::: tip Same methodology, both tools
+Everything in this guide — plan mode first, one task per conversation, task docs, confidence scoring, phase audits — works in Claude Code too. Wherever the guide says `.clinerules`, Claude Code reads `CLAUDE.md` instead. The templates in [Part VI](/part-6/templates) ship both.
+:::
 
 ---
 
@@ -148,6 +187,8 @@ $ claude "plan task 3.2 from the sprint plan"
 | **New features** | Claude Chat (Project with repo synced) | Strategic discussion first |
 | **Phase audits** | Claude Chat (fresh conversation) | Fresh eyes, no dev context |
 | **Quick tweaks** | Cline in VS Code | Fast, low overhead, full control |
+
+Wherever this table says "Cline in VS Code," **Claude Code works just as well** — same Plan → Act → Verify cycle, reading `CLAUDE.md` instead of `.clinerules`. Pick based on the trade-offs above: Claude Code for cost and parallelism, Cline for speed and visibility.
 
 ---
 
@@ -181,6 +222,8 @@ Extended thinking catches problems before they become expensive.
 ::: tip Brainstorming is covered by your subscription
 All brainstorming and document generation happens in Claude Chat (claude.ai), which is covered by your Claude Pro subscription ($20/month). You only pay per-token costs for the **execution** work in Cline. This keeps the expensive part (Opus-quality brainstorming) essentially free, and the high-volume part (task execution with Sonnet) affordable.
 :::
+
+These figures are for Cline. **Running the same work through Claude Code typically costs 5–10x less** for the same Anthropic models — the trade-off is that it's correspondingly slower. If budget is the constraint, that changes the maths a lot.
 
 The methodology adds some overhead (documentation, scoring, audits). It saves many times that in avoided rework.
 

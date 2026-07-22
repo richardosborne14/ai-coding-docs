@@ -48,6 +48,7 @@ export default defineConfig({
         items: [
           { text: 'Setting Up Your Computer', link: '/part-0/setting-up-your-computer' },
           { text: 'Cline & AI Credits', link: '/part-0/cline-and-credits' },
+          { text: 'Claude Code: Setup & Customisation', link: '/part-0/claude-code-setup' },
           { text: 'Browser DevTools', link: '/part-0/browser-devtools' },
           { text: 'How Apps Run', link: '/part-0/how-apps-run' },
           { text: 'Files & Styling Basics', link: '/part-0/files-and-styles' },
