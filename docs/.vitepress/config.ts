@@ -22,6 +22,7 @@ export default defineConfig({
     },
 
     nav: [
+      { text: '👋 Start Here', link: '/start-here' },
       { text: 'Guide', link: '/introduction' },
       { text: 'Templates', link: '/part-6/templates' },
       {
@@ -36,6 +37,13 @@ export default defineConfig({
     ],
 
     sidebar: [
+      {
+        text: '👋 New Here? Start Here',
+        collapsed: false,
+        items: [
+          { text: 'Start Here (For Non-Techies)', link: '/start-here' },
+        ]
+      },
       {
         text: 'Getting Started',
         items: [

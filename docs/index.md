@@ -9,13 +9,22 @@ hero:
   tagline: Start with a conversation. Document thoroughly. Execute systematically. Ship production-ready code.
   actions:
     - theme: brand
-      text: Start Reading
+      text: 👋 New to this? Start Here
+      link: /start-here
+    - theme: alt
+      text: Read the Full Guide
       link: /introduction
     - theme: alt
       text: Project Templates
       link: /part-6/templates
 
 features:
+  - icon: 🧭
+    title: Totally New? Start Here
+    details: Never built an app before? Read the plain-English explainer of every word Claude, Cline and Claude Code will throw at you — before you need it.
+    link: /start-here
+    linkText: Read the beginner's guide
+
   - icon: 🧠
     title: Start with Opus
     details: Every project begins with a real brainstorming conversation in Claude Opus. The quality of your foundation docs determines everything.
