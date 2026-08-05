@@ -124,4 +124,4 @@ The hotkey, the modal, and the JSON-plus-screenshot write give you the entire be
 
 ---
 
-**Next:** [The Frontend Tweaker](/part-5/frontend-tweaker) — stop invoking the AI for cosmetic changes.
+**Next:** [Accessibility by Default](/part-5/accessibility) — changing what the AI emits when nobody asks.

@@ -34,6 +34,11 @@
 - [ ] No linter warnings introduced
 - [ ] LEARNINGS.md updated if gotchas discovered
 
+**If this task touches the UI, also:**
+- [ ] Keyboard-only: every new interaction reachable and operable, focus always visible
+- [ ] a11y linter clean, axe-core check passing for affected routes
+- [ ] New colour pairs meet contrast (4.5:1 body, 3:1 large text and UI boundaries)
+
 ## Notes
 
 [Anything the developer (human or AI) should know — edge cases, related decisions, links to relevant docs or prior tasks]

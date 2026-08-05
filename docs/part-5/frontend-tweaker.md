@@ -26,6 +26,7 @@ The backend version gives you visibility into automations and deployment. The fr
 | Layer | Convention file | Tweaker control | What it covers |
 |-------|----------------|-----------------|----------------|
 | Styles | CSS custom properties + `@tweak` annotations | Sliders, colour pickers | Spacing, sizes, colours, borders, shadows |
+| Contrast | `@contrast` annotations on colour pairs | Live ratio next to the picker | WCAG contrast, checked as you choose |
 | Text | i18n JSON locale files | Text inputs, textareas | Every visible string in the app |
 | Links | `links.json` | URL inputs | Social links, CTAs, footer links, external hrefs |
 | SEO | `meta.json` | Text inputs + char counts | Page titles, meta descriptions, OG content |
@@ -54,6 +55,14 @@ The component references these variables: `font-size: var(--hero-title-font-size
 Changes apply live via `document.documentElement.style.setProperty()`. Hit save, the values write back to the CSS file. No AI loop, no risk of side effects, no searching the codebase.
 
 **Brand colours cascade.** Structure tokens hierarchically — brand → semantic → component. Change `--brand-primary` in the tweaker, everything referencing it updates. Dark mode is a second set of the same variables under `.dark {}`.
+
+**Show the contrast ratio while the colour is being picked.** Annotate the pairs that must pass and let the panel compute them live:
+
+```css
+/* @contrast --text-primary on --bg-surface | min: 4.5 */
+```
+
+This is the highest-value control in the panel. A linter that runs afterwards asks you to undo a decision you've already committed to; a number visible during the decision changes the decision itself. See [Accessibility by Default](/part-5/accessibility).
 
 ---
 
@@ -142,6 +151,7 @@ Add these to your project rules. They're non-negotiable defaults:
 5. All external URLs and internal navigation links MUST reference `links.json` — no hardcoded hrefs in components
 6. All page meta (title, description, OG image) MUST reference `meta.json` — no hardcoded meta tags
 7. When adding a new page or component, update the relevant convention files in the same task
+8. Every colour pair that carries text or a UI boundary MUST have a `@contrast` annotation with its minimum ratio
 
 Rule 7 is the equivalent of the control panel's "update deployment.json whenever a service changes." Without it, the convention files go stale.
 

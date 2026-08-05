@@ -109,6 +109,7 @@ export default defineConfig({
           { text: 'The Project Control Panel', link: '/part-5/control-panel' },
           { text: 'Observability & Error Tracking', link: '/part-5/observability' },
           { text: 'The In-App Feedback Loop', link: '/part-5/feedback-loop' },
+          { text: 'Accessibility by Default', link: '/part-5/accessibility' },
           { text: 'The Frontend Tweaker', link: '/part-5/frontend-tweaker' },
           { text: 'Token Economics', link: '/part-5/token-economics' },
           { text: 'Deployment & Platform Targets', link: '/part-5/deployment-platforms' },

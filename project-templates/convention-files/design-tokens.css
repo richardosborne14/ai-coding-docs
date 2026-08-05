@@ -1,3 +1,19 @@
+/*
+ * Design tokens.
+ *
+ * @tweak   — exposes the property in the frontend tweaker panel
+ * @contrast — declares a colour pair that MUST meet a WCAG ratio.
+ *             4.5 for body text, 3 for large text and UI component boundaries.
+ *             Check these when changing any colour — the point is to see the number
+ *             while you're picking the colour, not in a report afterwards.
+ *             See /part-5/accessibility
+ */
+
+/* @contrast --text-primary on --bg-surface | min: 4.5 */
+/* @contrast --text-secondary on --bg-surface | min: 4.5 */
+/* @contrast --btn-primary-text on --btn-primary-bg | min: 4.5 */
+/* @contrast --border-default on --bg-surface | min: 3 */
+
 :root {
   /* ===== Brand Tokens ===== */
   /* @tweak Brand primary colour | type: color */
@@ -42,10 +58,43 @@
   --btn-border-radius: 6px;
   /* @tweak Primary button background | type: color */
   --btn-primary-bg: var(--brand-primary);
+  /* @tweak Primary button text | type: color */
+  --btn-primary-text: #ffffff;
   /* @tweak Primary button hover background | type: color | state: hover */
   --btn-primary-hover-bg: #2563eb;
+
+  /* ===== Focus (WCAG 2.4.7 — do not delete) ===== */
+  /* @tweak Focus ring colour | type: color | state: focus */
+  --focus-ring-color: #2563eb;
+  /* @tweak Focus ring width | range: 1px, 4px | state: focus */
+  --focus-ring-width: 2px;
+  /* @tweak Focus ring offset | range: 0px, 4px | state: focus */
+  --focus-ring-offset: 2px;
 }
 
+/*
+ * Visible focus for every keyboard-reachable element.
+ * If a component sets `outline: none`, it MUST provide its own replacement.
+ */
+:focus-visible {
+  outline: var(--focus-ring-width) solid var(--focus-ring-color);
+  outline-offset: var(--focus-ring-offset);
+}
+
+/* Every animation and transition sits behind this guard. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Dark mode re-checks every @contrast pair above — a ratio that passes in light mode
+   tells you nothing about the dark override. */
 .dark {
   /* @tweak Body text colour (dark mode) | type: color */
   --text-primary: #f1f5f9;

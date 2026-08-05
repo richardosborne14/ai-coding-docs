@@ -27,6 +27,12 @@ Please conduct a comprehensive audit reviewing:
 5. **Test Coverage** — gaps in testing, tests that don't actually test meaningful behavior
 6. **Architecture** — violations of stated patterns, coupling issues, scalability concerns
 7. **Performance** — N+1 queries, unnecessary re-renders, missing indexes, large bundle concerns
+8. **Accessibility** — WCAG 2.2 AA. Specifically: click handlers on `<div>`/`<span>` instead of
+   real `<button>`/`<a href>`, `outline: none` without a `:focus-visible` replacement, images
+   missing `alt`, inputs without labels, icon-only buttons without an accessible name, skipped
+   heading levels, `<div>` where a landmark belongs, colour used as the only signal, contrast
+   below 4.5:1, animations not behind `prefers-reduced-motion`, SPA route changes that don't
+   move focus. Report these as real issues with severities, not as a footnote.
 
 For each issue found:
 - Severity: Critical / High / Medium / Low
@@ -45,6 +51,20 @@ Be critical. I want to find problems, not hear that everything is fine.
 2. Fix Critical and High issues before proceeding
 3. Medium and Low can go to backlog
 4. Re-audit after fixes to confirm the score improved
+
+## The 10-Minute Manual Pass (you, not the AI)
+
+Do this yourself once per phase. Automated tooling detects roughly a third of WCAG failures
+and is blind to the ones that matter most — whether a name is *meaningful*, whether reading
+order makes sense, whether alt text is *right* rather than merely present.
+
+1. **Unplug the mouse.** Tab through the main flow. Can you complete it? Can you always see
+   where you are?
+2. **Zoom to 200%.** Does anything overlap, clip, or scroll horizontally?
+3. **Turn on the screen reader** (VoiceOver: `Cmd+F5`. Narrator: `Ctrl+Win+Enter`). Navigate
+   one page. Are buttons announced as buttons, with names that mean something?
+
+Anything that fails becomes a fix task. See [Accessibility by Default](/part-5/accessibility).
 
 ## Focused Audit Variant
 

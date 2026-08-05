@@ -202,6 +202,47 @@ You do NOT need to build dashboards or alerts yet — only the plumbing.
 - When modifying an existing component: ensure all four convention layers are updated in the same task
 - NEVER leave orphaned keys in convention files after removing a component
 
+### Accessibility Conventions (all projects with a UI) — non-negotiable
+
+Accessibility produces no feedback signal on its own — a missing `alt` doesn't fail a type
+check, a test, or a screenshot. It's structurally invisible, so it's enforced by rule and
+linter, not by review. Target: **WCAG 2.2 Level AA**. See [Accessibility by Default](/part-5/accessibility).
+
+**Semantics:**
+- Interactive elements MUST be real elements — `<button>`, `<a href>`, `<input>`. NEVER `<div onClick>`. Navigates → `<a href>`. Acts → `<button>`.
+- One `<h1>` per page, no skipped heading levels. Headings are structure, not font size.
+- Landmarks (`<main>`, `<nav>`, `<header>`, `<footer>`) over `<div>` for page regions. Exactly one `<main>`.
+- Every `<img>` gets `alt` — descriptive if meaningful, `alt=""` if decorative. Never omit it.
+- Every input gets an associated `<label>`. A placeholder is not a label.
+- Icon-only buttons get an accessible name (`aria-label` or visually-hidden text).
+- `<html lang>` set from project locale, not hardcoded.
+
+**Focus and keyboard:**
+- NEVER remove a focus indicator. `outline: none` requires a `:focus-visible` replacement in the same change (WCAG 2.4.7 — the most common failure in generated UIs).
+- Everything reachable by mouse must be reachable by keyboard, in sensible tab order. No keyboard traps.
+- Dialogs trap focus, close on `Escape`, return focus to the trigger.
+- Client-side route changes move focus to the new page heading — otherwise an SPA navigation is silent to a screen reader.
+
+**Visual:**
+- Colour is NEVER the only carrier of information — pair with text, icon, or shape.
+- Contrast ≥ 4.5:1 body text, ≥ 3:1 large text and UI boundaries. Annotate required pairs in `design-tokens.css`: `/* @contrast --foreground on --background | min: 4.5 */`
+- Interactive targets ≥ 24×24px (WCAG 2.5.8).
+- Every animation behind a `prefers-reduced-motion` guard. Never autoplay media with sound.
+- Layouts survive 200% zoom without clipping or horizontal scroll.
+
+**Content:**
+- Visible button text must match its accessible name (WCAG 2.5.3 — voice control).
+- Link text makes sense out of context. Never "click here".
+- Error messages identify the field and say how to fix it.
+
+**Checks — what makes the rules above real:**
+- Install the stack's a11y linter in Sprint 1: `eslint-plugin-jsx-a11y` (React), Svelte's built-in compiler warnings (never silence them), `eslint-plugin-vuejs-accessibility` (Vue), `@angular-eslint` (Angular).
+- An axe-core check (`@axe-core/playwright` or `jest-axe`) covers every route — added in the same task as the route.
+- Run linter + axe before declaring ANY UI task complete. Report the result in the confidence score.
+- NEVER call an app "accessible" on a passing scanner — automated tooling catches ~a third of WCAG failures. Say "no detected issues". A manual keyboard and screen-reader pass backs anything stronger.
+- NEVER install or recommend an accessibility overlay widget.
+- Update the Accessibility table in ARCHITECTURE.md whenever one of these is wired.
+
 ### Prohibited
 - Do NOT skip tests
 - Do NOT refactor outside current task scope
@@ -210,6 +251,9 @@ You do NOT need to build dashboards or alerts yet — only the plumbing.
 - Do NOT store secrets in code
 - Do NOT ignore linter warnings
 - Do NOT install dependencies without first searching the web for the latest stable version
+- Do NOT attach click handlers to `<div>` or `<span>` — use a real `<button>` or `<a href>`
+- Do NOT write `outline: none` without a `:focus-visible` replacement in the same change
+- Do NOT silence a11y linter warnings, and do NOT install an accessibility overlay widget
 - Do NOT overwrite production `.env` files with local values
 - Do NOT push code to the production stack directly — dev first, user promotes to prod manually
 - Do NOT estimate how long tasks will take — AI time predictions are wildly inaccurate and misleading. A task that takes 30 minutes of focused AI-assisted work gets estimated at "2-3 days." Omit all time estimates from plans, task docs, and status updates.

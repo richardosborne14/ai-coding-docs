@@ -16,13 +16,14 @@ Based on everything we've discussed, please create the foundational files for Cl
 Generate all of the following:
 
 1. **README.md** — Project overview, vision, current phase (MVP), tech stack with rationale, setup instructions, project structure
-2. **ARCHITECTURE.md** — System design, database schema with all tables/columns/types/constraints, component architecture, API design, auth flow, deployment architecture, key technical decisions
+2. **ARCHITECTURE.md** — System design, database schema with all tables/columns/types/constraints, component architecture, API design, auth flow, deployment architecture, key technical decisions, and (if the project has a UI) the Accessibility section with its WCAG 2.2 AA target and Sprint 1 checklist
 3. **LEARNINGS.md** — Empty template ready to be filled during development
 4. **.clinerules** (for Cline) AND/OR **CLAUDE.md** (for Claude Code) — Iron-clad developer rules including:
    - Mandatory reading list before every task
    - Quality standards (unit tests mandatory, smoke tests after every change, browser testing for UI)
    - Development workflow rules (plan mode first, one task at a time, commit working code, ask questions when unclear, never start serious dev without a task doc)
    - Architecture rules (follow existing patterns, no unauthorized dependencies, use import aliases)
+   - Accessibility conventions if the project has a UI (real elements not `<div onClick>`, never remove focus indicators without a `:focus-visible` replacement, alt on every image, labels on every input, semantic headings and landmarks, never colour alone, 4.5:1 contrast, 24×24px targets, `prefers-reduced-motion`, focus moves on client-side route change, a11y linter + axe-core before any UI task is complete, no overlay widgets) — copy the full section from the templates
    - Prohibited behaviors (no skipping tests, no scope creep, no untyped code, no installing deps without checking latest versions first)
    - Git & security hygiene (.gitignore from the start, no secrets in code, .env.example maintenance)
    - Dev/prod environment separation rules
@@ -40,7 +41,9 @@ Also generate any foundational code files that you know should exist from the st
 - Project config files (tsconfig, eslint, prettier, etc.)
 - Database schema/migration files
 - Environment variable templates (.env.example)
-- Base layout or app shell components
+- Base layout or app shell components (with `<html lang>` set from the project locale, a skip link, and a single `<main>` landmark)
+- `design-tokens.css` with `@tweak` annotations, `@contrast` pairs, focus-ring tokens, and the `prefers-reduced-motion` guard
+- The a11y linter for the chosen stack, wired into the lint script
 - Auth utility stubs
 - Docker configuration (docker-compose.yml) if the project has a backend
 - .gitignore covering all sensitive files

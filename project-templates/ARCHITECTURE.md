@@ -161,6 +161,39 @@ users 1──▶ N sessions      (user_id FK)
 
 See [The Frontend Tweaker](/part-5/frontend-tweaker) for the full pattern.
 
+## Accessibility (if project has a UI)
+
+> **Target: WCAG 2.2 Level AA.** Accessibility produces no feedback signal on its own, so
+> the point of this table is to make it visible. The Sprint 1 rows are cheap and they are
+> what stop the problem accumulating — retrofitting semantics across a built app is not cheap.
+
+**Conformance target:** WCAG 2.2 AA
+**Legal driver:** [European Accessibility Act (applies since 28 June 2025) | none | other]
+**Last manual pass:** [date, or "not yet"]
+
+| Item | Phase | Status |
+|------|-------|--------|
+| a11y linter installed, warnings not silenced | Sprint 1 | [ ] |
+| Accessibility rules in `.clinerules` / `CLAUDE.md` | Sprint 1 | [ ] |
+| `@contrast` annotations on colour token pairs | Sprint 1 | [ ] |
+| `<html lang>` set from project locale | Sprint 1 | [ ] |
+| axe-core check per route in the test run | Sprint 1–2 | [ ] |
+| Focus management on client-side route change | Sprint 2 | [ ] |
+| `prefers-reduced-motion` honoured throughout | Sprint 2 | [ ] |
+| Manual keyboard-only pass | Every phase audit | [ ] |
+| Manual screen-reader pass (VoiceOver / NVDA) | Pre-launch | [ ] |
+| CI a11y gate flipped to blocking | Pre-launch | [ ] |
+| Accessibility statement published (naming known gaps) | Pre-launch | [ ] |
+
+### Known gaps
+[List anything that does not conform and why — e.g. a third-party embed, a canvas view.
+An honest gap list is what makes the rest of the claim credible. Automated tooling detects
+roughly a third of WCAG failures, so "axe is green" is never the whole story.]
+
+### AI rule
+Update this table's Status column whenever an accessibility item is wired. See
+[Accessibility by Default](/part-5/accessibility) for the full reasoning.
+
 ## Observability & Error Tracking
 
 > Declare the plan from Sprint 1. Most boxes stay unchecked early — that's expected.

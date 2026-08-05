@@ -203,6 +203,47 @@ You do NOT need to build dashboards or alerts yet — only the plumbing.
 - When modifying an existing component: ensure all four convention layers are updated in the same task
 - NEVER leave orphaned keys in convention files after removing a component
 
+### Accessibility Conventions (all projects with a UI) — non-negotiable
+
+Accessibility produces no feedback signal on its own: a missing `alt` does not fail a type
+check, does not fail a test, does not throw, and does not change a screenshot. It is
+structurally invisible, so it must be enforced by rule and by linter, not by review.
+Target is **WCAG 2.2 Level AA**. See [Accessibility by Default](/part-5/accessibility).
+
+**Semantics — the default, not the request:**
+- Interactive elements MUST be real elements — `<button>`, `<a href>`, `<input>`, `<select>`. NEVER a `<div>` or `<span>` with a click handler. If it navigates it is an `<a href>`; if it acts it is a `<button>`.
+- One `<h1>` per page. Never skip heading levels. Headings describe structure, not font size.
+- Use landmark elements — `<main>`, `<nav>`, `<header>`, `<footer>`, `<aside>` — in preference to `<div>` for page regions. Exactly one `<main>` per page.
+- Every `<img>` MUST have `alt` — descriptive if it carries meaning, `alt=""` if purely decorative. Never omit the attribute.
+- Every form input MUST have an associated `<label>` (`for`/`id`, or wrapping). A placeholder is NOT a label.
+- Icon-only buttons MUST have an accessible name (`aria-label` or visually-hidden text).
+- `<html lang>` MUST be set from the project's locale, not hardcoded.
+
+**Focus and keyboard:**
+- NEVER remove a focus indicator. `outline: none` is only permitted when a `:focus-visible` replacement is written in the same change. This is WCAG 2.4.7 and it is the single most common failure in generated UIs.
+- Every interaction reachable by mouse MUST be reachable by keyboard, in a sensible tab order. No keyboard traps.
+- Modals and dialogs MUST trap focus while open, close on `Escape`, and return focus to the trigger element on close.
+- Client-side route changes MUST move focus to the new page's `<h1>` (or main heading) — an SPA navigation is silent to a screen reader otherwise.
+
+**Visual:**
+- Colour MUST NEVER be the only carrier of information. Pair it with text, an icon, or a shape (error states, status dots, chart series, required fields).
+- Text contrast MUST meet 4.5:1 (3:1 for large text and for UI component boundaries). Annotate the required pairs in `design-tokens.css` with `/* @contrast --foreground on --background | min: 4.5 */` and verify before shipping a colour change.
+- Interactive targets MUST be at least 24×24px (WCAG 2.5.8).
+- Every animation and transition MUST be wrapped in a `prefers-reduced-motion` guard. Never autoplay media with sound.
+- Layouts MUST survive 200% zoom without clipping or horizontal scroll. No fixed pixel heights on text containers.
+
+**Content:**
+- A visible button's text MUST match its accessible name (WCAG 2.5.3 — voice-control users say what they see).
+- Link text MUST make sense out of context. Never "click here" or "read more" alone.
+- Error messages MUST identify the field and say how to fix it, not just that something is wrong.
+
+**Checks — this is what makes the rules above real:**
+- The stack's a11y linter MUST be installed in Sprint 1: `eslint-plugin-jsx-a11y` (React), the Svelte compiler's built-in a11y warnings (never silence them), `eslint-plugin-vuejs-accessibility` (Vue), `@angular-eslint` (Angular).
+- An axe-core check (`@axe-core/playwright` or `jest-axe`) MUST cover every route. Add the test in the same task that adds the route.
+- Run the linter and the axe tests before declaring ANY UI task complete, and report the result in the confidence score.
+- NEVER report an app as "accessible" on the strength of a passing scanner — automated tooling detects roughly a third of WCAG failures. The correct phrasing is "no detected issues". A manual keyboard and screen-reader pass is what backs any stronger claim.
+- NEVER install, recommend, or integrate an accessibility overlay widget. They do not achieve compliance and are opposed by the users they claim to serve.
+
 ### What NOT To Do
 - Do NOT skip tests to save time
 - Do NOT refactor code outside the current task scope
@@ -211,6 +252,9 @@ You do NOT need to build dashboards or alerts yet — only the plumbing.
 - Do NOT store secrets or credentials in code
 - Do NOT ignore linter warnings
 - Do NOT install dependencies without first searching the web for the latest stable version — training data may be months out of date
+- Do NOT attach click handlers to `<div>` or `<span>` — use a real `<button>` or `<a href>`
+- Do NOT write `outline: none` without a `:focus-visible` replacement in the same change
+- Do NOT silence a11y linter warnings, and do NOT install an accessibility overlay widget
 - Do NOT overwrite production `.env` files with local values — always confirm the target environment before any deployment action
 - Do NOT push code to the production stack directly — push to dev, test, then the user manually promotes to production
 - Do NOT estimate how long tasks will take — AI time predictions are wildly inaccurate and misleading. A task that takes 30 minutes of focused AI-assisted work gets estimated at "2-3 days." Omit all time estimates from plans, task docs, and status updates.

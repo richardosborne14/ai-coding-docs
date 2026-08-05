@@ -162,6 +162,10 @@ Building the minimum to validate [core concept].
 ## Observability & Error Tracking (if applicable)
 [Maturity checklist with Phase and "Irreversible if missing" columns]
 [See Observability & Error Tracking](/part-5/observability) for the full pattern]
+
+## Accessibility (if project has a UI)
+[WCAG 2.2 AA target, Sprint 1 checklist, and an honest known-gaps list]
+[See Accessibility by Default](/part-5/accessibility) for the full pattern]
 ```
 
 ---
@@ -224,6 +228,10 @@ After each task: rate 1-10, 8 minimum to proceed.
 ### Frontend Tweaker Conventions (all projects with a UI)
 [i18n text management, @tweak style tokens, link management, SEO meta content]
 [See The Frontend Tweaker](/part-5/frontend-tweaker) for the full rules]
+
+### Accessibility Conventions (all projects with a UI) — non-negotiable
+[Real elements not `<div onClick>`, never remove focus indicators, alt on every image, labels on every input, semantic headings and landmarks, never colour alone, 4.5:1 contrast, 24×24px targets, `prefers-reduced-motion`, focus moves on route change, a11y linter + axe-core before any UI task is complete, no overlay widgets]
+[See Accessibility by Default](/part-5/accessibility) for the full rules]
 ```
 
 ---

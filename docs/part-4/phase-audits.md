@@ -122,6 +122,19 @@ After fixing, run the audit again. Should hit 8/10+ to proceed.
 - Race conditions
 - Missing edge case handling
 
+**Accessibility failures:**
+- `<div onClick>` where a `<button>` belongs
+- `outline: none` with no `:focus-visible` replacement
+- Images without `alt`, inputs without labels
+
+---
+
+## The One Thing the AI Auditor Can't Do
+
+An auditor — human or AI — reading source will catch the mechanical accessibility failures above. It cannot tell you whether a button's name is *meaningful*, whether the reading order makes sense, or whether alt text is *right* rather than merely present. Automated tooling detects roughly a third of WCAG failures.
+
+So every audit gets a 10-minute pass you do yourself: unplug the mouse and tab through the main flow, zoom to 200%, then turn on the screen reader and navigate one page. See [Accessibility by Default](/part-5/accessibility).
+
 ---
 
 ## Good Audit vs Bad Audit

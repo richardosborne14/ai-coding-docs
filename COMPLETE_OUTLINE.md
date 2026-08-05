@@ -666,6 +666,15 @@ The dev-phase counterpart to Observability. A dev-only feedback hotkey mounted i
 
 ---
 
+### Chapter 12i: Accessibility by Default ✅ COMPLETE
+
+**File:** `docs/part-5/accessibility.md`
+**Status:** Written and published. Accessibility Conventions added to `.clinerules` / `CLAUDE.md` / `docs/part-6/templates.md`, Accessibility table added to `ARCHITECTURE.md`, UI acceptance criteria added to `TASK_TEMPLATE.md`, accessibility dimension + manual pass added to `prompts/07-phase-audit.md`, `@contrast` annotations + focus-ring tokens + `prefers-reduced-motion` guard added to `convention-files/design-tokens.css`.
+
+The chapter that changes what the AI emits by default. Diagnoses *why* AI writes `<div onClick>` — the training corpus is a web where ~95% of home pages have detectable WCAG failures; accessibility is the one quality dimension that produces no feedback signal at all (no type error, no failing test, no changed screenshot); and `<div onClick>` is a genuine local optimum for whoever is writing at that moment. The load-bearing finding is that the knowledge is already in the model (ACM Web4All 2025: accessibility-oriented prompting materially improves WCAG compliance) — nothing in the loop asks for it, which makes this a harness problem, not a model problem. Core doctrine: defaults over documentation (if it only happens when you remember to ask, it hasn't shipped); convert the invisible into a checkable signal (a11y linter + axe-core per route in Sprint 1); put the number at the point of decision (`@contrast` annotations in `design-tokens.css` rather than a report afterwards); warnings not blockers, with an opt-in gate before launch; never claim "accessible" on a passing scanner — automated tooling catches ~a third of failures, so the phrasing is "no detected issues" and a 10-minute manual keyboard/zoom/screen-reader pass backs anything stronger; and never ship an accessibility overlay. Target is WCAG 2.2 AA, with the European Accessibility Act (in force since 28 June 2025) as the commercial driver.
+
+---
+
 ## Part VI: Practical Resources
 
 ### Chapter 13: Complete Template Library
