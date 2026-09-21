@@ -100,11 +100,11 @@ Social media URLs, CTA destinations, footer links, "book a call" URLs, terms of 
 ```json
 {
   "social": {
-    "twitter": "https://twitter.com/visualhive",
-    "linkedin": "https://linkedin.com/company/visualhive"
+    "twitter": "https://twitter.com/yourcompany",
+    "linkedin": "https://linkedin.com/company/yourcompany"
   },
   "cta": {
-    "primary": "https://calendly.com/visualhive/consult",
+    "primary": "https://calendly.com/yourcompany/consult",
     "secondary": "/pricing"
   },
   "footer": {

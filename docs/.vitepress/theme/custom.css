@@ -1,6 +1,7 @@
 /**
- * Visual Hive Branding — Custom VitePress Theme
- * Brand color: #f8fa30 (neon yellow)
+ * Digital Bricks Branding — Custom VitePress Theme
+ * Palette mirrors digitalbricks.io: deep-water navy ground, pale steel-blue accent.
+ * Dark is the intended look; light is the explicit swap.
  */
 
 /* ========================================
@@ -8,51 +9,63 @@
    ======================================== */
 
 :root {
-  /* Brand colors — light mode needs darker variants for readability */
-  --vp-c-brand-1: #d4d600;
-  --vp-c-brand-2: #c0c200;
-  --vp-c-brand-3: #a8aa00;
-  --vp-c-brand-soft: rgba(248, 250, 48, 0.14);
+  /* Light mode: the deeper blue keeps AA contrast on a pale ground */
+  --vp-c-brand-1: #1F5C8E;
+  --vp-c-brand-2: #164771;
+  --vp-c-brand-3: #164771;
+  --vp-c-brand-soft: rgba(31, 92, 142, 0.12);
 
-  /* Button text must be dark on yellow background */
-  --vp-button-brand-text: #1a1a2e;
-  --vp-button-brand-bg: #f8fa30;
-  --vp-button-brand-hover-text: #1a1a2e;
-  --vp-button-brand-hover-bg: #e6e82b;
-  --vp-button-brand-active-text: #1a1a2e;
-  --vp-button-brand-active-bg: #d4d600;
+  --vp-button-brand-text: #FFFFFF;
+  --vp-button-brand-bg: #1F5C8E;
+  --vp-button-brand-hover-text: #FFFFFF;
+  --vp-button-brand-hover-bg: #164771;
+  --vp-button-brand-active-text: #FFFFFF;
+  --vp-button-brand-active-bg: #164771;
+
+  --db-cta-text: #FFFFFF;
+  --db-serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Hoefler Text", Charter, Georgia, serif;
 }
 
 .dark {
-  /* Brighter values work well on dark backgrounds */
-  --vp-c-brand-1: #f8fa30;
-  --vp-c-brand-2: #e6e82b;
-  --vp-c-brand-3: #d4d600;
-  --vp-c-brand-soft: rgba(248, 250, 48, 0.16);
+  --vp-c-bg: #0A192B;
+  --vp-c-bg-alt: #0E2139;
+  --vp-c-bg-elv: #0E2139;
+  --vp-c-bg-soft: #0E2139;
+  --vp-c-divider: #1B3049;
+  --vp-c-gutter: #06111E;
+  --vp-c-border: #1B3049;
+  --vp-c-text-1: #E6EDF5;
+  --vp-c-text-2: #94AAC2;
+  --vp-c-text-3: #657E99;
+  --vp-code-block-bg: #0E2139;
+
+  --vp-c-brand-1: #7FB2DE;
+  --vp-c-brand-2: #5C93C4;
+  --vp-c-brand-3: #5C93C4;
+  --vp-c-brand-soft: rgba(127, 178, 222, 0.14);
+
+  --vp-button-brand-text: #0A192B;
+  --vp-button-brand-bg: #7FB2DE;
+  --vp-button-brand-hover-text: #0A192B;
+  --vp-button-brand-hover-bg: #9CC4E6;
+  --vp-button-brand-active-text: #0A192B;
+  --vp-button-brand-active-bg: #5C93C4;
+
+  --db-cta-text: #0A192B;
 }
 
 /* ========================================
    Hero Section
    ======================================== */
 
-/* Hero name gradient — yellow to soft gold */
 :root {
-  --vp-home-hero-name-color: transparent;
-  --vp-home-hero-name-background: -webkit-linear-gradient(
-    120deg,
-    #f8fa30 30%,
-    #e6c84a
-  );
+  --vp-home-hero-name-color: var(--vp-c-brand-1);
+  --vp-home-hero-image-background-image: linear-gradient(-45deg, #7FB2DE50 50%, #1F5C8E50 50%);
+  --vp-home-hero-image-filter: blur(44px);
 }
 
-/* Hero image glow */
-:root {
-  --vp-home-hero-image-background-image: linear-gradient(
-    -45deg,
-    #f8fa3050 50%,
-    #e6c84a50 50%
-  );
-  --vp-home-hero-image-filter: blur(44px);
+.VPHero .tagline {
+  font-family: var(--db-serif);
 }
 
 /* ========================================
@@ -60,7 +73,7 @@
    ======================================== */
 
 .VPNavBarTitle .logo {
-  height: 48px;
+  height: 24px;
   width: auto;
   flex-shrink: 0;
   margin-left: 0;
@@ -86,10 +99,10 @@
 }
 
 /* ========================================
-   Visual Hive CTA Component
+   Digital Bricks CTA Component
    ======================================== */
 
-.vh-cta {
+.db-cta {
   margin: 2.5rem 0;
   padding: 1.75rem 2rem;
   border-radius: 12px;
@@ -103,7 +116,7 @@
   overflow: hidden;
 }
 
-.vh-cta::before {
+.db-cta::before {
   content: '';
   position: absolute;
   top: 0;
@@ -114,30 +127,27 @@
   border-radius: 4px 0 0 4px;
 }
 
-.vh-cta h3 {
+.db-cta h3 {
   margin: 0 0 0.75rem 0;
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--vp-c-brand-1);
 }
 
-.dark .vh-cta h3 {
-  color: #f8fa30;
-}
-
-.vh-cta p {
+.db-cta p {
   margin: 0 0 1.25rem 0;
+  font-family: var(--db-serif);
   line-height: 1.7;
   color: var(--vp-c-text-1);
 }
 
-.vh-cta .vh-cta-actions {
+.db-cta .db-cta-actions {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-.vh-cta .vh-cta-btn {
+.db-cta .db-cta-btn {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -149,42 +159,30 @@
   transition: all 0.2s ease;
 }
 
-.vh-cta .vh-cta-btn-primary {
+.db-cta .db-cta-btn-primary {
   background: var(--vp-button-brand-bg);
-  color: #1a1a2e !important;
+  color: var(--db-cta-text) !important;
 }
 
-.vh-cta .vh-cta-btn-primary:hover,
-.vh-cta .vh-cta-btn-primary:focus,
-.vh-cta .vh-cta-btn-primary:active {
+.db-cta .db-cta-btn-primary:hover,
+.db-cta .db-cta-btn-primary:focus,
+.db-cta .db-cta-btn-primary:active {
   background: var(--vp-button-brand-hover-bg);
-  color: #1a1a2e !important;
+  color: var(--db-cta-text) !important;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(248, 250, 48, 0.3);
+  box-shadow: 0 4px 12px var(--vp-c-brand-soft);
 }
 
-.vh-cta .vh-cta-btn-secondary {
+.db-cta .db-cta-btn-secondary {
   border: 1px solid var(--vp-c-brand-1);
   color: var(--vp-c-brand-1) !important;
   background: transparent;
 }
 
-.vh-cta .vh-cta-btn-secondary:hover,
-.vh-cta .vh-cta-btn-secondary:focus,
-.vh-cta .vh-cta-btn-secondary:active {
+.db-cta .db-cta-btn-secondary:hover,
+.db-cta .db-cta-btn-secondary:focus,
+.db-cta .db-cta-btn-secondary:active {
   background: var(--vp-c-brand-soft);
   color: var(--vp-c-brand-1) !important;
   transform: translateY(-1px);
-}
-
-/* ========================================
-   Fix VitePress brand button text on hover
-   (prevents yellow text on yellow background)
-   ======================================== */
-
-.VPButton.brand,
-.VPButton.brand:hover,
-.VPButton.brand:focus,
-.VPButton.brand:active {
-  color: #1a1a2e !important;
 }

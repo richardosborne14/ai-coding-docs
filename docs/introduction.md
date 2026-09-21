@@ -43,7 +43,7 @@ Tell Claude in your Project instructions or profile to **never use the inline ch
 
 Once you're happy that you've debated enough with Claude — it's had at least one or more rethinks and adjustments to its proposed project plan and architecture — ask it to build out the documentation and foundation files.
 
-**Before asking Claude to produce the docs, sync the AI Coding Docs repo.** Use the `+` icon on the chat input, select "GitHub", paste `https://github.com/Visual-Hive/ai-coding-docs`, and wait for the sync to finish (the send button will be disabled until it completes). You need to go through the Claude GitHub integration flow first if you haven't already.
+**Before asking Claude to produce the docs, sync the AI Coding Docs repo.** Use the `+` icon on the chat input, select "GitHub", paste `https://github.com/richardosborne14/ai-coding-docs`, and wait for the sync to finish (the send button will be disabled until it completes). You need to go through the Claude GitHub integration flow first if you haven't already.
 
 Then be explicit: *"Please create the foundational files for Cline and VSCode to get the prototype built using the AI Coding Docs repo in project files."* This ensures Claude uses the templates and methodology rather than improvising its own structure. It will produce: README, Architecture (with real schemas), Learnings (empty template), `.clinerules` or `CLAUDE.md`, sprint rules, task template, and Sprint 1 plan with task index.
 
@@ -176,12 +176,12 @@ Browse the repo to see the methodology in action.
 
 ---
 
-<div class="vh-cta">
-  <h3>Want expert guidance before you dive in?</h3>
-  <p>The methodology in this guide works — but every project is different. If you'd like a second pair of eyes on your architecture, a strategy audit to identify risks early, or a team to build and ship alongside you, <a href="https://visualhive.co">Visual Hive</a> offers free consultations to help you find the right starting point.</p>
-  <div class="vh-cta-actions">
-    <a href="https://visualhive.co/contact/" target="_blank" class="vh-cta-btn vh-cta-btn-primary">Book a Free Consultation →</a>
-    <a href="https://visualhive.co" target="_blank" class="vh-cta-btn vh-cta-btn-secondary">About Visual Hive</a>
+<div class="db-cta">
+  <h3>Want a second pair of eyes before you dive in?</h3>
+  <p>The methodology in this guide works, but every project is different. If you want someone to look over your architecture, spot the risks early, or build alongside you, book a call and we'll work out the right starting point.</p>
+  <div class="db-cta-actions">
+    <a href="https://calendar.app.google/HH5FyJKogsLQc2kC8" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-primary">Book a call →</a>
+    <a href="https://digitalbricks.io" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-secondary">About Digital Bricks</a>
   </div>
 </div>
 

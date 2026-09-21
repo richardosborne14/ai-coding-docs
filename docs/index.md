@@ -63,17 +63,17 @@ The [VH Conference Toolkit](https://github.com/Visual-Hive/vh-conference-toolkit
 ## Get Started
 
 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-  <a href="/introduction" style="padding: 0.75rem 1.5rem; background: var(--vp-c-brand-1); color: #1a1a2e; border-radius: 4px; text-decoration: none; font-weight: 600;">Read the Guide →</a>
+  <a href="/introduction" style="padding: 0.75rem 1.5rem; background: var(--vp-button-brand-bg); color: var(--vp-button-brand-text); border-radius: 4px; text-decoration: none; font-weight: 600;">Read the Guide →</a>
   <a href="/part-6/templates" style="padding: 0.75rem 1.5rem; border: 1px solid var(--vp-c-brand-1); border-radius: 4px; text-decoration: none;">Get the Templates</a>
 </div>
 
 ---
 
-<div class="vh-cta">
+<div class="db-cta">
   <h3>Need a hand getting started?</h3>
-  <p>Whether you're exploring AI-assisted development for the first time or looking to sharpen an existing workflow, the team at <a href="https://visualhive.co">Visual Hive</a> can help. Book a free consultation to talk through your goals — from strategy audits that pinpoint bottlenecks to hands-on development and deployment.</p>
-  <div class="vh-cta-actions">
-    <a href="https://visualhive.co/contact/" target="_blank" class="vh-cta-btn vh-cta-btn-primary">Book a Free Consultation →</a>
-    <a href="https://visualhive.co" target="_blank" class="vh-cta-btn vh-cta-btn-secondary">Learn About Visual Hive</a>
+  <p>Whether you're trying AI-assisted development for the first time or tightening up a workflow you already have, I can help. I build apps, and I teach founders and teams to build their own — from a one-off review of where you're stuck to hands-on help shipping the thing.</p>
+  <div class="db-cta-actions">
+    <a href="https://calendar.app.google/HH5FyJKogsLQc2kC8" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-primary">Book a call →</a>
+    <a href="https://digitalbricks.io" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-secondary">About Digital Bricks</a>
   </div>
 </div>

@@ -4,7 +4,7 @@
 
 ## Before You Prompt
 
-**Sync the AI Coding Docs repo first.** Use the `+` icon on the chat input, select "GitHub", paste `https://github.com/Visual-Hive/ai-coding-docs`, and wait for the sync to finish (the send button will be disabled until the repo is synced). This gives Claude access to the project templates and methodology, so it generates docs that follow the structure rather than improvising.
+**Sync the AI Coding Docs repo first.** Use the `+` icon on the chat input, select "GitHub", paste `https://github.com/richardosborne14/ai-coding-docs`, and wait for the sync to finish (the send button will be disabled until the repo is synced). This gives Claude access to the project templates and methodology, so it generates docs that follow the structure rather than improvising.
 
 You need to have the Claude GitHub integration set up first (Settings → Integrations → GitHub).
 

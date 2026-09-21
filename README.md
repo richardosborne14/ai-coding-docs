@@ -65,6 +65,16 @@ docs/                       # The methodology guide (VitePress)
 └── .vitepress/             # Site config
 ```
 
+## Running & Deploying
+
+```bash
+npm install
+npm run dev            # local preview at http://localhost:5173
+./deploy/deploy.sh     # build + push to nexus-1 (Hetzner), served by Caddy
+```
+
+Live at [ai-coding.digitalbricks.io](https://ai-coding.digitalbricks.io). See `deploy/deploy.sh` for `--go-live` and `--rollback`.
+
 ## Real Example
 
 The [VH Conference Toolkit](https://github.com/Visual-Hive/vh-conference-toolkit) was built using this methodology. Browse its repo to see thorough architecture docs, strict development rules, sprint-based task specs, and ADRs in action.
@@ -76,3 +86,7 @@ This methodology built [RISE](https://github.com/The-Low-Code-Foundation/rise) �
 ## Status
 
 Major update complete. Core methodology revised to reflect current best practices. Project templates and prompt library added.
+
+---
+
+Written and maintained by Richard Osborne at [Digital Bricks](https://digitalbricks.io).

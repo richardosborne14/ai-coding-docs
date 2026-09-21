@@ -157,12 +157,12 @@ Subsequent projects: ~30 minutes (just brainstorming + docs)
 
 ---
 
-<div class="vh-cta">
-  <h3>Stuck on setup? We can help.</h3>
-  <p>Getting the tooling right matters — it shapes everything that follows. If you'd rather walk through setup with someone who's done it dozens of times, or you want advice on choosing the right stack for your project, <a href="https://visualhive.co">Visual Hive</a> offers free consultations to get you moving in the right direction.</p>
-  <div class="vh-cta-actions">
-    <a href="https://visualhive.co/contact/" target="_blank" class="vh-cta-btn vh-cta-btn-primary">Book a Free Consultation →</a>
-    <a href="https://visualhive.co" target="_blank" class="vh-cta-btn vh-cta-btn-secondary">About Visual Hive</a>
+<div class="db-cta">
+  <h3>Stuck on setup?</h3>
+  <p>Getting the tooling right shapes everything that follows. If you'd rather walk through setup with someone who has done it many times, or want advice on picking the right stack, book a call.</p>
+  <div class="db-cta-actions">
+    <a href="https://calendar.app.google/HH5FyJKogsLQc2kC8" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-primary">Book a call →</a>
+    <a href="https://digitalbricks.io" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-secondary">About Digital Bricks</a>
   </div>
 </div>
 

@@ -4,11 +4,16 @@ export default defineConfig({
   title: 'AI-Assisted Software Engineering Guide',
   description: 'Build production-ready apps with AI — systematically, not randomly',
 
+  sitemap: { hostname: 'https://ai-coding.digitalbricks.io' },
   cleanUrls: true,
   lastUpdated: true,
 
   head: [
-    ['meta', { name: 'theme-color', content: '#f8fa30' }],
+    ['link', { rel: 'icon', href: '/brand/db-icon.svg', type: 'image/svg+xml' }],
+    ['link', { rel: 'icon', href: '/brand/favicon-32.png', sizes: '32x32', type: 'image/png' }],
+    ['link', { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' }],
+    ['meta', { name: 'author', content: 'Richard Osborne, Digital Bricks' }],
+    ['meta', { name: 'theme-color', content: '#0A192B' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:title', content: 'AI-Assisted Software Engineering Guide' }],
     ['meta', { property: 'og:description', content: 'Build production-ready apps with AI — systematically, not randomly' }],
@@ -17,8 +22,9 @@ export default defineConfig({
   themeConfig: {
     siteTitle: 'AI-Assisted SE Guide',
     logo: {
-      light: '/assets/logo_black.png',
-      dark: '/assets/logo_white.png'
+      light: '/brand/db-lockup-navy-nav.svg',
+      dark: '/brand/db-lockup-nav.svg',
+      alt: 'Digital Bricks'
     },
 
     nav: [
@@ -137,12 +143,12 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Visual-Hive/ai-coding-docs' }
+      { icon: 'github', link: 'https://github.com/richardosborne14/ai-coding-docs' }
     ],
 
     footer: {
-      message: 'A collaboration between <a href="https://thelowcodefoundation.com">The Low Code Foundation</a> and <a href="https://visualhive.co">Visual Hive</a>',
-      copyright: '© 2026 | Author: Richard Osborne, CTO of Visual Hive'
+      message: 'Written by Richard Osborne · <a href="https://digitalbricks.io">Digital Bricks</a>',
+      copyright: '© 2026 Digital Bricks'
     },
 
     search: {
