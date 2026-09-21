@@ -1,6 +1,6 @@
 # Phase 5: Claude-Code-First Audit & Voice Rebrand
 
-**Status:** IN PROGRESS. R0 and R1 are done and signed off. R2 facts are verified and the voice spec is drafted (2026-09-21). **Waiting on Richard's picks. The next session starts by reading them (R2 step 3).**
+**Status:** IN PROGRESS. R0 and R1 are done and signed off. R2 is done: facts verified and voice picked (2026-09-21). **The next session starts at R3.**
 
 **The brief, in Richard's words:** rebrand the whole thing as *"I know so much about Claude I made a whole docs site to show you how to use it, so you don't even need me... or do you?"* The "Book a call" CTA is the punchline to "...or do you?". **Tone only, no swearing on the site** (ruled 2026-09-21).
 
@@ -19,8 +19,8 @@
 |------|-------|--------|
 | R0 | Interview Richard | ✅ 2026-09-21 → R0-INTERVIEW.md |
 | R1 | Content audit → written findings, signed off | ✅ 2026-09-21 → R1-AUDIT.md |
-| R2 | Verify F1–F3 + F5, then the voice & positioning spec (hero, tagline, meta, About, CTA punchline, **track names**) | 🟡 facts ✅ → R2-FACTS.md; spec drafted → R2-VOICE.md; **waiting on Richard's picks** |
-| R3 | Restructure IA / sidebar, and build the two-track show/hide mechanism | ⬜ |
+| R2 | Verify F1–F3 + F5, then the voice & positioning spec (hero, tagline, meta, About, CTA punchline, **track names**) | ✅ 2026-09-21 → R2-FACTS.md, R2-VOICE.md (picks recorded at the bottom) |
+| R3 | Restructure IA / sidebar, and build the two-track show/hide mechanism | ⬜ **next** |
 | R4 | Rewrite chapters per the audit (incl. 6 new pages, 3 cuts, redirect for `/part-3/cline-workflow`) | ⬜ |
 | R5 | `project-templates/` → CLAUDE.md-only; rewrite `WRITING_GUIDE.md`; replace repo `.clinerules` with a repo `CLAUDE.md` | ⬜ |
 | R6 | Build, screenshot (light + dark, both tracks, phone width), deploy with `./deploy/deploy.sh`, verify live | ⬜ |
@@ -29,7 +29,7 @@
 
 1. ✅ **Facts verified** 2026-09-21 → [R2-FACTS.md](R2-FACTS.md). Only Anthropic pages were used.
 2. ✅ **Voice spec drafted** → [R2-VOICE.md](R2-VOICE.md). Richard is choosing on the ruling page **https://claude.ai/artifact/55MeBnxb4CGwgnGETAp4Qs**. Recommendations are pre-selected.
-3. ⬜ **Read his picks.** The page saves them to the artifact's database: `ArtifactData` → action `get`, url above, collection/doc `rulings/r2`. Fields are `hero`, `cta`, `ntrack`, `tracks`, `cards` (a list of the kept cards), `about`, `meta`, plus `<field>Note` and `otherNote` if he wrote any. If the doc is missing, he hasn't sent it: ask, and don't guess. Record the picks under "Richard's picks" in R2-VOICE.md, then R2 is ✅.
+3. ✅ **Picks read** 2026-09-21 and recorded in R2-VOICE.md › Richard's picks. (How it was done: The page saves them to the artifact's database: `ArtifactData` → action `get`, url above, collection/doc `rulings/r2`. Fields are `hero`, `cta`, `ntrack`, `tracks`, `cards` (a list of the kept cards), `about`, `meta`, plus `<field>Note` and `otherNote` if he wrote any. If the doc is missing, he hasn't sent it: ask, and don't guess. Record the picks under "Richard's picks" in R2-VOICE.md.)
 4. **Voice rules** (Richard's) are listed in R2-VOICE.md. No em dashes, no melodrama, no swearing, first person. Keep the Digital Bricks look (`custom.css` palette untouched).
 
 ### Where the earlier plan was wrong (settled by R2-FACTS)
@@ -39,6 +39,7 @@
 - F3: Claude Design is on paid plans. It is labelled beta in one place and research preview in another. It hands off to Claude Code as a bundle. **What the bundle contains is still unconfirmed**: check this before R4 writes `mockups-first`.
 
 ### R3 notes
+- Track names are **"Keep it simple" / "Show me everything"** (T3). "Everything" hides nothing; "simple" hides builder-only blocks. The simple track is the desktop app's Code tab (Richard ruled `ntrack` = code-tab), so adjust R1's N-track notes for `setting-up-your-computer` and `tool-selection` to match.
 - Two tracks, chosen on the first page, with show/hide. The proposed mechanism is in R1-AUDIT › Tracks: localStorage wrapped in try/catch, the default shows everything, and the pages must read fine with nothing stored.
 
 ---
@@ -66,7 +67,7 @@
 ## Still Richard's call (not asked or not approved yet)
 1. Redirect or take down the old `ai-coding.visualhive.co` (not approved 2026-09-21).
 2. Rename the GitHub repo (not approved 2026-09-21).
-3. The voice picks, track names and the N-track shape (`ntrack`). All are on the ruling page, see R2 step 3.
+3. (Ruled 2026-09-21: voice, track names and N-track shape. See R2-VOICE.md.)
 
 ## Verify before trusting
 - `git log --oneline -3`: the phase-5 folder (R0, R1, R2 files) is committed.
