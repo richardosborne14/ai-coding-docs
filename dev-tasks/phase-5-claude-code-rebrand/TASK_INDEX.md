@@ -1,6 +1,6 @@
 # Phase 5: Claude-Code-First Audit & Voice Rebrand
 
-**Status:** IN PROGRESS. R0 to R4 are done (2026-09-21). **The next session starts at R5.** Nothing from R3 or R4 is deployed yet: deploying is R6.
+**Status:** IN PROGRESS. R0 to R4 are done (2026-09-21). **The next session starts at R5.** R3 + R4 are **live** (deployed 2026-09-21 at Richard's request, from `3cb0c4a`). R6 is still due after R5: the full screenshot pass and a redeploy.
 
 **The brief, in Richard's words:** rebrand the whole thing as *"I know so much about Claude I made a whole docs site to show you how to use it, so you don't even need me... or do you?"* The "Book a call" CTA is the punchline to "...or do you?". **Tone only, no swearing on the site** (ruled 2026-09-21).
 
@@ -65,7 +65,9 @@
 1. `project-templates/`: rewrite `CLAUDE.md` as the primary template (user-techiness profile, unbreakable rules, learnings habit, doc-length rules, testing incl. headless browser, model-per-task, "rule via artifact"). Add a "Recommended model" line to `TASK_TEMPLATE.md`. Move `.clinerules` and `.clineignore` to `project-templates/other-tools/cline/`. **`docs/part-6/templates.md` already describes the set as it will be after R5**, so match it (read it first).
 2. Rewrite `WRITING_GUIDE.md` for the new voice (R2-VOICE rules).
 3. Replace the repo `.clinerules` with a repo `CLAUDE.md` (it still links the old `/part-3/cline-workflow` URL).
-4. Then R6: build, screenshots (light + dark, both tracks, phone), `./deploy/deploy.sh`, then verify live, including the four 301s.
+4. Then R6: build, screenshots (light + dark, both tracks, phone), `./deploy/deploy.sh`, verify live.
+
+**Deploy readings 2026-09-21 (commit 3cb0c4a, `./deploy/deploy.sh`):** Caddy validated and reloaded. nexus, digitalbricks.io, the learn-ai home and philosophy all returned 200. The live home shows the H2 hero and the C1 CTA. The 5 new pages return 200. All four old URLs 301 to their targets (`/part-0/cline-and-credits`, `/part-5/token-economics`, `/part-6/setup-guide` incl. `.html`, `/part-3/cline-workflow`). Richard asked to deploy before reading the copy, so the "Read the R4 copy" item below now means fixing it live.
 
 ---
 
