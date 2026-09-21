@@ -100,6 +100,7 @@ const IA: Section[] = [
       { text: 'Project Templates', link: '/part-6/templates' },
       { text: 'Prompt Library', link: '/part-6/prompts' },
       { text: 'Case Studies', link: '/part-6/case-studies' },
+      { text: 'Case Study: NodeGX', link: '/part-6/nodegx' },
     ]
   },
   {

@@ -33,7 +33,7 @@ The long version is [the rest of the site](/introduction).
 
 ## History
 
-The guide started as a collaboration between [The Low Code Foundation](https://thelowcodefoundation.com), a French non-profit that promotes accessible software development, and [Visual Hive](https://visualhive.co), where I was CTO. It's now maintained independently under Digital Bricks. Thanks to both for helping get it going.
+The guide started as a collaboration between [The Low Code Foundation](https://www.helloasso.com/associations/the-low-code-foundation), a French non-profit that promotes accessible software development, and [Visual Hive](https://visualhive.co), where I was CTO. It's now maintained independently under Digital Bricks. Thanks to both for helping get it going.
 
 ## Open source
 

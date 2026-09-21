@@ -7,6 +7,10 @@ description: Real projects built with this method, what went right, and what wen
 
 Real projects, warts included. Some of these were built when this guide was centred on Cline, and I say so where that's the case. The method carried over to Claude Code almost untouched. What changed was the tool, the cost and a few habits, which I point out as I go.
 
+::: tip The big one
+NodeGX has its own page: a stalled legacy codebase, 3,865 commits in two months, and a code export people said wasn't worth attempting. Read [Case Study: NodeGX](/part-6/nodegx).
+:::
+
 ---
 
 ## Rocket School: a game tested by a robot and a grown-up
