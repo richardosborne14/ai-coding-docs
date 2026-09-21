@@ -1,7 +1,7 @@
-# ai-coding.digitalbricks.io — static VitePress build.
-# Installed to /etc/caddy/conf.d/ai-coding.caddy by deploy/deploy.sh --go-live.
-ai-coding.digitalbricks.io {
-	root * /srv/ai-coding/site
+# learn-ai.digitalbricks.io — static VitePress build.
+# Installed to /etc/caddy/conf.d/learn-ai.caddy by deploy/deploy.sh --go-live.
+learn-ai.digitalbricks.io {
+	root * /srv/learn-ai/site
 	encode zstd gzip
 
 	# VitePress builds with cleanUrls: /part-1/philosophy -> part-1/philosophy.html

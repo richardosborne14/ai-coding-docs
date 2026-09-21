@@ -4,7 +4,7 @@ export default defineConfig({
   title: 'AI-Assisted Software Engineering Guide',
   description: 'Build production-ready apps with AI — systematically, not randomly',
 
-  sitemap: { hostname: 'https://ai-coding.digitalbricks.io' },
+  sitemap: { hostname: 'https://learn-ai.digitalbricks.io' },
   cleanUrls: true,
   lastUpdated: true,
 

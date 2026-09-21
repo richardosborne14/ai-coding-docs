@@ -7,16 +7,16 @@
 #
 # Caddy runs natively under systemd and also serves nexus, digitalbricks.io and
 # others from /etc/caddy/conf.d/*.caddy. This script only ever touches
-# /etc/caddy/conf.d/ai-coding.caddy and /srv/ai-coding/.
+# /etc/caddy/conf.d/learn-ai.caddy and /srv/learn-ai/.
 set -euo pipefail
 
 IP="${DB_HOST:-49.12.102.195}"
-DOMAIN="ai-coding.digitalbricks.io"
+DOMAIN="learn-ai.digitalbricks.io"
 SSH_KEY="${SSH_KEY:-$HOME/.ssh/nexus_hetzner}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(dirname "$HERE")"
 SSH=(ssh -i "$SSH_KEY" -o StrictHostKeyChecking=accept-new "root@$IP")
-CONF=/etc/caddy/conf.d/ai-coding.caddy
+CONF=/etc/caddy/conf.d/learn-ai.caddy
 
 build() {
   echo "==> building"
@@ -25,10 +25,10 @@ build() {
 
 sync_files() {
   echo "==> syncing site to $IP"
-  "${SSH[@]}" 'mkdir -p /srv/ai-coding/site'
+  "${SSH[@]}" 'mkdir -p /srv/learn-ai/site'
   rsync -az --delete \
     -e "ssh -i $SSH_KEY -o StrictHostKeyChecking=accept-new" \
-    "$ROOT/docs/.vitepress/dist/" "root@$IP:/srv/ai-coding/site/"
+    "$ROOT/docs/.vitepress/dist/" "root@$IP:/srv/learn-ai/site/"
 }
 
 reload_caddy() {
@@ -56,12 +56,12 @@ case "${1:-}" in
     resolved="$(dig +short "$DOMAIN" A | tail -1)"
     if [ "$resolved" != "$IP" ]; then
       echo "!! $DOMAIN resolves to '${resolved:-nothing}', expected $IP." >&2
-      echo "   Add an A record (ai-coding -> $IP) and wait for propagation first." >&2
+      echo "   Add an A record (learn-ai -> $IP) and wait for propagation first." >&2
       exit 1
     fi
     build
     sync_files
-    scp -q -i "$SSH_KEY" "$HERE/ai-coding.caddy" "root@$IP:$CONF"
+    scp -q -i "$SSH_KEY" "$HERE/learn-ai.caddy" "root@$IP:$CONF"
     reload_caddy
     sleep 8   # give ACME a moment to complete the challenge
     verify
@@ -74,7 +74,7 @@ case "${1:-}" in
     build
     sync_files
     if "${SSH[@]}" "test -f $CONF"; then
-      scp -q -i "$SSH_KEY" "$HERE/ai-coding.caddy" "root@$IP:$CONF"
+      scp -q -i "$SSH_KEY" "$HERE/learn-ai.caddy" "root@$IP:$CONF"
       reload_caddy
       verify
     else

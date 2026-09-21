@@ -73,7 +73,7 @@ npm run dev            # local preview at http://localhost:5173
 ./deploy/deploy.sh     # build + push to nexus-1 (Hetzner), served by Caddy
 ```
 
-Live at [ai-coding.digitalbricks.io](https://ai-coding.digitalbricks.io). See `deploy/deploy.sh` for `--go-live` and `--rollback`.
+Live at [learn-ai.digitalbricks.io](https://learn-ai.digitalbricks.io). See `deploy/deploy.sh` for `--go-live` and `--rollback`.
 
 ## Real Example
 
