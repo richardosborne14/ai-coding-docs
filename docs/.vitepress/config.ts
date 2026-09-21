@@ -31,7 +31,7 @@ const IA: Section[] = [
     items: [
       { text: 'Setting Up Your Computer', link: '/part-0/setting-up-your-computer' },
       { text: 'Plans & Limits', link: '/part-0/plans-and-limits' },
-      { text: 'Claude Code: Setup & Customisation', link: '/part-0/claude-code-setup', track: 'everything' },
+      { text: 'Claude Code: Setup & Customisation', link: '/part-0/claude-code-setup' },
       { text: 'Browser DevTools', link: '/part-0/browser-devtools' },
       { text: 'How Apps Run', link: '/part-0/how-apps-run' },
       { text: 'Files & Styling Basics', link: '/part-0/files-and-styles' },
@@ -61,7 +61,7 @@ const IA: Section[] = [
     collapsed: false,
     items: [
       { text: 'The Execution Workflow', link: '/part-3/execution-workflow' },
-      { text: 'Task Documentation', link: '/part-3/task-patterns', track: 'everything' },
+      { text: 'Task Patterns', link: '/part-3/task-patterns' },
       { text: 'Confidence Scoring', link: '/part-3/confidence-scoring' },
     ]
   },
@@ -70,7 +70,7 @@ const IA: Section[] = [
     collapsed: false,
     items: [
       { text: 'Phase Audits', link: '/part-4/phase-audits' },
-      { text: 'Testing', link: '/part-4/testing', track: 'everything' },
+      { text: 'Testing', link: '/part-4/testing' },
       { text: 'Commenting Philosophy', link: '/part-4/commenting-philosophy', track: 'everything' },
     ]
   },
@@ -81,7 +81,7 @@ const IA: Section[] = [
       { text: 'Context Management', link: '/part-5/context-management' },
       { text: 'Skills', link: '/part-5/skills' },
       { text: 'Common Pitfalls', link: '/part-5/pitfalls-recovery' },
-      { text: 'Project Memory & Self-Improvement', link: '/part-5/project-memory', track: 'everything' },
+      { text: 'Project Memory & Self-Improvement', link: '/part-5/project-memory' },
       { text: 'The Project Brain', link: '/part-5/project-brain', track: 'everything' },
       { text: 'Team Workflows', link: '/part-5/team-workflows', track: 'everything' },
       { text: 'The Project Control Panel', link: '/part-5/control-panel', track: 'everything' },
@@ -97,7 +97,7 @@ const IA: Section[] = [
     text: 'Part VI: Resources',
     collapsed: false,
     items: [
-      { text: 'Project Templates', link: '/part-6/templates', track: 'everything' },
+      { text: 'Project Templates', link: '/part-6/templates' },
       { text: 'Prompt Library', link: '/part-6/prompts' },
       { text: 'Case Studies', link: '/part-6/case-studies' },
     ]
@@ -113,9 +113,8 @@ const IA: Section[] = [
   },
 ]
 
-// Cut in the audit and waiting for R4 to fold their content elsewhere and delete them.
-// They still build, but nothing in the sidebar or nav points at them:
-// /part-0/cline-and-credits, /part-5/token-economics, /part-6/setup-guide
+// Cut in R4 and deleted. Their old URLs 301 to the pages that absorbed them
+// (see deploy/learn-ai.caddy).
 
 const docsDir = fileURLToPath(new URL('..', import.meta.url))
 const written = (p: Page) => existsSync(`${docsDir}${p.link.slice(1)}.md`)

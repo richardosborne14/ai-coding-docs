@@ -1,178 +1,140 @@
 ---
 title: The Brainstorming Session
-description: Starting every project with a proper conversation
+description: Every project starts with a proper conversation in Chat, with Opus, before any mockups or code
 ---
 
 # The Brainstorming Session
 
 ## TLDR
 
-Every project starts with a **conversation with Claude Opus inside a Project**. Not a single prompt. A real, multi-turn discussion lasting 30-60 minutes. You describe your vision, Claude pushes back, asks questions, recommends tech, debates scope, maybe prototypes a layout. The quality of this conversation determines everything that follows.
+Every project starts with a **conversation with Opus in Chat**, ideally inside a Project. Not a single prompt. A real back-and-forth of 30 to 60 minutes. You describe the idea, Claude pushes back, asks questions and helps you cut it down to a V1. Nothing else you do on the project pays back as well.
 
-This is the highest-ROI activity in your entire project.
-
----
-
-## Why Opus, Why a Project
-
-**Why Opus:** The initial conversation quality is dramatically better. Opus thinks deeper about scope, challenges assumptions more effectively, and the resulting foundation documents are 10X better. Don't start with Sonnet or Haiku for this phase — the savings aren't worth the quality loss.
-
-**Why a Project:** Claude Projects give persistent file context. You can:
-- Start with an empty Project and just talk
-- Add reference files (design mockups, competitor screenshots, API docs)
-- Later sync your GitHub repo so Claude sees the actual codebase
-- Every new conversation in the Project inherits the same context
+When you're done, you take a short summary into [Mockups First](/part-2/mockups-first). The stack and the code come later.
 
 ---
 
-## The Conversation
+## Why Opus, why Chat, why a Project
 
-This isn't "prompt → response → done." It's a real discussion.
+**Opus** thinks harder about scope and challenges your assumptions better. This is the conversation everything else is built on, so use the best model you have.
 
-**Turn 1: Describe everything**
+**Chat** (the desktop app or claude.ai) is the conversational Claude. It's better at open-ended discussion than Claude Code, and it already knows a fair bit about you from earlier chats.
 
-Don't hold back. Tell Claude the full vision:
+**A Project** keeps the files and instructions for one idea together. Every new conversation in it starts with the same context. You can add reference files: screenshots of apps you like, competitor pages, API docs.
 
-> "I want to build a community platform for event professionals. They can browse open-source tools, configure them with their branding, deploy them. Plus resources, guides, video tutorials. Eventually an AI assistant that knows the platform..."
+### Chat knows you, Code knows your repo
 
-**Turn 2: Claude analyzes and asks questions**
+Chat's memory of you (your job, your preferences, how you like things explained) stays in Chat. Claude Code doesn't see it. Claude Code knows your project through the files in your repo, and nothing else.
 
-Claude should:
-- Identify the core value proposition
-- Ask about your technical level, timeline, budget
-- Point out complexity you might be underestimating
-- Suggest what's MVP vs what's V2
-
-**Turn 3-5: Back and forth**
-
-This is where the real value is:
-- "Is that really minimal enough for MVP?"
-- "What if we cut the AI assistant and just do tools + resources?"
-- "Do we need user accounts or can we do magic links for MVP?"
-- "Show me what the tech stack comparison looks like"
-- "Can you sketch out the main page layout so I know we're aligned?"
-
-**Turn 6+: Converge on decisions**
-
-Claude lays out the technology recommendations with alternatives and trade-offs. Depending on your technical level, this is more or less detailed. Topics to cover:
-- Frontend framework and why
-- Backend approach and why
-- Database choice and why
-- Auth strategy
-- Hosting/deployment
-- Data architecture (how the pieces connect)
+So anything you want Claude Code to know about you has to be written down. That's the "who I am" section of your CLAUDE.md, covered in [Documentation Architecture](/part-2/documentation-architecture). A good trick: at the end of the brainstorm, ask Chat to write that section for you. It knows you better than you'd describe yourself.
 
 ---
 
-## What Makes a Good Brainstorm
+## The conversation
 
-**Claude should be recommending, not just agreeing.** If Claude never pushes back on your ideas, you're not getting the value. Push Claude to challenge you:
+**Turn 1: say everything.** Don't hold back. Tell Claude the whole vision:
 
-> "Be honest — is this scope realistic for 3 weeks? What would you cut?"
+> "I want to build a community platform for event professionals. They can browse open-source tools, add their branding and deploy them. Plus guides and video tutorials. Eventually an AI assistant that knows the platform..."
 
-**Make Claude verify its suggestions with web search.** Claude's training data can be months out of date. This is especially dangerous with LLM model names, library versions, and framework recommendations — it may suggest deprecated packages or older versions of tools. Tell Claude: "Please do a web search to check what the latest stable version of X is before recommending it." This one habit prevents a whole class of problems during execution.
+**Turn 2: Claude asks questions.** It should find the core value, ask about your technical level, time and budget, and point out what you're underestimating.
 
-**Tech stack discussion should include alternatives.** Not just "use React" but "here are 3 options, here's why I'd recommend this one for your situation." For new projects where you have no framework preference, Svelte is worth considering — it produces cleaner code that AI handles better, with smaller bundle sizes and a growing ecosystem. React remains appropriate when the project requires specific React-only libraries or your team already knows it well.
+**Turns 3 to 5: argue.** This is where the value is.
+- "Is that really small enough for a V1?"
+- "What if we cut the AI assistant and just do tools and guides?"
+- "Do we need user accounts, or can we do email login links?"
 
-**Discuss your platform targets early.** This conversation should cover where the app will run — and the answer shapes the entire architecture:
-
-- **Web only?** Simple. Netlify or Vercel for static/frontend, Hetzner or similar for backends.
-- **Mobile app store?** Plan for Capacitor from the start. Consider Fastlane for deployment automation. This must be baked into the project foundation, not bolted on later.
-- **PWA?** A great middle ground for testing prototypes without app store deployment pain. Discuss whether PWA is sufficient or if native is required.
-- **Desktop app?** Electron is the established choice, Tauri is the modern lightweight alternative (Rust-based, 96% smaller binaries, lower memory usage). Both have trade-offs — desktop apps can become a nightmare of debugging, rebuilding, and reinstalling, so plan for extra logging and control panel systems from the start.
-
-**Data architecture matters early.** Discuss how entities relate. What are the main database tables? How does auth connect to the rest? This prevents painful refactoring later.
-
-**Prototype if needed.** If you and Claude aren't sure you're imagining the same thing, ask Claude to describe or prototype a page layout. Alignment now prevents rework later.
+**Turn 6 onwards: converge.** Agree what's in V1, what waits and why. Leave the tech stack loose for now. You'll settle it after the mockups, when you know what the screens need.
 
 ---
 
-## Example Output
+## What makes a good brainstorm
 
-After 30-45 minutes of conversation (using a conference toolkit as an example):
+**Claude should be recommending, not just agreeing.** If it never pushes back, you're not getting the value. Ask for it:
 
-**Core insight:**
-> "The unique value is making open-source event tools accessible to non-technical organizers. The community and resources support that mission. The AI assistant is V2."
+> "Be honest. Is this realistic for a first version? What would you cut?"
 
-**MVP scope:**
-- Member registration and profiles
-- Tool library with browsing and filtering
-- Tool configuration with custom branding
-- Widget hosting for deployed tools
-- Resource library (guides, articles)
-- Admin panel for content management
+**Push it past caution.** Claude tends to play safe. If you suspect there's a bolder option it isn't mentioning, ask: "What would you do if this were your project?"
 
-**Deferred to V2:**
-- AI assistant (Erleah) → Sprint 3+
-- Real-time collaboration → Production
-- Third-party integrations → Production
+**Make it check facts with a web search.** Its training data can be months old. Library versions, model names and pricing are where this bites. Say: "Search the web for the current version of X before you recommend it."
 
-**Tech stack:**
-- SvelteKit (full-stack, fast, good DX)
-- PostgreSQL with Drizzle ORM
-- Tailwind CSS
-- Cookie-based auth (simpler than JWT for this use case)
-- Docker on Hetzner (cost-effective self-hosting)
+**Talk about platforms early.** Where the app will run shapes everything:
 
-**Key decisions documented:**
-- Standalone app, not part of existing monorepo
-- Three-tier tool hosting model (browser-only, self-hosted, platform-hosted)
-- JSONB for flexible tool configuration schemas
+- **Web only?** Simplest.
+- **Phone app stores?** Say so now. It changes how the app is built from day one.
+- **Installable web app (PWA)?** A good middle ground for testing on phones without the app stores.
+- **Desktop app?** Possible, but harder to debug and ship. Plan for good logging from the start.
+
+**Sketch the main entities.** Members, events, bookings: what are the main things the app stores, and how do they connect? You don't need a schema yet. A plain list stops a lot of rework later.
 
 ---
 
-## Red Flags During Scoping
+## When you have lots to decide: ask for an artifact
 
-**"Everything is essential"**
-> "We need tools AND resources AND AI assistant AND messaging or it won't work."
+Brainstorms throw up a pile of questions. Answering ten of them in one chat message gets messy. Instead, ask:
 
-Push back: "Can we validate that organizers want the tools first? Everything else supports that core."
+> "Make me an artifact with each open question, your recommendation first, and a way for me to pick an answer."
 
-**"It's not that complex"**
-> "AI assistant is just a chatbot, how hard can it be?"
+You click through it at your own pace. Artifacts can store your answers, so they can come back to Claude later, including in Claude Code. I use this all the time when Claude needs me to rule on several things at once.
 
-Reality check: AI assistant = ghost cursor + speech synthesis + HUD overlay + RAG knowledge base + action system = 11 tasks spanning weeks. Defer it.
-
-**"Users won't understand without X"**
-> "We need a full onboarding wizard or users will be lost."
-
-Counter: Ship with a simple questionnaire. If users are confused, that tells you what to explain. Don't guess.
+Ask for artifacts rather than inline previews for anything you'll want to keep or share.
 
 ---
 
-## What You Walk Away With
+## Red flags while scoping
 
-By end of brainstorming:
+**"Everything is essential."**
+> "We need tools and guides and an assistant and messaging or it won't work."
 
-1. **MVP scope** (one clear paragraph)
-2. **Success criteria** (2-3 measurable bullets)
-3. **Deferred features** (with reasoning for each)
-4. **Tech stack** (with rationale, not just names)
-5. **Data architecture** (main entities and relationships)
-6. **Key technical decisions** (documented with reasoning)
+Push back: can we check that organisers want the tools first? Everything else supports that.
 
-This becomes the foundation for your README, ARCHITECTURE.md, and sprint plan.
+**"It's not that complex."**
+> "The AI assistant is just a chatbot, how hard can it be?"
 
-**Don't close this conversation yet.** The next step is asking Claude to generate your foundation documents — do that in the same conversation so all the brainstorming context is available.
+In one of my projects that "chatbot" turned into eleven tasks. Put it in V2.
 
----
+**"Users won't understand without X."**
+> "We need a full onboarding wizard or people will be lost."
 
-## Common Mistakes
-
-**Using Sonnet/Haiku for brainstorming.** The quality difference is significant. Use Opus for this phase. It's worth the cost.
-
-**One prompt, one response.** Brainstorming needs back-and-forth. If you got a good answer on the first try, you probably didn't explore enough.
-
-**Not using a Project.** Without persistent context, you lose the brainstorming insights when you start a new conversation.
-
-**Skipping this entirely.** Starting with "build me X" instead of "let's discuss X." You'll regret it at $500 in rework.
-
-**Forgetting to document.** The brainstorming insights are valuable. Make sure Claude generates the foundation docs before you move on.
-
-**Letting Claude use inline HTML previews.** Set a project instruction or profile preference telling Claude to always use the artifacts system for mockups and documentation, never the inline chat preview. The inline preview is a cute gimmick, but you'll waste tokens having Claude recreate the work as an artifact when you need to export or share it.
-
-**Not discussing platform targets.** If there's even the slightest intention of going to mobile app stores or desktop, this needs to be in the brainstorming conversation. Bolting on Capacitor or Electron/Tauri after the fact is painful. Even if you start with a web MVP, the architectural choices (framework, routing, build system) should accommodate your eventual platform targets. If the project has a UI, plan for [Frontend Tweaker conventions](/part-5/frontend-tweaker) from Sprint 1.
+Ship something simple. If people get confused, you'll learn what to explain. Don't guess.
 
 ---
 
-**Next:** [Documentation Architecture](/part-2/documentation-architecture) — The documents that make everything work.
+## What you walk away with
+
+1. **V1 scope** in one clear paragraph.
+2. **How you'll know it works**: two or three things you can check.
+3. **What's deferred**, and why.
+4. **The main entities** and how they relate.
+5. **Platforms**: web, phone, desktop.
+6. **A "who I am" note** for your CLAUDE.md.
+
+For example, from a conference toolkit project:
+
+> **Core:** make open-source event tools usable by organisers who aren't technical. Guides support that. The AI assistant is V2.
+>
+> **V1:** member sign-up, a tool library with filters, branding per tool, hosted widgets, a guides section, an admin panel.
+>
+> **Later:** the AI assistant, real-time collaboration, third-party integrations.
+
+---
+
+## Next: mockups
+
+Ask Claude to write the summary above as one message you can copy. Then take it to Claude Design and start drawing screens. Claude Design doesn't know what you agreed in Chat unless you paste it in.
+
+Don't pick the stack or write tasks yet. That comes after the mockups, when you know exactly what you're building.
+
+---
+
+## Common mistakes
+
+**Using a smaller model for this.** Use Opus. It's the conversation that sets up everything else.
+
+**One prompt, one answer.** If you got a good answer first time, you probably didn't explore enough.
+
+**Skipping it.** Starting with "build me X" instead of "let's talk about X" is the most expensive shortcut in the whole process.
+
+**Assuming Claude Code heard it.** It didn't. Write the decisions down and take them with you.
+
+---
+
+**Next:** [Mockups First](/part-2/mockups-first)

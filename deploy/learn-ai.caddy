@@ -7,6 +7,13 @@ learn-ai.digitalbricks.io {
 	# Renamed pages (phase 5). Old URLs are linked from outside, so keep them working.
 	redir /part-3/cline-workflow /part-3/execution-workflow 301
 	redir /part-3/cline-workflow.html /part-3/execution-workflow 301
+	# Pages cut in R4, folded into other pages.
+	redir /part-0/cline-and-credits /appendix-other-tools 301
+	redir /part-0/cline-and-credits.html /appendix-other-tools 301
+	redir /part-5/token-economics /part-0/plans-and-limits 301
+	redir /part-5/token-economics.html /part-0/plans-and-limits 301
+	redir /part-6/setup-guide /part-0/setting-up-your-computer 301
+	redir /part-6/setup-guide.html /part-0/setting-up-your-computer 301
 
 	# VitePress builds with cleanUrls: /part-1/philosophy -> part-1/philosophy.html
 	try_files {path} {path}.html {path}/index.html

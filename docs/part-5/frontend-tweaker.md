@@ -1,41 +1,41 @@
 ---
 title: The Frontend Tweaker
-description: Stop invoking AI for padding changes — bake editability into your frontend from Sprint 1
+description: Stop asking Claude to change padding. Bake editability into your frontend from Sprint 1 with four convention files and a dev-mode panel.
 ---
 
 # The Frontend Tweaker
 
 ::: warning Opinionated by design
-This guide makes strong recommendations. We don't present three options and let you choose — we tell you what works and why. The conventions below are defaults for every project. Override them if you have a reason, but the burden of proof is on the override.
+I don't give you three options and let you pick. I tell you what works and why. The conventions below are defaults for every project. Override them if you have a reason, but the burden of proof sits with the override.
 :::
 
 ## TLDR
 
-After every big build, you'll want to tweak twelve small things — a font size, a button colour, a heading that's too long, a link that points to the wrong URL. Each one is a 5-second fix if you could just *edit it*, but a full AI round-trip if you have to describe it, wait for the AI to search the codebase, and pray it doesn't touch anything else.
+After every big build you'll want to tweak a dozen small things: a font size, a button colour, a heading that's too long, a link to the wrong URL. Each one takes five seconds if you can just *edit it*. Through Claude it's a full round trip: describe it, wait while Claude searches the codebase, and hope nothing else changes. It also eats into your session limit for a one-line change.
 
-The fix: bake editability into the frontend the same way the [control panel](/part-5/control-panel) bakes observability into the backend. Four structured convention files, one simple dev-mode panel, zero AI involvement for cosmetic changes.
+The fix is to bake editability into the frontend, the same way the [control panel](/part-5/control-panel) bakes visibility into the backend. You need four convention files and one simple dev-mode panel. Cosmetic changes then need no Claude at all.
 
 ---
 
 ## The Pattern
 
-Same philosophy as the control panel. Establish conventions. Make the AI maintain them via `.clinerules`. Build a simple tool that reads the conventions.
+Same approach as the control panel. Set conventions, write them into `CLAUDE.md` so Claude maintains them, and build a simple tool that reads them.
 
-The backend version gives you visibility into automations and deployment. The frontend version gives you direct control over styles, text, links, and SEO — the four things people tweak constantly after a build.
+The backend version shows you automations and deploys. The frontend version gives you direct control of the four things people tweak constantly after a build: styles, text, links and SEO.
 
 | Layer | Convention file | Tweaker control | What it covers |
 |-------|----------------|-----------------|----------------|
-| Styles | CSS custom properties + `@tweak` annotations | Sliders, colour pickers | Spacing, sizes, colours, borders, shadows |
+| Styles | CSS custom properties with `@tweak` annotations | Sliders, colour pickers | Spacing, sizes, colours, borders, shadows |
 | Contrast | `@contrast` annotations on colour pairs | Live ratio next to the picker | WCAG contrast, checked as you choose |
 | Text | i18n JSON locale files | Text inputs, textareas | Every visible string in the app |
 | Links | `links.json` | URL inputs | Social links, CTAs, footer links, external hrefs |
-| SEO | `meta.json` | Text inputs + char counts | Page titles, meta descriptions, OG content |
+| SEO | `meta.json` | Text inputs with character counts | Page titles, meta descriptions, OG content |
 
 ---
 
 ## Styles: CSS Custom Properties with @tweak Annotations
 
-Instead of hardcoding values in component CSS, the AI coder extracts every tweakable property into a named CSS custom property with a structured comment.
+Instead of hardcoding values in component CSS, Claude pulls every tweakable property into a named CSS custom property with a structured comment.
 
 ```css
 :root {
@@ -50,11 +50,11 @@ Instead of hardcoding values in component CSS, the AI coder extracts every tweak
 }
 ```
 
-The component references these variables: `font-size: var(--hero-title-font-size)`. The tweaker panel scans for `@tweak` comments, parses the metadata, and renders the right control — a slider for ranges, a colour picker for colours, grouped by component and state.
+Components use the variables: `font-size: var(--hero-title-font-size)`. The tweaker panel scans for `@tweak` comments, reads the metadata and shows the right control: a slider for a range, a colour picker for a colour. Controls are grouped by component and state.
 
-Changes apply live via `document.documentElement.style.setProperty()`. Hit save, the values write back to the CSS file. No AI loop, no risk of side effects, no searching the codebase.
+Changes apply live through `document.documentElement.style.setProperty()`. Hit save and the values write back to the CSS file. No Claude, no side effects, no codebase search.
 
-**Brand colours cascade.** Structure tokens hierarchically — brand → semantic → component. Change `--brand-primary` in the tweaker, everything referencing it updates. Dark mode is a second set of the same variables under `.dark {}`.
+**Brand colours cascade.** Structure tokens in layers: brand, then semantic, then component. Change `--brand-primary` in the tweaker and everything that uses it updates. Dark mode is a second set of the same variables under `.dark {}`.
 
 **Show the contrast ratio while the colour is being picked.** Annotate the pairs that must pass and let the panel compute them live:
 
@@ -62,13 +62,13 @@ Changes apply live via `document.documentElement.style.setProperty()`. Hit save,
 /* @contrast --text-primary on --bg-surface | min: 4.5 */
 ```
 
-This is the highest-value control in the panel. A linter that runs afterwards asks you to undo a decision you've already committed to; a number visible during the decision changes the decision itself. See [Accessibility by Default](/part-5/accessibility).
+This is the most useful control in the panel. A linter that runs afterwards asks you to undo a choice you've already made. A number you can see while choosing changes the choice. See [Accessibility by Default](/part-5/accessibility).
 
 ---
 
-## Text: i18n as a Universal Text Management Layer
+## Text: i18n as a Text Management Layer
 
-This is the move most people miss. i18next (or any i18n library) isn't just for translation — it's a text management architecture. Every visible string in the app lives in structured JSON:
+Most people miss this one. i18next (or any i18n library) isn't only for translation. It's a way to manage text. Every visible string in the app lives in structured JSON:
 
 ```json
 {
@@ -85,17 +85,17 @@ This is the move most people miss. i18next (or any i18n library) isn't just for 
 }
 ```
 
-Components use `{t('hero.title')}` instead of hardcoded strings. The tweaker reads the JSON, renders text inputs for every key, writes updated values back. Change a button label, a heading, a menu item — all without touching component code.
+Components use `{t('hero.title')}` instead of hardcoded strings. The tweaker reads the JSON, shows a text input for every key and writes the new values back. Change a button label, a heading or a menu item without touching component code.
 
-**Even monolingual apps use i18n.** The overhead argument doesn't hold when AI writes the code. One `.clinerules` rule and the AI wraps every string automatically. You get centralised text management for free, and if you ever need translations, the architecture is already there.
+**Use i18n even in a one-language app.** The "too much overhead" argument falls apart when Claude writes the code. One line in `CLAUDE.md` and Claude wraps every string. You get all your text in one place, and if you ever need translations, the structure is already there.
 
-**Interpolation stays safe.** Keys with variables like `"Welcome back, {{name}}"` render in the tweaker with `{{name}}` as a protected pill — you can edit the surrounding text but not accidentally delete the placeholder.
+**Placeholders stay safe.** A key like `"Welcome back, {{name}}"` shows `{{name}}` in the tweaker as a locked pill. You can edit the text around it but can't delete it by accident.
 
 ---
 
 ## Links: Centralised URL Management
 
-Social media URLs, CTA destinations, footer links, "book a call" URLs, terms of service paths — these aren't text content (i18n doesn't catch them) and they're not styles. They live in `links.json`:
+Social links, CTA destinations, footer links, "book a call" URLs and terms-of-service paths aren't text (i18n doesn't catch them) and they aren't styles. They live in `links.json`:
 
 ```json
 {
@@ -114,59 +114,59 @@ Social media URLs, CTA destinations, footer links, "book a call" URLs, terms of 
 }
 ```
 
-Components import from this file. The tweaker renders URL input fields. When you change your Calendly link or add a new social profile, it's one edit in one file.
+Components import from this file and the tweaker shows URL fields. Changing your Calendly link or adding a social profile is one edit in one file.
 
 ---
 
 ## SEO: Per-Page Meta Configuration
 
-Page titles, meta descriptions, and OG image paths are invisible on the page but obsessively tweaked after launch. They don't belong in the i18n layer because they're not rendered in components. `meta.json` handles them per-page:
+Page titles, meta descriptions and OG images are invisible on the page, and people fiddle with them endlessly after launch. They don't belong in i18n because components don't render them. `meta.json` holds them per page:
 
 ```json
 {
   "home": {
-    "title": "OpsNest — Operations Dashboard for Small Teams",
+    "title": "OpsNest: Operations Dashboard for Small Teams",
     "description": "Monitor deployments, track automations, and manage data from one dashboard.",
     "og_image": "/images/og-home.png"
   },
   "pricing": {
-    "title": "Pricing — OpsNest",
+    "title": "Pricing | OpsNest",
     "description": "Simple, transparent pricing for teams of all sizes."
   }
 }
 ```
 
-The tweaker renders a "SEO" tab with text inputs per page and character count indicators — meta descriptions have optimal lengths around 155 characters, and seeing the count while editing prevents the "too long, Google truncated it" cycle.
+The tweaker has an SEO tab with a text input per page and a character count. Meta descriptions work best at around 155 characters, and seeing the count as you type saves the "Google cut it off" round trip.
 
 ---
 
-## The .clinerules Additions
+## What to add to CLAUDE.md
 
-Add these to your project rules. They're non-negotiable defaults:
+These are non-negotiable defaults:
 
-1. All user-facing text MUST use i18n translation keys — no hardcoded strings in components
-2. i18n keys MUST be hierarchical by page/feature (e.g. `dashboard.header.title`, not `text1`)
-3. All tweakable styles (spacing, font sizes, colours, border radii, hover/disabled states) MUST use CSS custom properties with `@tweak` annotations
-4. Group style tokens hierarchically: brand → semantic → component
-5. All external URLs and internal navigation links MUST reference `links.json` — no hardcoded hrefs in components
-6. All page meta (title, description, OG image) MUST reference `meta.json` — no hardcoded meta tags
-7. When adding a new page or component, update the relevant convention files in the same task
-8. Every colour pair that carries text or a UI boundary MUST have a `@contrast` annotation with its minimum ratio
+1. All user-facing text MUST use i18n keys. No hardcoded strings in components.
+2. i18n keys MUST be grouped by page or feature (`dashboard.header.title`, not `text1`).
+3. All tweakable styles (spacing, font sizes, colours, border radii, hover and disabled states) MUST use CSS custom properties with `@tweak` annotations.
+4. Layer style tokens: brand, then semantic, then component.
+5. All external URLs and internal nav links MUST come from `links.json`. No hardcoded hrefs in components.
+6. All page meta (title, description, OG image) MUST come from `meta.json`. No hardcoded meta tags.
+7. When adding a page or component, update the matching convention files in the same task.
+8. Every colour pair that carries text or a UI boundary MUST have a `@contrast` annotation with its minimum ratio.
 
-Rule 7 is the equivalent of the control panel's "update deployment.json whenever a service changes." Without it, the convention files go stale.
+Rule 7 matches the control panel's "update deployment.json whenever a service changes". Without it the convention files go stale.
 
 ---
 
 ## When to Build It
 
-**Always.** The convention files cost nothing — they're just structured data the AI maintains. Set them up in Sprint 1 alongside your control panel.
+**The conventions: always.** They cost nothing. They're structured data that Claude maintains. Set them up in Sprint 1 alongside the control panel.
 
-The tweaker panel itself (the dev-mode HTML page that reads these files and renders editing controls) is a half-day task. Build it after Sprint 1 when you have enough UI to tweak. Or don't build it at all — even without the panel, the convention files make every value easy to find and change manually. The panel is convenience; the conventions are the real value.
+The tweaker panel itself (the dev-mode page that reads these files and shows the controls) is a half-day task. Build it after Sprint 1, once there's enough UI to tweak. Or skip it. Even without the panel, the convention files make every value easy to find and change by hand. The panel is a convenience. The conventions are where the value is.
 
 ::: tip Start with i18n
-If you only adopt one convention from this chapter, make it i18n for all text. It's the highest-value, lowest-effort change, and it transforms how you maintain content across the entire app.
+If you only adopt one convention from this chapter, make it i18n for all text. It costs the least and changes the most about how you maintain content.
 :::
 
 ---
 
-**Next:** [Deployment & Platform Targets](/part-5/deployment-platforms) — Getting your app running everywhere.
+**Next:** [Deployment & Platform Targets](/part-5/deployment-platforms): getting your app running everywhere.

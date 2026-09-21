@@ -1,37 +1,41 @@
 ---
-title: How Apps Run — Local vs Cloud
-description: Understanding localhost, ports, servers, SSH keys, and what 'deployment' actually means
+title: "How Apps Run: Local vs Cloud"
+description: Localhost, ports, servers, SSH keys, and what "deployment" actually means
 ---
 
-# How Apps Run — Local vs Cloud
+# How Apps Run: Local vs Cloud
 
 ## TLDR
 
-When you build an app, it first runs on your own computer ("locally"). To let other people use it, you put it on a server ("deploy to the cloud"). The `:5173` or `:5000` in your browser address is a port number — think of it as a door number on your computer. SSH keys are digital keys that prove to a server that you're allowed to deploy to it. This page explains all of this in plain English, including why port conflicts happen and why you need to keep deploying from the same machine.
+When you build an app, it first runs on your own computer ("locally"). To let other people use it, you put it on a server ("deploy to the cloud"). The `:5173` or `:5000` in the address bar is a port number. Think of it as a door number on your computer. SSH keys are digital keys that prove to a server you're allowed in. This page covers all of that in plain English, including why port conflicts happen and why you should keep deploying from the same machine.
 
 ---
 
 ## Running Locally: What "localhost" Means
 
-When Cline builds your app and runs it, you'll see a message like:
+When Claude builds your app and runs it, you'll see a message like:
 
 ```
 Server running at http://localhost:5173
 ```
 
-**localhost** literally means "this computer." It's a special address that always points back to the machine you're sitting at. When you open `http://localhost:5173` in your browser, you're not going to the internet — you're looking at something running right here on your computer.
+**localhost** means "this computer." It's a special address that always points back to the machine you're sitting at. When you open `http://localhost:5173`, you're not going out to the internet. You're looking at something running right here.
 
-Nobody else can see it. If you sent that URL to a friend, it wouldn't work for them — their `localhost` points to their own computer, not yours.
+Nobody else can see it. If you sent that link to a friend, it wouldn't work. Their `localhost` is their own computer.
 
-This is **local development.** Your computer is acting as both the builder and the viewer. It's fast, it's private, and it's where all development happens before anything goes live.
+This is **local development.** Your computer is both the builder and the viewer. It's fast and private, and it's where everything happens before anything goes live.
+
+::: simple
+In the Code tab of the Claude desktop app, the Browser pane shows your running app. That's localhost, you just don't have to type it.
+:::
 
 ---
 
 ## What Are Ports? (The :5173 Thing)
 
-Think of your computer as a building with thousands of doors. Each door has a number. When a program wants to communicate over the network (even locally), it picks a door to use. That door number is the **port**.
+Think of your computer as a building with thousands of doors. Each door has a number. When a program wants to talk over the network (even locally), it picks a door. That number is the **port**.
 
-- `http://localhost:5173` means "talk to the program using door 5173 on this computer"
+- `http://localhost:5173` means "talk to the program behind door 5173 on this computer"
 - `http://localhost:3000` means "door 3000"
 - `http://localhost:8080` means "door 8080"
 
@@ -49,27 +53,26 @@ Different tools use different default ports:
 
 ### Why Port Conflicts Happen
 
-A port can only be used by one program at a time. If you start a React app (port 3000) and then also start an Express server (also port 3000), the second one will fail with an error like:
+Only one program can use a port at a time. Start a React app on 3000, then an Express server also on 3000, and the second one fails with something like:
 
 ```
 Error: listen EADDRINUSE: address already in use :::3000
 ```
 
-This just means "something else is already using door 3000."
+That just means "something else is already behind door 3000."
 
-### How to Fix Port Conflicts
+The usual cause: you started your app, closed the browser tab and forgot the server was still running. Later you start it again and hit a conflict with the old copy. The easy fix is to tell Claude: "port 3000 is already in use, find what's on it and stop it." It will.
 
-**Option 1: Find and stop the other program.** 
-
-On Mac/Linux:
+::: everything Fixing it by hand
+**Find and stop the other program.** On Mac/Linux:
 ```bash
 lsof -i :3000
 ```
-This shows what's using port 3000. Note the PID (process ID) number, then:
+Note the PID (process ID), then:
 ```bash
 kill -9 12345
 ```
-(Replace 12345 with the actual PID.)
+(Replace 12345 with the real PID.)
 
 On Windows (PowerShell):
 ```powershell
@@ -77,7 +80,7 @@ netstat -ano | findstr :3000
 taskkill /PID 12345 /F
 ```
 
-**Option 2: Use a different port.** Most tools let you specify a port:
+**Or use a different port.** Most tools let you pick one:
 ```bash
 npm run dev -- --port 5174
 ```
@@ -90,106 +93,104 @@ export default {
 }
 ```
 
-**Option 3: Just close the terminal** that's running the other server. If you started something in a terminal tab and forgot about it, closing that tab usually stops it.
-
-**The common scenario:** You started your app, it's running on port 5173, you close the browser tab, but forget to stop the server in the terminal. You come back later, try to start the app again, and get a port conflict because the old instance is still running. Press Ctrl+C in the terminal to stop the running server before starting it again.
+**Or close the terminal** that's running the old server. Better still, press Ctrl+C in it to stop the server before you start it again.
+:::
 
 ---
 
 ## The Cloud: What "Deployment" Means
 
-Deployment means taking the app that works on your computer and putting it on a computer somewhere else (a "server") so other people can access it via a real URL like `https://myapp.com`.
+Deployment means taking the app that works on your computer and putting it on a computer somewhere else (a "server"), so other people can reach it at a real address like `https://myapp.com`.
 
-There are two types of deployment:
+There are two kinds.
 
-### Static / Frontend Deployment (Easy)
+### Static / Front-end Deployment (Easy)
 
-If your app is just HTML, CSS, and JavaScript with no server-side logic, you can deploy it to services like **Netlify** or **Vercel** for free. These services:
+If your app is just HTML, CSS and JavaScript with no server-side logic, you can deploy it to services like **Netlify** or **Vercel** for free. They:
 
 1. Watch your GitHub repository
-2. When you push new code, they automatically build and publish your site
-3. Give you a URL like `https://myapp.netlify.app`
-4. Handle everything else — security certificates, global distribution, caching
+2. Build and publish your site whenever you push new code
+3. Give you an address like `https://myapp.netlify.app`
+4. Handle the rest: security certificates, global distribution, caching
 
-This is genuinely push-button deployment. Connect your GitHub repo, configure the build command (Cline can guide you through this), and you're live.
+This really is push-button. Connect your GitHub repo, set the build command (Claude can walk you through it) and you're live.
 
-### Backend / Full-Stack Deployment (More Involved)
+### Back-end / Full-Stack Deployment (More Involved)
 
-If your app has a server, a database, or any backend logic, it needs to run on an actual server — a computer that's always on, always connected to the internet, and managed by you (or a hosting provider).
+If your app has a server, a database or any back-end logic, it needs a real server. That's a computer that's always on, always online, and managed by you (or a hosting company).
 
 Common options:
-- **Hetzner** — affordable European cloud servers, starting at ~€4/month
-- **DigitalOcean** — similar, US-based
-- **Railway** — more expensive but simpler, handles Docker for you
-- **AWS / Google Cloud / Azure** — overkill for most projects at this stage, complex to set up
+- **Hetzner.** Affordable European cloud servers, from about €4 a month
+- **DigitalOcean.** Similar, US-based
+- **Railway.** Dearer but simpler, handles Docker for you
+- **AWS / Google Cloud / Azure.** Overkill for most projects at this stage, and fiddly to set up
 
-With these, you're renting a computer in a data centre. You connect to it remotely (via SSH — more on this below), install your app, and it stays running 24/7.
+With these you're renting a computer in a data centre. You connect to it remotely (over SSH, more below), install your app and it runs around the clock.
+
+Claude tends to play it safe here. It may suggest a managed platform or tell you to do the server steps yourself. If you want it to set up SSH and deploy for you, say so. Push it to recommend what it would actually do.
 
 ---
 
-## SSH Keys: Your Digital Identity Card
+## SSH Keys: Your Digital ID Card
 
-When you deploy to a server, you need a way to prove you're allowed to access it. Passwords work but they're insecure and annoying to type every time. Instead, the industry standard is **SSH keys**.
+When you deploy to a server, you need to prove you're allowed in. Passwords work, but they're weak and a pain to type. The standard answer is **SSH keys**.
 
 ### How SSH Keys Work (Simplified)
 
-An SSH key is actually a pair of files:
+An SSH key is a pair of files:
 
-1. **Private key** — lives on your computer, never shared with anyone. Think of it as the actual key
-2. **Public key** — goes on the server. Think of it as the lock that only your key can open
+1. **Private key.** Lives on your computer and is never shared. It's the actual key
+2. **Public key.** Goes on the server. It's the lock only your key opens
 
-When you try to connect to the server, it checks: "Does this person's private key match the public key I have on file?" If yes, you're in. No password needed.
+When you connect, the server checks whether your private key matches the public key it has on file. If it does, you're in. No password.
 
+::: everything Creating and adding keys
 ### Creating an SSH Key
 
-Open your terminal and type:
+In your terminal:
 
 ```bash
 ssh-keygen -t ed25519 -C "your.email@example.com"
 ```
 
 It will ask:
-- **Where to save it:** Press Enter to accept the default location (`~/.ssh/id_ed25519`)
-- **Passphrase:** You can set a password on the key itself for extra security, or press Enter twice to skip (simpler for beginners, still secure)
+- **Where to save it:** Press Enter for the default (`~/.ssh/id_ed25519`)
+- **Passphrase:** Set one for extra security, or press Enter twice to skip (simpler, still secure)
 
-This creates two files:
-- `~/.ssh/id_ed25519` — your private key (NEVER share this)
-- `~/.ssh/id_ed25519.pub` — your public key (this is what you give to servers and GitHub)
+That creates two files:
+- `~/.ssh/id_ed25519`, your private key (NEVER share this)
+- `~/.ssh/id_ed25519.pub`, your public key (this is what you give to servers and GitHub)
 
 ### Adding Your SSH Key to GitHub
 
 1. Copy your public key:
    - Mac: `cat ~/.ssh/id_ed25519.pub | pbcopy` (copies it to your clipboard)
-   - Windows: `cat ~/.ssh/id_ed25519.pub` then manually select and copy
-   - Or just open the `.pub` file in a text editor and copy the contents
+   - Windows: `cat ~/.ssh/id_ed25519.pub`, then select and copy it
+   - Or open the `.pub` file in a text editor and copy the contents
 2. Go to GitHub > Settings > SSH and GPG Keys > New SSH Key
 3. Paste the public key and save
 
-Now you can push and pull code from GitHub without typing your password every time.
+Now you can push and pull from GitHub without typing your password.
 
 ### Adding Your SSH Key to a Server
 
-When you set up a cloud server (Hetzner, DigitalOcean, etc.), the setup wizard usually asks for your public key. Paste the same `.pub` contents there.
+When you create a cloud server (Hetzner, DigitalOcean and so on), the setup wizard usually asks for your public key. Paste the same `.pub` contents there.
 
-If the server is already running, Cline can help you add the key via:
+If the server is already running, Claude can add the key for you with:
 
 ```bash
 ssh-copy-id user@your-server-ip
 ```
+:::
 
-### Why You Must Deploy from the Same Machine
+### Why You Should Deploy from the Same Machine
 
-Here's the crucial thing: **SSH keys are tied to the machine they're on.** Your private key lives in `~/.ssh/` on your specific computer. If you:
+**SSH keys are tied to the machine they're on.** Your private key lives in `~/.ssh/` on your computer. If you switch computers or reinstall your operating system, the new setup won't have your private key. The server will turn you away. You'd need to copy the key across or add a new key pair.
 
-- Switch to a different computer
-- Reinstall your operating system
-- Use a work computer instead of your personal one
+When Claude deploys your app, it uses the SSH key on your computer. So keep deploying from that computer, or move your keys over carefully. And **back up your `.ssh` folder**. Lose your private key and you lose access to your server.
 
-...the new machine won't have your private key, and the server will reject you. You'd need to either copy the key to the new machine or add a new key pair.
-
-**Practical implication for Cline:** When Cline deploys your app to a server, it uses the SSH key on your computer. If you want to continue deploying, you need to keep working on that same computer (or transfer your SSH keys carefully). This is also why you should **back up your `.ssh` folder** — losing your private key means losing access to your server.
-
-**Transferring SSH keys to a new machine:** Copy the entire `~/.ssh/` folder to the same location on the new machine. On Mac/Linux, make sure the permissions are correct:
+::: everything Moving keys to a new machine
+Copy the whole `~/.ssh/` folder to the same place on the new machine. On Mac/Linux, set the permissions:
 
 ```bash
 chmod 700 ~/.ssh
@@ -197,7 +198,8 @@ chmod 600 ~/.ssh/id_ed25519
 chmod 644 ~/.ssh/id_ed25519.pub
 ```
 
-On Windows, the file permissions are handled differently — search for "SSH key permissions Windows" if you need to do this.
+Windows handles file permissions differently. Search "SSH key permissions Windows" if you need to do this.
+:::
 
 ---
 
@@ -205,35 +207,33 @@ On Windows, the file permissions are handled differently — search for "SSH key
 
 Once you have a server, you have two environments:
 
-**Development (dev):** Your local computer. This is where you build and test. Break things freely — nobody else is affected.
+**Development (dev).** Your own computer. This is where you build and test. Break things freely, nobody else is affected.
 
-**Production (prod):** The live server. This is what real users see. Breaking things here is bad.
+**Production (prod).** The live server. This is what real users see. Breaking things here is bad.
 
-The methodology's rule: **Cline pushes to dev. You manually promote to production.** This means Cline can happily deploy to a development server for testing, but the final step of going live is always a conscious human decision.
+My rule: **Claude pushes to dev. You promote to production yourself.** Claude can happily deploy to a test server, but going live is always a conscious human decision.
 
 ### The .env Problem
 
-Your app probably has configuration that differs between dev and production — database passwords, API keys, URLs, etc. These live in `.env` files (short for "environment variables").
+Your app almost certainly has settings that differ between dev and production: database passwords, API keys, URLs. These live in `.env` files (short for "environment variables").
 
-The danger: Cline might accidentally overwrite your production `.env` with local development values. This is a real and recurring problem. The `.clinerules` template includes a rule to prevent this, but it's worth understanding why it matters:
+The danger is that Claude overwrites your production `.env` with your local values. It happens. For example:
 
 - Your local database might be `localhost:5432/myapp_dev`
 - Your production database is `db.myserver.com:5432/myapp_prod`
-- If Cline copies the local `.env` to production, your live app suddenly tries to talk to your laptop's database — which it can't reach
+- If the local `.env` lands on production, your live app tries to talk to the database on your laptop. It can't reach it, and the site breaks
 
-Always keep dev and prod `.env` files separate, and always review what Cline is doing before any deployment step.
+So keep dev and prod `.env` files separate. Put a rule in your `CLAUDE.md` saying never to copy or overwrite the production `.env`. And read what Claude plans to do before any deploy step. "Just do it" is how this goes wrong.
 
 ---
 
 ## Quick Mental Model
 
-Think of it this way:
-
 ```
 Your Computer (localhost)          The Internet (production)
 ┌──────────────────────┐          ┌──────────────────────┐
 │                      │          │                      │
-│  Your app :5173   ───┼── SSH ──▶│  Your app :443    │
+│  Your app :5173   ───┼── SSH ──▶│  Your app :443       │
 │  Database :5432      │  deploy  │  Database :5432      │
 │  API server :3000    │          │  API server :3000    │
 │                      │          │                      │
@@ -242,8 +242,8 @@ Your Computer (localhost)          The Internet (production)
 └──────────────────────┘          └──────────────────────┘
 ```
 
-Port `:443` is the standard port for HTTPS (secure web traffic). When someone visits `https://myapp.com`, they're actually going to port 443 — the browser just hides it because it's the default. On your local machine, you use non-standard ports like 5173 or 3000 because port 443 is usually reserved for system use.
+Port `:443` is the standard port for HTTPS (secure web traffic). When someone visits `https://myapp.com`, they're really going to port 443. The browser hides it because it's the default. Locally you use ports like 5173 or 3000 because 443 is usually reserved for system use.
 
 ---
 
-**Next:** [Adding Files and Styling Basics](/part-0/files-and-styles) — Images, colours, and making things look right.
+**Next:** [Adding Files and Styling Basics](/part-0/files-and-styles). Images, colours and making things look right.

@@ -1,190 +1,143 @@
 ---
 title: Introduction
-description: What this guide is and who it's for
+description: How I build an app with Claude, start to finish, and how this guide is laid out.
 ---
 
 # Introduction
 
 ## TLDR
 
-Most AI-assisted coding fails because people skip the conversation, skip the documentation, and ask AI to build everything at once. Three weeks and $2000 later: broken code, no idea how to fix it, project abandoned.
+Most people who try to build an app with AI open a chat, type "build me X", and watch it produce a lot of code very quickly. A few weeks later they have something that half works, breaks in odd places, and nobody can fix.
 
-This guide fixes that with a proven system: start with a real conversation with Claude Opus, produce iron-clad documentation, and let AI execute tasks with clear specs and quality gates.
+What works is slower at the start and much faster overall. Talk the idea through properly. Get mockups until you'd be happy if the thing already existed. Write it all down. Then let Claude build it one small task at a time, testing as it goes.
 
-It's not magic. It's structure that works.
+This page walks through that process. The rest of the guide goes into each step in detail.
 
 ---
 
-## The Problem
+## Why "just build it" goes wrong
 
-You have a great idea. You prompt AI to build it. Three weeks and $2000 in tokens later, you have 50,000 lines of code that sort of works but breaks in weird ways. You can't fix the bugs. You can't hand it to another developer. Project abandoned.
+When a project falls over, it's nearly always for the same reasons:
 
-This happens because:
-- **No scoping conversation** — You jumped to "build me X" instead of discussing what X should be
-- **No quality gates** — Broken code kept building on broken code
-- **No documentation** — AI "forgot" early decisions every session
-- **No structure** — Tasks were vague, sprints didn't exist, scope crept endlessly
+- **Nobody talked it through.** You jumped to "build me X" before anyone worked out what X should be.
+- **Nothing was written down.** Every new session, Claude had to guess at decisions made last week.
+- **The jobs were too big.** One enormous request instead of a list of small tasks.
+- **Nobody checked.** Broken code got built on top of broken code.
 
-## The Solution: A Repeatable Process
+None of this is about the AI being bad. Claude is very good. It just can't read your mind, and it forgets everything between sessions unless you give it something to read.
 
-### Step 1: Brainstorm with Claude Opus in a Project
+---
 
-The conversation **always** starts in Claude Chat — not Cline, not Claude Code, not the API. Claude Chat gives you access to inbuilt skills (document generation, web search, artifacts) and a far more developed system prompt than the alternatives. Use **Opus** for this phase — it's significantly better than Sonnet at "big think" scoping, architecture reasoning, and documentation generation.
+## The process
 
-Create a **Claude Project** first. This gives Claude persistent context across conversations. Before starting the brainstorming conversation, add your project files: screenshots of mockups you've made or apps you want to emulate, any initial scope notes, supporting files like spreadsheets with example data or calculations, competitor analysis, pitch decks — anything that helps Claude understand what you're building and why.
+### 1. Talk it through in Claude Chat
 
-Then have a real conversation. Multiple turns, not one prompt. Discuss your vision, debate V1 vs V2 scope, talk through tech stack options, get aligned on data architecture. **Challenge Claude's ideas.** The conversation should never be "here's my idea, make me the docs." Allow Claude time to reason and brainstorm, present options and proposals, and be prepared to push back on things you don't agree with or don't understand. Encourage Claude to perform web searches to verify what the latest available tech and solutions are — otherwise it may suggest outdated versions or deprecated approaches.
+Every project starts as a conversation, and I use **Opus** for it. Chat is the right place because it's built for discussion and it remembers you from previous chats. Claude Code knows your repo, but it doesn't see your Chat memory.
 
-::: tip Artifacts, not inline previews
-Tell Claude in your Project instructions or profile to **never use the inline chat HTML preview** for mockups. It should always use the artifacts system. The inline preview wastes tokens — you'll end up asking Claude to recreate the work as an artifact anyway so you can export it or share it with your team.
+Make a **Claude Project** and put everything useful in it first: notes, screenshots of apps you like, a spreadsheet of example data, competitor links. Then have a real conversation over many turns. What's in V1 and what waits? Who uses it? What does it store? Push back when Claude says something you don't agree with or don't understand. Ask it to search the web so it doesn't suggest last year's tools.
+
+More in [The Brainstorming Session](/part-2/brainstorming).
+
+### 2. Get mockups
+
+Before anyone talks about code, I ask for mockups. Claude Design draws the screens and you change them by chatting or leaving comments on the canvas. Keep going until you can honestly say "if this existed, I'd be happy". Changing a mockup takes seconds. Changing a built app takes days.
+
+More in [Mockups First](/part-2/mockups-first).
+
+### 3. Then the stack, the docs and the tasks
+
+Now, and only now, talk about the tech stack, the database and where it will be hosted. Then ask Claude to write the foundation docs: a README, an architecture doc, a `CLAUDE.md` with the rules for your project, a sprint plan and a task file for each job.
+
+::: tip Give Claude the templates
+Add this guide's repo to your Claude Project (the `+` button on the chat input, then GitHub, then paste `https://github.com/richardosborne14/ai-coding-docs`). Then ask: *"Create the foundation files for this project using the templates in the AI Coding Docs repo."* Claude will follow the structure instead of inventing its own.
 :::
 
-### Step 2: Generate Foundation Documents
+Each task file names the model that should run it. Most get Opus. Small, well-specified ones can go to Sonnet if you're watching your limits. The docs carry most of the weight in this whole process, which is why [Documentation Architecture](/part-2/documentation-architecture) is one of the longest chapters.
 
-Once you're happy that you've debated enough with Claude — it's had at least one or more rethinks and adjustments to its proposed project plan and architecture — ask it to build out the documentation and foundation files.
+### 4. Build a V1 on your own machine
 
-**Before asking Claude to produce the docs, sync the AI Coding Docs repo.** Use the `+` icon on the chat input, select "GitHub", paste `https://github.com/richardosborne14/ai-coding-docs`, and wait for the sync to finish (the send button will be disabled until it completes). You need to go through the Claude GitHub integration flow first if you haven't already.
+Put the docs in a folder (or a GitHub repo), open it in Claude Code, and start the first task.
 
-Then be explicit: *"Please create the foundational files for Cline and VSCode to get the prototype built using the AI Coding Docs repo in project files."* This ensures Claude uses the templates and methodology rather than improvising its own structure. It will produce: README, Architecture (with real schemas), Learnings (empty template), `.clinerules` or `CLAUDE.md`, sprint rules, task template, and Sprint 1 plan with task index.
+::: simple
+Open the Claude desktop app, go to the **Code** tab and pick your project folder. You don't need a terminal. When Claude starts your app, it shows up in the Browser pane right there.
+:::
 
-### Step 3: Generate Task Specs
+::: everything
+Clone the repo, open it in VS Code, and run Claude Code in the terminal or the VS Code extension. Git, Docker and the rest are covered in [Setting Up Your Computer](/part-0/setting-up-your-computer).
+:::
 
-Ask Claude to produce the individual task files that go with the sprint plan. Depending on the project's complexity, there may be a lot of task docs and Claude may need several turns to complete them all. This may push you past your daily usage limit — a $5 USD top-up will typically be enough to finish. It's worth it: Cline using the latest Sonnet will cost less money and be **10x more reliable** if Opus has already written specific, detailed task docs. The goal is to reach the point where you say to Cline "Please execute sprint 1" in plan mode, it reads the task docs, says "ok let's go" with no outstanding questions, and 10 minutes later the sprint is done with minimal errors.
+One task per session. Claude reads the task, plans, builds, runs the tests and tells you how confident it is. You read the plan before it starts (really read it), then click around the result. The daily loop is in [The Execution Workflow](/part-3/execution-workflow).
 
-### Step 4: Set Up Repo and Execute
+### 5. Fix, fix, fix
 
-Download the docs from Claude. Create a private or public GitHub repo. Copy the repo link, open VSCode, click "Clone Repository", paste the link and hit return. Now drag the extracted Claude docs into the VSCode file explorer.
+The first version will have bugs. That's normal and it's where a lot of the time goes. Send Claude **screenshots**: one picture of a broken layout beats three paragraphs describing it. Copy errors from the browser console straight into the chat. If a fix starts going round in circles, stop, ask Claude to write down what it's learned in a task file, and start a fresh session.
 
-**Expect to reorganize.** Claude often doesn't properly organize the docs into folders, so you may need to ask it what the file organization should look like, then manually create the folders and drag files into place. Also watch for a common mistake with the Cline rules file — Claude sometimes names it `clinerules.md` or `CLAUDE.md` when it should be `.clinerules` (with the dot prefix). Rename it and make sure it's in the **root** of the project, not inside a subfolder, so Cline picks it up automatically.
+### 6. Put it live
 
-Point Cline at the repo and say "please start the tasks." Because the documentation is thorough and the rules are strict, the AI knows exactly what to build and how to build it.
-
-### Step 5: Test, Feedback, Iterate
-
-Test the build locally. Use the `+` icon on the Cline chat bar to add **screenshots** when something looks wrong — a visual is often better than trying to explain a UI problem in words. Get comfortable with the **JavaScript console** in your browser's devtools — you can copy-paste console output directly into the Cline chat to help debug frontend problems.
-
-For new features, repeat from Step 1 with the GitHub repo synced in the Claude Project. For fixes and tweaks, use Cline or Claude Code directly — but **always plan mode first**.
-
-### Step 6: Know When to Start Fresh
-
-If a fix or feature starts going in circles, ask AI to write a task doc capturing progress and next steps, then start a new conversation. Fresh context beats polluted context every time.
+Only once it works on your machine does it go on a real server with a real domain. That's covered in [Deployment & Platform Targets](/part-5/deployment-platforms) and [Deploy Verification](/part-5/deploy-verification).
 
 ---
 
-## What You'll Learn
+## What's in the guide
 
-**Part I: Foundation**
-- Why structure matters more than AI capability
-- Choosing the right tools (Claude Projects, Cline, Claude Code)
+- **Part 0: Before You Start.** Setting up, what the plans cost, and the basic ideas (how apps run, files, the browser's developer tools).
+- **Part I: Foundation.** Why docs matter so much, and which bit of Claude to use for what.
+- **Part II: Before You Build.** Brainstorming, mockups and the documentation set.
+- **Part III: Execution.** The daily loop, task files and confidence scores.
+- **Part IV: Quality.** Audits between phases, testing, and comments in code.
+- **Part V: Advanced.** Sessions and handoffs, skills, memory, pitfalls, teams, deployment.
+- **Part VI: Resources.** Templates, a prompt library and real projects.
 
-**Part II: Pre-Development**
-- The Opus brainstorming session that scopes your project
-- Setting up your documentation architecture
-
-**Part III: Execution**
-- The Cline/Claude Code workflow (Plan → Act → Verify)
-- Task documentation and sprint patterns
-- Confidence scoring
-
-**Part IV: Quality**
-- Phase audits with fresh AI eyes
-- Commenting philosophy
-
-**Part V: Advanced**
-- Context window management and the art of fresh conversations
-- Common pitfalls and recovery
-- Team workflows
-- Deployment and platform targets (Docker, Vercel, Netlify, Hetzner, mobile, desktop)
-
-**Part VI: Resources**
-- Drop-in project templates (sync to any repo)
-- Prompt library for every phase
-- Real-world case study: VH Conference Toolkit
+If you picked **Keep it simple**, the pages you don't need are hidden. You can switch tracks from the top of the sidebar.
 
 ---
 
-## Who This Is For
+## Who this is for
 
-**Developers** — You want AI to accelerate your work without producing garbage code.
+- **Founders** who want a working version before they spend real money.
+- **Non-coders** who are curious and patient. You don't need to write code, but you do need to read what Claude tells you.
+- **Developers and team leads** who want Claude to speed them up without making a mess.
 
-**Technical Founders** — You need to validate ideas quickly without burning your runway.
-
-**Team Leads** — You want standards for how your team uses AI tools.
-
-**Non-coders with technical sense** — You can read code and guide AI even if you don't write it fluently.
+It isn't a tutorial on Claude basics, and it won't remove the need for your judgement. You're still the one who decides what gets built and whether it's right.
 
 ---
 
-## What This Isn't
+## What you'll need
 
-- A tutorial on using Claude or ChatGPT basics
-- Magic that removes human judgment
-- A way to build production apps with zero coding knowledge
-- Guaranteed success (but much better odds)
+- A paid Claude plan. Claude Code isn't on the Free plan. Pro is enough to start, and Max is worth it once you're serious. Details in [Plans & Limits](/part-0/plans-and-limits).
+- The Claude desktop app. That's it for the simple track.
+- Patience for the talking and the mockups. It's the cheapest part of the project and it saves the most.
 
----
-
-## Prerequisites
-
-- Basic understanding of software development
-- Comfort with command line and Git
-- Claude access (Pro, Team, or API) — **Opus strongly recommended for brainstorming**
-- Claude Code (**the beginner-friendly, budget option**) or the Cline extension for VS Code (full inline visibility, faster) — see [Tool Selection](/part-1/tool-selection)
-- Willingness to document before coding
-
----
-
-## Expected Results
-
-| Project Type | Token Cost | Output |
-|--------------|------------|--------|
-| Simple MVP | $150–$300 | Working proof of concept |
-| Complex MVP | $300–$600 | Production-ready core |
-| Large refactor | $500–$1500 | Documented, tested codebase |
-
-These assume following the methodology. Skip steps and costs balloon.
-
-::: tip We don't estimate timelines
-AI is notoriously bad at predicting how long things take — a task that takes 30 minutes of focused Cline work gets estimated at "2-3 days." We've deliberately left timelines out of this guide. How fast you move depends on your experience, your documentation quality, and the complexity of what you're building. The methodology is designed to keep you moving efficiently, task by task.
+::: tip Don't trust time estimates
+Claude is bad at guessing how long things take. It will call a 30-minute task "two to three days". I've left timelines out of this guide on purpose. How fast you go depends on how good your docs are and how big the thing is.
 :::
 
 ---
 
-## Real Example: VH Conference Toolkit
+## A real example
 
-The [VH Conference Toolkit](https://github.com/Visual-Hive/vh-conference-toolkit) is a suite of open-source tools for event professionals, built using this exact methodology. Its repo demonstrates what good project documentation looks like:
-
-- Thorough architecture docs with full schemas and component hierarchy
-- Strict development rules with mandatory testing and quality standards
-- Sprint-based task documentation with individual task specs
-- Architectural Decision Records (ADRs) for major choices
-- Each tool built as an independent, well-documented module
-
-Browse the repo to see the methodology in action.
+The [VH Conference Toolkit](https://github.com/Visual-Hive/vh-conference-toolkit) is a set of open-source tools for event organisers, built this way. The repo shows what good project docs look like: architecture docs with full schemas, strict rules, a task file per job and decision records for the big choices. More in [Case Studies](/part-6/case-studies).
 
 ---
 
-## How to Read This
+## How to read this
 
-**If you're eager:** Jump to [Part II: Brainstorming](/part-2/brainstorming). That's where the real work starts.
-
-**If you're skeptical:** Read [Philosophy](/part-1/philosophy) to understand why this works.
-
-**If you just want templates:** Go to [Project Templates](/part-6/templates) — drop them into any repo.
-
-**If you're setting up a team:** Start with Philosophy, then skip to [Team Workflows](/part-5/team-workflows).
+- **Keen to start?** Go to [The Brainstorming Session](/part-2/brainstorming).
+- **Not convinced?** Read [Philosophy & Approach](/part-1/philosophy) first.
+- **Just want the files?** They're in [Project Templates](/part-6/templates).
+- **Setting up a team?** Read Philosophy, then [Team Workflows](/part-5/team-workflows).
 
 ---
 
 <div class="db-cta">
-  <h3>Want a second pair of eyes before you dive in?</h3>
-  <p>The methodology in this guide works, but every project is different. If you want someone to look over your architecture, spot the risks early, or build alongside you, book a call and we'll work out the right starting point.</p>
+  <h3>Want a second pair of eyes first?</h3>
+  <p>Every project is different. If you'd like someone to look over your idea or your architecture before you start, book a call and we'll work out the right first step.</p>
   <div class="db-cta-actions">
-    <a href="https://calendar.app.google/HH5FyJKogsLQc2kC8" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-primary">Book a call →</a>
+    <a href="https://calendar.app.google/HH5FyJKogsLQc2kC8" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-primary">Book a call</a>
     <a href="https://digitalbricks.io" target="_blank" rel="noopener" class="db-cta-btn db-cta-btn-secondary">About Digital Bricks</a>
   </div>
 </div>
 
 ---
 
-**Let's go:** [Philosophy & Approach](/part-1/philosophy)
+**Next:** [Philosophy & Approach](/part-1/philosophy)

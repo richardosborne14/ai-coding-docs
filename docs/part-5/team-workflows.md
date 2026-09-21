@@ -1,258 +1,214 @@
 ---
 title: Team Workflows
-description: Adapting the methodology for multiple developers
+description: Adapting the method for more than one person building with Claude
 ---
 
 # Team Workflows
 
 ## TLDR
 
-The methodology scales to teams with minimal adaptation. Key additions: shared documentation standards, clear task ownership, and AI-assisted code review.
+The method works for teams with a few additions: shared standards in CLAUDE.md, clear ownership of each task, and Claude as the first reviewer on every pull request.
 
 ---
 
-## What Changes with Teams
+## What changes with a team
 
-**Solo workflow:**
-- You own everything
-- Docs serve your future self + AI
-- No coordination needed
+On your own, you own everything, the docs serve you and Claude, and there's nobody to coordinate with.
 
-**Team workflow:**
-- Shared ownership
-- Docs serve everyone + AI
-- Coordination required
-
-The core principles stay the same. The documentation just becomes more critical.
+On a team, ownership is shared, the docs serve everyone, and you have to coordinate. The principles don't change. The docs just matter more.
 
 ---
 
-## Shared Documentation
+## Shared documentation
 
-**CLAUDE_RULES becomes team contract:**
-
-Everyone follows the same standards. AI produces consistent code regardless of who's prompting.
+**CLAUDE.md becomes the team contract.** It's committed to the repo, so everyone's Claude reads the same rules. The code comes out consistent whoever is prompting.
 
 ```markdown
-# Team Standards
+# Team standards
 
-## Code Style
-- Prettier for formatting (auto)
-- ESLint for linting (auto)
-- Comments: all functions, non-obvious logic
+## Code style
+- Prettier for formatting (automatic)
+- ESLint for linting (automatic)
+- Comment every function and any logic that isn't obvious
 
 ## Git
-- Branch naming: feature/task-X.X-short-description
+- Branch names: feature/task-X.X-short-description
 - Commit messages: "Task X.X: Description"
-- PRs require: tests pass, one approval, AI review
+- Pull requests need passing tests, one human approval and a Claude review
 
-## Task Ownership
+## Task ownership
 - One person per task
-- Update ROADMAP when starting/finishing
-- Don't work on others' active tasks
+- Update the roadmap when you start or finish a task
+- Don't work on someone else's active task
 ```
 
-**ROADMAP shows ownership:**
+Personal preferences go in each person's own `CLAUDE.local.md` or `~/.claude/CLAUDE.md`, not the shared file.
+
+**The roadmap shows who owns what:**
 
 ```markdown
-### Task 2.1: User Authentication
+### Task 2.1: User authentication
 Owner: Sarah
-Status: In Progress
+Status: In progress
 Branch: feature/task-2.1-auth
 
-### Task 2.2: Database Schema
-Owner: Mike  
-Status: Complete
+### Task 2.2: Database schema
+Owner: Mike
+Status: Done
 Confidence: 8/10
 
-### Task 2.3: API Endpoints
+### Task 2.3: API endpoints
 Owner: Unassigned
-Status: Not Started
+Status: Not started
 ```
 
-Everyone knows who's doing what. No conflicts.
+Everyone knows who's doing what, so nobody treads on anyone.
 
 ---
 
-## Task Assignment
+## Handing out tasks
 
-**Keep tasks independent when possible.**
+**Keep tasks independent where you can.**
 
 ```
-Good:
-├── Task 2.1: Auth (Sarah) - standalone
-├── Task 2.2: Database (Mike) - standalone
-├── Task 2.3: API (unassigned) - needs 2.1, 2.2
-└── Task 2.4: UI (unassigned) - needs 2.3
+├── Task 2.1: Auth (Sarah), standalone
+├── Task 2.2: Database (Mike), standalone
+├── Task 2.3: API (unassigned), needs 2.1 and 2.2
+└── Task 2.4: UI (unassigned), needs 2.3
 ```
 
-Sarah and Mike work in parallel. Task 2.3 waits until dependencies are complete.
+Sarah and Mike work in parallel. Task 2.3 waits for both.
 
-**When tasks must overlap:**
-
-Clear communication. Define interfaces first.
+**When tasks have to overlap, agree the interface first.**
 
 ```markdown
-## Interface Agreement: Auth → API
+## Interface agreement: Auth to API
 
 Auth (Sarah) will export:
 - requireAuth middleware
-- User type definition
+- User type
 - Token validation function
 
 API (Mike) will expect:
-- req.user.id after auth middleware
-- 401 response format: { error: string }
+- req.user.id after the auth middleware
+- 401 responses shaped as { error: string }
 
-Agreed: 2024-12-10
+Agreed: 2026-03-10
 ```
 
-Both sides code to the interface. Integration works.
+Both sides build to the agreement, and the pieces fit when they meet.
 
 ---
 
-## Code Review with AI
+## Claude as first reviewer
 
-**AI as first reviewer:**
-
-Before human review, run AI audit:
+Before a human looks at a pull request, Claude does. Something like:
 
 ```
-Review this PR for:
+Review this pull request for:
 - Bugs or logic errors
-- Security issues  
-- Consistency with CLAUDE_RULES
-- Test coverage gaps
+- Security problems
+- Anything that breaks the rules in CLAUDE.md
+- Missing tests
 
-Be specific. Reference file and line numbers.
+Be specific. Give file names and line numbers.
 ```
 
-AI catches mechanical issues. Human reviewer focuses on design and approach.
+Claude catches the mechanical problems. The human reviewer can then focus on what Claude can't judge:
 
-**Human reviewer focus:**
 - Does this solve the right problem?
 - Is the approach sensible?
-- Any concerns AI wouldn't catch?
-- Knowledge transfer—do I understand this code?
+- Do I understand this code well enough to maintain it?
 
-**PR template:**
+**A pull request template:**
 
 ```markdown
 ## Task
 Task X.X: [Name]
 
 ## Changes
-[Brief description]
+[Short description]
 
 ## Confidence
-X/10 - [Brief justification]
+X/10: [Short reason]
 
 ## Testing
 - [ ] Unit tests pass
-- [ ] Manual testing done
-- [ ] AI review completed
+- [ ] Browser tests pass
+- [ ] Checked by hand
+- [ ] Claude review done
 
-## Notes for Reviewer
+## Notes for the reviewer
 [Anything they should know]
 ```
 
 ---
 
-## Handling Conflicts
+## Handling conflicts
 
-**Documentation conflicts:**
+**Two people edit the roadmap at once.** You get a Git merge conflict. Pick one source of truth. A task board (Linear, Notion, GitHub Projects) works well as the master, and you can generate the roadmap file from it if Claude needs one.
 
-Two people update ROADMAP simultaneously. Git merge conflict.
-
-Fix: One source of truth. Use a task board (Linear, Notion, GitHub Projects) as primary, generate ROADMAP from it if needed.
-
-**Architectural conflicts:**
-
-Sarah thinks we should use approach A. Mike thinks B.
-
-Fix: Document the decision. Either works, but pick one and stick with it.
+**Two people disagree on an approach.** Sarah wants A, Mike wants B. Often either would work. Pick one, write it down, and stick with it:
 
 ```markdown
-# LEARNINGS.md
-
-## 2024-12-10: API Response Format
-Decided: Always return { data, error, message } structure.
-Alternatives considered: Just { data } or { result }.
-Decision by: Team consensus
-Reason: Consistent client-side handling.
+## 2026-03-10: API response format
+Decided: always return { data, error, message }.
+Considered: just { data }, or { result }.
+Decided by: the team
+Why: the client can handle every response the same way.
 ```
 
-Now it's documented. Future decisions reference this.
+Keep these in a decisions file in the repo, not in someone's personal memory. Claude's auto memory lives on one person's machine, so the rest of the team (and their Claude) won't see it.
 
 ---
 
-## Onboarding New Team Members
+## Bringing someone new in
 
-**Day 1:**
-1. Read README (5 minutes)
-2. Read CLAUDE_RULES (10 minutes)
-3. Set up dev environment (30 minutes)
-4. Read one completed task doc (5 minutes)
+**Day one:**
+1. Read the README.
+2. Read CLAUDE.md.
+3. Set up the project and get it running.
+4. Read one finished task file end to end.
 
-**First task:**
-- Assign something small and standalone
-- Pair with experienced team member first session
-- Review their task doc carefully
-- Provide feedback on adherence to standards
+**First task:** something small and standalone. Pair with someone for the first session, and review their task file carefully.
 
-**Ramp-up:**
-- Week 1: Small tasks with review
-- Week 2: Medium tasks with light review
-- Week 3+: Normal workflow
+**Ramp-up:** small tasks with review in week one, medium tasks with lighter review in week two, the normal flow from week three.
 
-Good documentation makes onboarding fast. New person reads docs, understands context, contributes quickly.
+Good docs make this quick. The new person reads them, understands the context, and contributes early. So does their Claude.
 
 ---
 
-## Communication Patterns
+## How to communicate
 
-**Async by default:**
-- Task docs capture decisions
-- LEARNINGS captures knowledge
-- PRs have context in description
-- Questions go in PR comments or chat
+**Write by default.** Task files hold decisions. The decisions file holds what the team agreed. Pull requests carry their context in the description. Questions go in pull request comments or chat.
 
-**Sync when needed:**
-- Architectural decisions
-- Interface agreements
-- Blocked dependencies
-- Complex debugging
+**Talk when you need to decide something:** architecture, interface agreements, blocked tasks, a nasty bug.
 
-Don't meet to share information that could be written. Meet to discuss and decide.
+Don't hold a meeting to share something that could be written down. Meet to decide.
 
 ---
 
-## Quality at Scale
+## Quality across the team
 
-**Individual responsibility:**
-Each person maintains confidence scoring for their tasks. Below 8/10 doesn't get PR'd.
+**Each person** scores confidence on their own tasks. Anything under 8/10 doesn't go up for review.
 
-**Team responsibility:**
-Phase audits involve whole team. Everyone reviews audit findings. Annex tasks get distributed.
+**The team** does phase audits together. Everyone reads the findings, and the follow-up tasks get shared out.
 
-**Lead responsibility:**
-Spot-check confidence scores. Are people being honest? Are standards maintained across the team?
+**The lead** spot-checks confidence scores. Are people being honest? Are the standards holding?
 
 ---
 
-## Quick Team Checklist
+## Before you go from solo to team
 
-Before scaling from solo to team:
+- [ ] CLAUDE.md covers the team standards
+- [ ] The roadmap or task board tracks ownership
+- [ ] The Git workflow is written down
+- [ ] There's a pull request template
+- [ ] There's a Claude review prompt (or a review skill)
+- [ ] There's an onboarding doc
 
-- [ ] CLAUDE_RULES covers team standards
-- [ ] ROADMAP supports ownership tracking
-- [ ] Git workflow documented
-- [ ] PR template created
-- [ ] AI review prompt ready
-- [ ] Onboarding doc written
-
-Most methodology stays identical. The documentation just needs to be clear enough for multiple people to follow.
+Most of the method stays the same. The docs just have to be clear enough for several people, and several Claudes, to follow.
 
 ---
 
-**Next:** [Templates](/part-6/templates) — Ready-to-use documents for your projects.
+**Next:** [The Project Control Panel](/part-5/control-panel)

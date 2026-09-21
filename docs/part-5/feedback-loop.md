@@ -1,41 +1,41 @@
 ---
 title: The In-App Feedback Loop
-description: A dev-only hotkey that turns "this looks wrong" into an AI-ready bug report — text, priority, screenshot, and full app state
+description: A dev-only hotkey that turns "this looks wrong" into a bug report Claude can act on, with text, priority, a screenshot and the app's state.
 ---
 
 # The In-App Feedback Loop
 
 ## TLDR
 
-While using your half-built app, you spot things constantly — a broken button, a heading that's wrong, a layout that breaks on mobile. Describing each one back to your AI coder is slow, and you always forget which page you were on and what data was loaded.
+While you use your half-built app, you spot things all the time: a dead button, a wrong heading, a layout that breaks on mobile. Describing each one to Claude is slow, and you always forget which page you were on and what data was loaded.
 
-Bake a feedback hotkey into the app. Press a key, a modal pops up, you type what's wrong and rate it 1–5. On submit it auto-captures a screenshot and a JSON snapshot of everything the AI needs — route, device, browser, params, current app state — and writes both to a gitignored `.feedback/` folder.
+So bake a feedback hotkey into the app. Press a key and a modal pops up. You type what's wrong and rate it 1 to 5. On submit it grabs a screenshot and a JSON snapshot of everything Claude needs (route, device, browser, params, app state) and writes both to a gitignored `.feedback/` folder.
 
-Then you tell Claude Code: *"Fix the highest-priority open feedback."* It reads the top item, looks at the screenshot, understands the context, fixes it, and marks it done. This is the dev-phase counterpart to [Observability](/part-5/observability) — that's production error tracking; this is you, ticketing your own app for the AI.
+Then you tell Claude Code: *"Fix the highest-priority open feedback."* It reads the top item, looks at the screenshot, fixes it and marks it done. This is the dev-phase partner to [Observability](/part-5/observability). That page covers production errors. This one is you, filing tickets on your own app.
 
 ---
 
 ## The Problem
 
-Manual bug reporting during development is lossy. You see something wrong, switch to Cline, and try to reconstruct it from memory: "On the pricing page — no wait, it was the dashboard — the export button did nothing when I had the March filter on." The AI now has to guess the route, the state, and what you actually saw.
+Reporting bugs by hand during development loses detail. You see something wrong, switch to Claude, and rebuild it from memory: "On the pricing page. No wait, the dashboard. The export button did nothing with the March filter on." Claude now has to guess the route, the state and what you saw.
 
-Every missing detail is a round-trip. The AI asks which page, you answer. It asks what data was loaded, you answer. Half the conversation is rebuilding context that was on your screen the moment you hit the bug.
+Every missing detail costs a round trip. Claude asks which page, and you answer. It asks what data was loaded, and you answer again. Half the conversation rebuilds context that was on your screen when you hit the bug.
 
-The feedback loop captures all of it at the source, the instant you notice, with one keypress.
+The feedback loop captures all of it at the source, with one keypress.
 
 ---
 
 ## How It Works
 
-A dev-only overlay component mounts on a global hotkey (say `Ctrl+Shift+F`). It renders a small modal: a textarea for the feedback, a 1–5 priority selector, and a submit button.
+A dev-only overlay mounts on a global hotkey (say `Ctrl+Shift+F`). It shows a small modal with a text box, a 1 to 5 priority selector and a submit button.
 
-On submit, three things get captured automatically:
+On submit, it captures three things:
 
-1. **A screenshot** of the current screen (via the browser's capture API or `html2canvas`).
-2. **A context snapshot** — a JSON blob of everything the AI would otherwise have to ask for.
+1. **A screenshot** of the current screen (through the browser's capture API or `html2canvas`).
+2. **A context snapshot:** a JSON blob of everything Claude would otherwise have to ask for.
 3. **Your text and priority.**
 
-All three write to a gitignored `.feedback/` folder through a tiny dev-only endpoint. Each report is one JSON file plus its matching screenshot:
+A tiny dev-only endpoint writes them to `.feedback/`. Each report is one JSON file plus its screenshot:
 
 ```
 .feedback/
@@ -62,66 +62,66 @@ All three write to a gitignored `.feedback/` folder through a tiny dev-only endp
 }
 ```
 
-The `context` block is the whole point. `rowsLoaded: 0` and `lastError: 422` tell the AI more than your sentence did. Include whatever your app knows that would help diagnose the problem — auth state, active feature flags, the last API call, form values. Never include secrets or raw tokens (same rule as `flowLog()` in [the control panel](/part-5/control-panel)).
+The `context` block is the point. `rowsLoaded: 0` and `lastError: 422` tell Claude more than your sentence did. Put in whatever the app knows that would help: auth state, active feature flags, the last API call, form values. Never secrets or raw tokens (the same rule as `flowLog()` in [the control panel](/part-5/control-panel)).
 
 ::: warning Dev-only, always
-Guard the whole thing behind a dev-mode check so it never mounts in production. This is a vibe-coding tool for you, not a customer feedback widget. If you want real user feedback in production, that's PostHog or Hotjar — a different job.
+Guard the whole thing behind a dev-mode check so it never mounts in production. It's a tool for you while you build, not a customer feedback widget. For real user feedback in production, use PostHog or Hotjar.
 :::
 
 ---
 
-## Feeding It to the AI
+## Feeding It to Claude
 
 The payoff is the prompt. Instead of describing a bug, you say:
 
 > Fix the highest-priority open feedback in `.feedback/`.
 
-The AI globs `.feedback/*.json`, filters out anything with `"status": "done"`, sorts by priority (then oldest first), and opens the top item. It reads the context, **looks at the screenshot**, and now understands the bug better than most hand-written tickets. It fixes it, then flips `status` to `"done"` and drops in a `resolution` note.
+Claude reads the `.feedback/*.json` files and skips anything marked `"done"`. It sorts by priority (oldest first on a tie) and opens the top item. It reads the context and **looks at the screenshot**, and at that point it understands the bug better than most hand-written tickets would let it. It fixes the bug, flips `status` to `"done"` and adds a `resolution` note.
 
-The screenshot matters more than you'd expect. "The layout breaks" is ambiguous in text; in an image the AI sees exactly which element overflowed. Pair this with the [fix-and-debug prompt](/part-6/prompts) workflow — the feedback file *is* the bug report, so you skip writing one.
+The screenshot matters more than you'd expect. "The layout breaks" is vague in text. In an image, Claude sees exactly which element overflowed. I send Claude more screenshots than ever, and this makes them automatic. Pair it with the [fix-and-debug prompt](/part-6/prompts): the feedback file *is* the bug report, so you skip writing one.
 
-Because priority is baked in, you triage by rating, not by re-reading everything. Rate the broken checkout 5 and the slightly-off padding 2, and "fix the highest-priority open feedback" always does the most important thing first.
+Because priority is built in, you triage by rating instead of re-reading everything. Rate the broken checkout 5 and the slightly-off padding 2, and "fix the highest-priority open feedback" always does the important thing first.
 
 ---
 
 ## The Admin Page (Optional)
 
-Once you have more than a handful of reports, add a dev-only page — `/dev/feedback` — that reads the folder and lists everything:
+Once you have more than a handful of reports, add a dev-only `/dev/feedback` page that reads the folder and lists:
 
-- Each report's text, priority, and open/done status
-- A thumbnail of the screenshot
-- A filter for open vs resolved, sorted by priority
+- each report's text, priority and status
+- a thumbnail of the screenshot
+- a filter for open and resolved, sorted by priority
 
-It's the same idea as the control panel's tabs: a convention folder plus a simple page that reads it. No AI loop needed to build the listing — it's a directory read and a grid. The value is seeing your whole backlog at a glance and spotting when five separate reports are really the same underlying bug.
+It's the same idea as the control panel: a convention folder plus a simple page that reads it. The value is seeing the whole backlog at once and spotting when five reports are really one bug.
 
 ---
 
-## The .clinerules Additions
+## What to add to CLAUDE.md
 
-Add these so the AI maintains the loop instead of ignoring it:
+Add these so Claude keeps the loop working instead of ignoring it:
 
-1. Feedback reports live in `.feedback/` as `<timestamp>-<id>.json` + matching `.png`; the folder is gitignored
-2. When asked to fix feedback, select the highest-`priority` item with `"status": "open"`, breaking ties by oldest `timestamp`
-3. After resolving a report, set `"status": "done"` and add a one-line `"resolution"` — never delete the file
-4. The feedback overlay and its write endpoint MUST be guarded behind a dev-mode check — never ship them to production
-5. The context snapshot MUST NOT include passwords, tokens, API keys, or raw JWTs
+1. Feedback reports live in `.feedback/` as `<timestamp>-<id>.json` plus a matching `.png`. The folder is gitignored.
+2. When asked to fix feedback, pick the highest-`priority` item with `"status": "open"`. Break ties by oldest `timestamp`.
+3. After fixing a report, set `"status": "done"` and add a one-line `"resolution"`. Never delete the file.
+4. The feedback overlay and its write endpoint MUST sit behind a dev-mode check. Never ship them to production.
+5. The context snapshot MUST NOT include passwords, tokens, API keys or raw JWTs.
 
-Rule 3 keeps a history. Resolved reports are a running log of what broke and how it was fixed — useful later for [project memory](/part-5/project-memory) and phase audits.
+Rule 3 keeps a history. Resolved reports become a running log of what broke and how it was fixed, which is handy later for [project memory](/part-5/project-memory) and phase audits.
 
 ---
 
 ## When to Build It
 
-**Worth it for any app you'll use before it's finished** — which is almost all of them. The capture piece (hotkey + modal + write endpoint) is a 1–2 hour task. The admin page is another hour and can wait until you have a backlog.
+**Worth it for any app you'll use before it's finished**, which is nearly all of them. The capture part (hotkey, modal, write endpoint) is a 1 to 2 hour task. The admin page is another hour and can wait.
 
-Build it in Sprint 1, right after the control panel. The two are siblings: the control panel shows you what the *backend* is doing; the feedback loop captures what *you* see wrong in the frontend and hands it to the AI ready to fix.
+Build it in Sprint 1, straight after the control panel. The two are siblings. The control panel shows you what the *backend* is doing. The feedback loop captures what *you* see wrong in the frontend and hands it to Claude ready to fix.
 
 Skip it only for throwaway prototypes you'll never click through yourself.
 
 ::: tip Start with capture, skip the admin page
-The hotkey, the modal, and the JSON-plus-screenshot write give you the entire benefit. "Fix the highest-priority open feedback" works against raw files in a folder — you don't need a UI to read them. Add the admin page later, when the backlog is big enough to need a view.
+The hotkey, the modal and the JSON-plus-screenshot write give you nearly all the benefit. "Fix the highest-priority open feedback" works on raw files in a folder. Add the admin page when the backlog is big enough to need one.
 :::
 
 ---
 
-**Next:** [Accessibility by Default](/part-5/accessibility) — changing what the AI emits when nobody asks.
+**Next:** [Accessibility by Default](/part-5/accessibility): changing what Claude writes when nobody asks.

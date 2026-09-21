@@ -1,220 +1,227 @@
 ---
 title: The Execution Workflow
-description: Plan → Act → Verify, one task at a time
+description: One task per session in Claude Code. Fresh session, right model, plan, build, test, look, score, close.
 ---
 
 # The Execution Workflow
 
 ## TLDR
 
-**New conversation for every task.** Prevents context pollution.
+**One task, one fresh session.** Your docs carry the memory, not the chat.
 
-**Plan mode FIRST.** Always review the approach before AI writes code. For fixes and debugging, this is **critical**.
+**Switch to the model the task names.** Each task file says which model should run it.
 
-**Minimal prompting.** "Can we plan task 2.3?" is enough — AI reads your docs for context.
+**Plan first, and read the plan.** Most of my bad days started with "yeah, just do it".
 
-**Verify and score.** Check the work, assign confidence, close, next task.
+**Tests run in the background.** Claude takes screenshots. You look at them.
+
+**Score it, update the docs, close the session.** Then the next task.
 
 ---
 
 ## The Cycle
 
 ```
-1. Open new Cline chat
-2. "Can we please plan task X.X?"
-3. AI reads docs, proposes approach
-4. Review plan, ask questions, adjust
-5. "Proceed" → execution
-6. Approve commands as needed
-7. AI completes work, provides confidence score
-8. Verify it works (run app, check browser, run tests)
-9. Close conversation
-10. Next task
+1. Start a fresh session (/clear)
+2. "Read task 2.3." Check the model it names and switch (/model)
+3. Plan mode: Claude reads the docs and proposes an approach
+4. You read the plan. Properly. Question it, adjust it
+5. Approve. Claude builds
+6. Claude runs the tests, including headless browser tests
+7. Claude shows you screenshots. You look at them, and send yours
+8. Confidence score. Below 8/10, fix before moving on
+9. Claude updates the docs and LEARNINGS
+10. Close the session. Next task
 ```
 
-Every task follows this cycle. No exceptions.
+Every task goes round this loop. No exceptions.
+
+::: simple
+Everything on this page works in the Code tab of the Claude desktop app. Starting a new session there is the same as `/clear`. You pick plan mode from the mode selector.
+:::
 
 ---
 
-## Why New Conversation Per Task
+## 1. A Fresh Session per Task
 
-Long conversations accumulate garbage:
-- Old debugging tangents
-- Superseded decisions
-- Conflicting context from abandoned approaches
-- Token costs for context you're barely using
+Long sessions fill up with old debugging tangents, abandoned approaches and decisions you've since changed. Claude has to wade through all of it on every reply. That also burns through your [session limit](/part-0/plans-and-limits) faster.
 
-By message 80, AI is confused and you're paying for 80 messages of context on every response.
+A fresh session starts clean. Claude reads `CLAUDE.md` and your docs, and that is the continuity. If you stick to one task per session, you'll rarely hit compaction at all.
 
-New conversation = fresh start. Your documentation provides continuity, not chat history.
-
-**The pattern:**
-- Task 1 → New conversation → Complete → Close
-- Task 2 → New conversation → Complete → Close
-- Task 3 → New conversation → Complete → Close
+Type `/clear` in Claude Code, or start a new session in the desktop app.
 
 ---
 
-## Plan Mode: Non-Negotiable for Fixes
+## 2. Read the Top of the Task, Then Switch Model
 
-For new tasks following a sprint plan, plan mode confirms alignment. For **fixes, debugging, and tweaks**, plan mode is absolutely critical:
+Every task file names the model that should run it (see [Task Patterns](/part-3/task-patterns)). So the first thing I do is ask Claude to read the task, then check that line and switch.
 
-```
-I need to fix this: [describe the problem]
+> "Read task 2.3 and tell me which model it recommends."
 
-Please investigate and propose a plan before making any changes.
-```
+Then `/model` to switch (or Option+P on a Mac, Alt+P elsewhere).
 
-**Why this matters for fixes:**
-- Without a plan, AI starts changing code based on its first guess
-- First guesses are often wrong for bugs
-- Changes without a plan create new bugs
-- A 2-minute plan review saves 30 minutes of rework
+How I pick:
+- **Opus** runs about 99% of my work.
+- **Fable** comes in when the app has a fundamental problem or a design problem Opus keeps circling.
+- **On Pro**, alternate. Use Opus to plan and write the tasks. Let Sonnet run the simpler ones.
 
-**In Cline:** Use the explicit Plan Mode toggle.
-**In Claude Code:** Ask it to plan, or use `--plan` flag.
+The model choice is written into the task when you plan the sprint, so you don't have to think about it on the day.
 
 ---
 
-## Minimal Prompting
+## 3. Plan Mode First
 
-You don't need elaborate prompts. This works:
+Switch to plan mode before Claude touches anything. In the terminal that's Shift+Tab. In VS Code it's the mode indicator, and in the desktop app it's the mode selector.
 
-> "Can we please plan task 2.3?"
+Then keep the prompt short:
 
-AI will:
-1. Read your `.clinerules` / `CLAUDE.md` for rules
-2. Read `ARCHITECTURE.md` for the system design
-3. Read the sprint plan to find the task
-4. Read the task spec for details
-5. Check `LEARNINGS.md` for gotchas
-6. Propose an approach
+> "Can we plan task 2.3?"
 
-If your docs are good, the prompt can be simple.
+If your docs are good, Claude reads `CLAUDE.md`, the architecture doc, the sprint plan, the task and LEARNINGS, then proposes an approach. You only add context the docs don't have: an API link, a changed requirement, a constraint.
 
-**When to add context:**
-- External APIs: "Here's the API docs: [link]"
-- Changed requirements: "Actually, we're using X instead of Y"
-- Specific constraints: "This needs to work offline"
+For **bugs and fixes**, plan mode matters even more. Claude's first guess at a bug is often wrong, and changing code on a guess makes new bugs.
 
-Otherwise, trust your docs.
+```
+I need to fix this: [describe the problem, attach a screenshot]
+
+Investigate and propose a plan before changing anything.
+```
+
+### Read the plan before you approve it
+
+This is where it goes wrong, and it's usually the human's fault. Claude spells out exactly what it's about to do. You skim it, say "just do it", and an hour later you're unhappy with something the plan told you about in plain words.
+
+Read it. If a line surprises you, ask about it. If you don't understand it, ask Claude to explain it the way your `CLAUDE.md` says you like things explained. Two minutes here saves an evening.
+
+### Push it further
+
+Claude errs on the side of caution. It will happily build what you asked for and keep quiet about the bolder option. So before approving, I often ask:
+
+> "What would you recommend here that you haven't suggested?"
+
+That's how you hear about things it tends to avoid unprompted, like setting up SSH access to your server or testing against real data instead of made-up samples. You don't have to take the advice. You do want to hear it.
 
 ---
 
-## Execution
+## 4. Build
 
-Once the plan looks right:
+Once the plan looks right, approve it and let Claude work. It will create files, edit code and run commands. By default it asks before anything risky. Say yes quickly to the routine stuff (installs, tests). Slow down for anything destructive: deleting files, touching a database, Git operations.
 
-> "Looks good. Proceed."
-
-AI starts working — creating files, editing code, running commands.
-
-**Terminal approval (Cline):**
-```
-Cline wants to run: npm install bcrypt jsonwebtoken
-[Approve] [Reject] [Edit]
-```
-
-Quick approval for standard stuff (install, test). Careful review for anything destructive (rm, database operations, git operations).
-
-**Claude Code:** Review the proposed changes in your terminal. You can stop it at any point.
+If it heads somewhere you didn't expect, press **Esc** to stop it and talk it through. `/rewind` rolls back to an earlier checkpoint if it has already made a mess.
 
 ---
 
-## Completion and Scoring
+## 5. Tests, Including Headless Browser Tests
 
-When AI finishes, it should provide:
+After the build, Claude runs the tests. Backend tests, and headless browser tests that click through the app the way a person would. They run in the background, so you won't see a browser window pop up. That's normal.
+
+Your `CLAUDE.md` should ask for both. See [Testing](/part-4/testing) for how I set this up.
+
+---
+
+## 6. Screenshots, Both Ways
+
+Screenshots matter more with Claude Code than with anything I've used before.
+
+**Claude's screenshots.** Ask Claude to capture the screens it changed. Then actually look at them. A test can pass while a button sits off the edge of a phone screen.
+
+**Your screenshots.** When something looks wrong, take a screenshot and paste or drag it into the chat. A picture of a broken layout beats three paragraphs of "the thing on the left is sort of squashed". For small cosmetic tweaks (font sizes, colours, labels) the [Frontend Tweaker](/part-5/frontend-tweaker) conventions let you skip Claude entirely.
+
+**Console errors.** When the page misbehaves, open the browser's developer tools (see [Browser DevTools](/part-0/browser-devtools)), copy what the Console tab says and paste it in. A screenshot of what's wrong plus the actual error message usually gets a fix in one round instead of three.
+
+::: simple
+The Code tab has a Browser pane that shows your running app. It's the easiest way to see what Claude just built without leaving the app.
+:::
+
+---
+
+## 7. The Confidence Score
+
+When Claude finishes, it should report something like this:
 
 ```markdown
 ## Confidence: 8/10
 
 **Done:**
-- Login endpoint working
-- Register endpoint working
-- JWT tokens generating correctly
-- Tests passing (8/8)
-- Smoke tested in browser
+- Login and register endpoints working
+- Tests passing (8/8), browser test of the sign-up flow passing
+- Screenshots of the login page at laptop and phone width
 
 **Deferred:**
 - Rate limiting (Sprint 2 per roadmap)
-- Refresh tokens (V2)
 
 **Notes:**
-- Used 24h token expiry as discussed
-- Added entry to LEARNINGS about bcrypt cost factor
+- 24h token expiry as discussed
+- Added the bcrypt cost factor finding to LEARNINGS
 ```
 
-**Your job:**
-1. Run the app, test manually
-2. Check confidence score makes sense
-3. Below 8/10? Fix before moving on
-4. Close conversation, move to next task
+Your job: try it yourself, check the score makes sense, and don't move on below 8/10. More on this in [Confidence Scoring](/part-3/confidence-scoring).
+
+In my experience Claude won't let a task close quietly. It insists on you testing it and keeps chasing ("still waiting on your ruling on this"). Let it.
 
 ---
 
-## Visual Debugging
+## When Claude Needs Several Rulings
 
-When testing locally, you don't always need to describe problems in words. Cline supports visual input that can dramatically speed up debugging.
+Sometimes Claude comes back with five questions at once. Answering them in one long chat message is a mess.
 
-**Screenshots:** Use the `+` icon on the Cline chat bar to attach a screenshot when something looks wrong in the browser. A picture of a broken layout, a misaligned element, or an unexpected error page communicates the problem faster and more accurately than trying to describe it in non-developer language. This is especially useful for CSS issues, responsive layout problems, and visual regressions. For small cosmetic tweaks (font sizes, colours, spacing, button labels), the [Frontend Tweaker](/part-5/frontend-tweaker) conventions let you edit these directly without invoking Cline at all.
+Instead, ask it for an artifact:
 
-**JavaScript console output:** Get comfortable with the browser's developer tools (F12 or right-click → Inspect → Console tab). When the frontend misbehaves, the console often shows the actual error — a failed API call, a null reference, a missing module. Copy-paste the console output directly into the Cline chat. This gives Cline the exact error message, stack trace, and context it needs to diagnose the problem without guessing.
+> "Make me an artifact where I can click through these decisions one by one."
 
-**The combination is powerful:** Screenshot of what's wrong + console output of the error = Cline can usually diagnose and fix the issue in one conversation turn instead of three.
+You get a small page with each question and its options. You click and type your answers, the artifact stores them, and they come back to Claude Code. Much easier than scrolling a wall of text, and nothing gets lost.
 
-::: tip Use a Remote Browser Connection to Preserve Login Sessions
-Cline can launch its own browser to test your app, but by default it starts a fresh instance every time — which means fighting through login screens, losing session state if you accidentally close it, and wasting tokens on authentication flows that have nothing to do with the feature you're testing.
+It also helps to have a line in `CLAUDE.md` asking Claude to put rulings in plain words: what each choice does for the person using the app, with its recommendation first.
 
-**The fix:** In Cline's settings, enable **"Use remote browser connection"**. There's a button right there to **launch a local debugging Chrome instance**, and an indicator showing whether it's connected or not. Once enabled, Cline drives your existing browser session — the one where you're already logged in. No more re-authenticating on every test cycle.
+---
 
-This pairs with a `.clinerules` convention: tell Cline to **assume an authenticated session already exists** and navigate directly to the target URL of the feature under test, not the login page. If the app bounces Cline to login, it authenticates then — but it never pre-emptively goes to `/login`. For signup, onboarding, or password-reset testing where you need a logged-out state, explicitly log out first or note that a clean session is needed.
+## 8. Update the Docs, Then Close
 
-The token savings add up fast. Every avoided login flow is one less round-trip that contributes nothing to the actual test.
-:::
+Before you close, Claude updates what changed: the task file, the sprint plan, and LEARNINGS if it hit a gotcha worth remembering (see [Project Memory](/part-5/project-memory)). Your `CLAUDE.md` should say this happens at the end of every task, so you don't have to ask.
+
+Then close the session. The next task gets a fresh one.
 
 ---
 
 ## When Things Go Wrong
 
-**AI seems confused:** Your docs might be incomplete or contradictory. Check them.
+**Claude seems confused.** Your docs may be incomplete or contradict each other. Check them.
 
-**AI does something unexpected:** Stop execution, go back to plan mode, discuss.
+**Claude does something unexpected.** Esc, back to plan mode, talk it through.
 
-**Confidence below 8:** Don't move on. Ask what's missing and fix it.
+**Confidence below 8.** Ask what's missing and fix it.
 
-**Task taking way too long:** Probably too big. Split into subtasks.
+**The task is taking forever.** It's probably too big. Split it.
 
-**Going in circles on a bug:** Stop. Write a task doc capturing what's been tried and what's left. Start fresh. (See [Context Management](/part-5/context-management) for details.)
+**Going in circles on a bug.** Stop. Ask Claude to write a task doc of what's been tried and what's left, then start a fresh session. See [Context Management](/part-5/context-management).
 
 ---
 
 ## The Side-Task Trap
 
-During a task, AI (or you) notices something else that needs fixing in a different part of the app.
+Halfway through a task, you or Claude spot something else that needs fixing somewhere else.
 
-**Wrong approach:** "While we're here, let's fix that too."
+**Don't:** "While we're here, let's fix that too."
 
-**Right approach:** "That's important but not our current task. Write a quick task doc for it and let's stay focused."
+**Do:** "Good catch. Write a task doc for it and let's stay on this one."
 
-Resist the temptation. Each conversation has limited context. Piling unrelated work into it:
-- Increases token costs (paying for context you're only 20% using)
-- Increases confusion (AI mixing concerns)
-- Increases error risk (changes in unrelated areas without proper planning)
-
-Write the task doc. Start a fresh conversation for it later.
+Piling unrelated work into one session mixes concerns, makes changes you didn't plan, and eats your limits. Write the task doc and give it its own session later.
 
 ---
 
 ## Quick Reference
 
-| Phase | What Happens |
-|-------|--------------|
-| New conversation | Fresh context, AI reads docs |
-| Plan Mode | AI proposes approach, you review |
-| Execution | AI writes code, you approve commands |
-| Completion | Confidence score, verification |
-| Close | Done. Next task gets new conversation |
+| Step | What happens |
+|------|--------------|
+| Fresh session | `/clear`. Claude reads the docs |
+| Model | Read the task header, `/model` to switch |
+| Plan mode | Claude proposes, you read and question |
+| Build | Claude works, you approve risky commands |
+| Test | Backend and headless browser tests in the background |
+| Look | Screenshots both ways |
+| Score | 8/10 or better to move on |
+| Close | Docs updated, session closed |
 
 ---
 
-**Next:** [Task Patterns](/part-3/task-patterns) — How to document completed tasks.
+**Next:** [Task Patterns](/part-3/task-patterns): how to write the task files Claude works from.

@@ -1,15 +1,15 @@
 ---
 title: Phase Audits
-description: Fresh AI eyes catch what you've stopped seeing
+description: A fresh Claude Code session or subagent reviews the code at the end of each phase and catches what you've stopped seeing
 ---
 
 # Phase Audits
 
 ## TLDR
 
-After finishing a major phase (like MVP), get a fresh AI instance to review your code. It catches accumulated issues you've become blind to.
+At the end of a major phase (like the MVP), have a fresh Claude review the code. Either a new Claude Code session or a subagent. It catches the problems you and your working session have gone blind to.
 
-Takes 30 minutes. Prevents shipping broken code.
+It takes about half an hour, and it stops you shipping broken code.
 
 ---
 
@@ -17,110 +17,114 @@ Takes 30 minutes. Prevents shipping broken code.
 
 Audit at natural boundaries:
 
-- **After MVP complete** — Before showing anyone
-- **After v1.0 features done** — Before calling it "done"
-- **Before any deployment** — Before it's live
-- **When something feels off** — Trust your gut
+- **After the MVP**, before you show anyone
+- **After the v1.0 features**, before you call it done
+- **Before any deployment**, before it's live
+- **When something feels off**. Trust your gut.
 
-Don't audit after every task. That's overkill. Audit after completing a meaningful chunk of work.
+Not after every task. That's overkill. Audit after a meaningful chunk of work.
 
 ---
 
 ## The Process
 
-**1. Push your code to GitHub**
+::: everything Save your work first
+Commit before the audit, so you can see exactly what the fixes changed afterwards:
 
 ```bash
 git add .
-git commit -m "MVP complete - ready for audit"
-git push
+git commit -m "MVP complete, ready for audit"
 ```
+:::
 
-**2. Start a fresh Claude conversation**
+**1. Start fresh**
 
-Not the same chat you've been working in. Fresh context matters—it sees your code without your assumptions.
+Two options, both fine:
+- **A new Claude Code session** (`/clear`, or a new session in the desktop app). The auditor starts with nothing but your repo and your docs.
+- **A subagent.** From your working session, ask: "Use a subagent to audit the code for this phase." The subagent gets its own clean context and reports back.
 
-**3. Give it the auditor prompt**
+What matters is that the auditor didn't build the thing. It sees your code without your assumptions.
+
+**2. Give it the auditor prompt**
 
 ```
 You're a senior developer reviewing this codebase.
+Context: this is the end of the MVP phase of [one-line description].
 
-Repo: [link or attach files]
-Context: This is the MVP phase of [brief description].
-
-Please review for:
+Review for:
 - Bugs or logic errors
 - Security issues
 - Missing error handling
 - Code quality problems
-- Test coverage gaps
+- Test coverage gaps, including missing browser tests
 
-Rate overall quality 1-10 and list specific issues to fix.
+Be critical. Rate overall quality 1-10 and list specific issues
+with file and line references. Don't change any code.
 ```
 
-**4. Review the findings**
+That last line matters. You want a report, not a surprise refactor.
 
-AI will return something like:
+**3. Read the findings**
+
+You'll get something like this:
 
 ```markdown
 ## Audit Result: 7/10
 
-### Issues Found
+### Critical
+1. API has no rate limiting, open to abuse
+2. Password reset tokens never expire
 
-**Critical:**
-1. API endpoint has no rate limiting - vulnerable to abuse
-2. Password reset tokens don't expire
+### Important
+3. Two database queries aren't parameterised (SQL injection risk)
+4. Error messages show stack traces to users
 
-**Important:**
-3. Database queries aren't parameterized in 2 places (SQL injection risk)
-4. Error messages expose stack traces to users
-
-**Minor:**
-5. Some console.log statements left in
+### Minor
+5. Leftover console.log statements
 6. Inconsistent naming (userID vs UserId vs user_id)
 ```
 
-**5. Create fix tasks**
-
-Turn issues into tasks:
+**4. Turn the issues into tasks**
 
 ```markdown
 ## Audit Fix Tasks
 
 - [ ] 4.A: Add rate limiting to API endpoints
-- [ ] 4.B: Add expiration to password reset tokens
-- [ ] 4.C: Fix SQL parameterization in user.js and orders.js
-- [ ] 4.D: Sanitize error messages for production
+- [ ] 4.B: Expire password reset tokens
+- [ ] 4.C: Parameterise queries in user.js and orders.js
+- [ ] 4.D: Hide error details in production
 - [ ] 4.E: Clean up console.log and naming
 ```
 
-**6. Fix, then re-audit**
+Each fix task runs like any other: one per session, with the model named in its header. See [Task Patterns](/part-3/task-patterns).
 
-After fixing, run the audit again. Should hit 8/10+ to proceed.
+**5. Fix, then re-audit**
+
+After the fixes, run the audit again in another fresh session. 8/10 or better to move on.
 
 ---
 
 ## What Auditors Catch
 
 **Things you stopped noticing:**
-- That TODO you wrote on day 1 and forgot
+- The TODO from day one
 - The error handling you meant to add
-- The test you skipped "temporarily"
+- The test you skipped "for now"
 
-**Accumulated inconsistencies:**
-- Early code follows different patterns than late code
-- Naming conventions drifted
+**Drift:**
+- Early code follows different patterns from late code
+- Naming conventions wandered
 - Some files commented, others not
 
-**Security issues:**
+**Security:**
 - Exposed secrets
 - Missing validation
 - Unsafe queries
 
 **Integration problems:**
-- Components that work alone but not together
+- Parts that work alone but not together
 - Race conditions
-- Missing edge case handling
+- Missing edge cases
 
 **Accessibility failures:**
 - `<div onClick>` where a `<button>` belongs
@@ -129,72 +133,70 @@ After fixing, run the audit again. Should hit 8/10+ to proceed.
 
 ---
 
-## The One Thing the AI Auditor Can't Do
+## What the Auditor Can't Do
 
-An auditor — human or AI — reading source will catch the mechanical accessibility failures above. It cannot tell you whether a button's name is *meaningful*, whether the reading order makes sense, or whether alt text is *right* rather than merely present. Automated tooling detects roughly a third of WCAG failures.
+An auditor reading source code will catch the mechanical accessibility failures above. It can't tell you whether a button's name makes sense to a person, whether the reading order works, or whether alt text is right rather than just present. Automated tools catch roughly a third of WCAG failures.
 
-So every audit gets a 10-minute pass you do yourself: unplug the mouse and tab through the main flow, zoom to 200%, then turn on the screen reader and navigate one page. See [Accessibility by Default](/part-5/accessibility).
+So every audit gets a 10-minute pass you do yourself. Unplug the mouse and tab through the main flow. Zoom to 200%. Then turn on the screen reader and get round one page. See [Accessibility by Default](/part-5/accessibility).
 
 ---
 
-## Good Audit vs Bad Audit
+## Good Prompt, Bad Prompt
 
-**Good audit prompt:**
+**Good:**
 ```
 Review this codebase. Be critical. Find problems.
 Rate 1-10 and list specific issues with file/line references.
 ```
 
-**Bad audit prompt:**
+**Bad:**
 ```
 Look at my code and tell me it's good.
 ```
 
-You want the auditor to find problems. That's the point. Don't prime it to be nice.
+You want the auditor to find problems. Don't prime it to be nice.
 
 ---
 
-## Handling Audit Results
+## Handling the Results
 
-**If 8/10+:** Nice. Note any minor suggestions for later, continue to next phase.
+**8/10 or more:** note the minor suggestions for later and move on.
 
-**If 6-7/10:** Fix the critical and important issues. Minor stuff can wait. Re-audit.
+**6-7/10:** fix the critical and important issues. The minor ones can wait. Re-audit.
 
-**If below 6/10:** Something went wrong. Review your process. Why did quality slip this much?
+**Below 6/10:** something went wrong in the process. Work out why quality slipped this far before you carry on.
 
-**If you disagree with a finding:** That's fine. AI isn't always right. But think about it before dismissing. Usually there's at least a grain of truth.
+**You disagree with a finding:** fine, Claude isn't always right. Think about it before you dismiss it, though. There's usually a grain of truth.
 
 ---
 
-## Audit Frequency
+## How Often
 
-| Project Size | Audit Points |
+| Project size | Audit points |
 |--------------|--------------|
-| Small MVP | Once, after MVP complete |
-| Medium project | After MVP, after v1.0 |
+| Small MVP | Once, after the MVP |
+| Medium project | After the MVP, after v1.0 |
 | Large project | After each major phase |
 | Team project | Before each merge to main |
 
-Don't over-audit. It's a checkpoint, not a constant activity.
+It's a checkpoint, not a hobby.
 
 ---
 
-## The Fresh Eyes Effect
+## Why Fresh Eyes Work
 
-Why does a new AI instance catch things your working instance missed?
-
-**Your working context accumulates:**
+**Your working session builds up:**
 - Assumptions about how things work
-- Knowledge of "temporary" workarounds
-- Blindness to issues you've seen 100 times
+- Knowledge of the "temporary" workarounds
+- Blindness to issues it's seen a hundred times
 
-**Fresh context sees:**
-- Just the code as it exists
+**A fresh auditor sees:**
+- The code as it is
 - No assumptions
 - No excuses
 
-This is why audits work. The auditor doesn't know your journey. It just sees the destination.
+It doesn't know the journey. It only sees where you ended up.
 
 ---
 
-**Next:** [Commenting Philosophy](/part-4/commenting-philosophy) — Why 50% comments isn't crazy.
+**Next:** [Testing](/part-4/testing): backend tests and browser tests that run while you get on with your day.

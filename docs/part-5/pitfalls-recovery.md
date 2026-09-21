@@ -1,299 +1,201 @@
 ---
 title: Common Pitfalls
-description: What goes wrong and how to recover
+description: What actually goes wrong when you build with Claude, and how to get back on track
 ---
 
 # Common Pitfalls
 
 ## TLDR
 
-Even with solid methodology, things go wrong. The difference between a successful project and a failed one is recognizing problems early and knowing the recovery pattern — which is usually: stop, write a task doc, start fresh.
+The problems I actually hit aren't the ones people warn you about. Claude rarely claims a job is done when it isn't. It rarely forgets things, as long as you keep to one task per session. What goes wrong is duller than that:
+
+- **The docs get too long.** Claude reads everything, so bloated docs slow it down and muddy its thinking.
+- **Claude is too careful.** It avoids things it should be recommending, and you have to push.
+- **You don't read the plan.** You say "just do it", then don't like what you get.
+
+Then there are the traps from real projects: the deploy that says it worked when it didn't, the server that quietly fills its disk, and the bug that keeps coming back.
+
+The recovery for most of them is the same: stop, write it down, start a fresh session.
 
 ---
 
-## Pitfall 1: The Side-Task Spiral
+## Pitfall 1: The docs get too long
 
-**What happens:**
-You're working on auth. You notice the header component has a bug. "Quick fix while I'm here." The quick fix reveals a state management issue. Now you're refactoring stores while your auth task sits half-done.
+**What happens:** Every session adds a little. A learnings file here, a note there, a phase plan that nobody archives. Six weeks in, CLAUDE.md is 600 lines and the learnings file is 2,000. Claude reads all of it every time. The rule that matters is buried under forty that don't, and Claude starts missing things.
+
+I've watched this happen on my own projects. One learnings file passed 2,000 lines before anyone stopped it.
 
 **Signs:**
-- Current task paused for "just one more thing"
-- Conversation context includes 3+ unrelated topics
-- You've lost track of what the original task was
-- Token costs are climbing but progress isn't
+- Claude ignores a rule that is definitely written down.
+- Sessions take longer to get going.
+- You can't find anything in your own docs.
+- Old phase plans still sit next to the current one.
 
-**Recovery:**
-Stop. Ask AI to write a task doc for the side issue. Get back to the original task. Handle the side issue in a fresh conversation.
+**Recovery:** Give it a session of its own. Ask Claude to:
+1. Summarise anything long into its main points.
+2. Split big files by topic, with a short index that points to each part.
+3. Move finished phases and old notes into an `archive/` folder that Claude doesn't read by default.
+4. Turn anything it keeps relearning into a short rule.
 
-**Prevention:**
-When AI mentions something outside the current task: "Good catch. Write a task doc for it. Let's stay on [current task]."
-
-**The rule:** You cannot be too strict about starting fresh conversations. It's 9/10 the better choice.
+**Prevention:** Put length rules in CLAUDE.md from day one. Tell Claude how long each doc may grow before it has to condense, split or archive. [Project Memory](/part-5/project-memory) covers how to keep memory small as a project grows.
 
 ---
 
-## Pitfall 2: Overloading Conversations
+## Pitfall 2: Claude is too careful
 
-**What happens:**
-You pile multiple unrelated tasks into one conversation. "While we're here, also fix X and add Y and refactor Z." The conversation balloons to 100+ messages. AI is confused. Every response costs a fortune in input tokens because it's processing the entire bloated history.
+**What happens:** You'd think the risk is Claude going wild. In my experience it's the opposite. Claude plays it safe. It won't suggest you SSH into your server to look at the logs. It builds with fake sample data when real data would show the bug in a second. It asks permission for things you'd happily let it do. It solves exactly what you asked and doesn't mention the bigger problem sitting next to it.
 
 **Signs:**
-- Conversation has been going for hours
-- You're paying for context that's only 20% relevant
-- AI is mixing up details from different tasks
-- Quality of output is declining
+- Every answer ends with a question back to you.
+- It works around a problem instead of looking at it directly.
+- You find out about an obvious improvement weeks later, by yourself.
 
-**Recovery:**
-Close the conversation. For each remaining task, start a fresh conversation with just the relevant context.
+**Recovery:** Push. Ask it straight out:
+- "What would you do if this were your project?"
+- "What am I not asking that I should be?"
+- "Would it be faster to SSH in and look?"
+- "Can we test this with real data instead of a fake set?"
 
-**Prevention:**
-One task = one conversation. Always. The cost of reloading docs in a fresh conversation is trivial compared to carrying 80 messages of irrelevant context.
+It usually has a good answer. It was waiting to be asked.
+
+**Prevention:** Write down in CLAUDE.md how techie you are and how much initiative you want. If you're happy for Claude to suggest server access, real data or a bigger rethink, say so. See [Documentation Architecture](/part-2/documentation-architecture).
 
 ---
 
-## Pitfall 3: Going in Circles on Bugs
+## Pitfall 3: You didn't read the plan
 
-**What happens:**
-You hit a bug. AI suggests a fix. Doesn't work. Another fix. Still broken. New error. AI suggests reverting. You've been at this for an hour.
+**What happens:** Claude writes a careful plan. It's long, so you skim it and type "just do it". Claude does exactly what the plan said. Then you look at the result and it isn't what you wanted. The plan told you so. You didn't read it.
+
+I'd call this the most common failure of all, and it's a human one.
 
 **Signs:**
-- Same error keeps appearing or morphing
-- Fixes create new bugs
-- AI is guessing rather than reasoning
-- You're frustrated and throwing tokens at it
+- "That's not what I meant" after a task Claude marked as done.
+- The plan had a line you'd have objected to, if you'd seen it.
+- Rework on something that was never discussed.
 
-**Recovery:**
-1. Stop immediately
-2. Ask AI to write a task doc: what was the problem, what was tried, what's the current state, what should be tried next
-3. Start a completely fresh conversation with the task doc
-4. The fresh conversation often solves it in minutes because it doesn't have failed attempts polluting its reasoning
+**Recovery:** Go back to the plan and find the line where it went wrong. Fix the plan, then fix the code. Don't just say "no, redo it".
 
 **Prevention:**
-Set a 30-minute rule. If a bug isn't solved in 30 minutes, the approach is wrong, not just the code. Stop, document, restart.
+- Read the plan. If it's too long to read, ask Claude to shorten it to what matters.
+- When a plan needs you to decide several things, ask Claude for an artifact you can click through. Your answers come back to Claude Code, and you can't skip a question without noticing.
+- Ask Claude to put anything that changes what you'll see at the top of the plan.
 
 ---
 
-## Pitfall 4: Skipping Plan Mode for Fixes
+## Pitfall 4: The same error three times
 
-**What happens:**
-"It's just a small fix, I'll skip plan mode." AI dives in, makes changes, breaks something else, tries to fix that, cascade of changes.
+**What happens:** A bug. Claude tries a fix. The error comes back. Another fix, same error, or a slightly different one. By the fourth attempt Claude is guessing, and the conversation is full of failed attempts that keep pulling it back the same way.
+
+**The rule: same error three times, stop.**
+
+**Recovery:**
+1. Ask Claude to write a research task file: what the problem is, what was tried and why each attempt failed, what's still unknown, and what to look into next.
+2. End the session.
+3. Start a fresh session with that file. Tell it to research before it touches any code.
+
+A fresh session that starts from a clear write-up often solves in minutes what the old one couldn't solve in an hour. For a really stubborn one, I run the research task on Fable instead of Opus.
+
+**Prevention:** Put the three-strikes rule in CLAUDE.md, so Claude stops itself.
+
+---
+
+## Pitfall 5: The side-task spiral
+
+**What happens:** You're working on login. Claude notices the header is broken. "Quick fix while I'm here." The quick fix turns up a deeper problem. An hour later you're refactoring something else and login is half done.
+
+**Recovery:** Stop. Ask Claude to write a task file for the side issue. Get back to login. Do the side issue in its own session.
+
+**Prevention:** When Claude spots something outside the current task: "Good catch. Write a task file for it. Let's finish this first." [Context Management](/part-5/context-management) covers one task per session.
+
+---
+
+## Pitfall 6: The phantom deploy
+
+**What happens:** You deploy. The output says success. The health check passes. Claude reports the deploy is done. But the old code is still running. Every signal says success, which is why it's so hard to catch.
+
+**Why:** There are plenty of ways a deploy can fail silently. The image tag doesn't match. Docker used a cached layer. The build never ran. Each one still prints "success". A health check only asks "is something running?". It doesn't ask "is the right version running?". A container with months-old code passes it perfectly.
+
+Claude reads "Started" in the output and reasonably concludes it worked. It has no way to know otherwise unless you give it one.
+
+**Recovery:**
+1. Add a build-info endpoint that returns the git commit baked into the build. See [Deploy Verification](/part-5/deploy-verification#the-build-info-pattern).
+2. Add a rule to CLAUDE.md: Claude must check that endpoint and compare commits before it calls a deploy done.
+3. Use the [deploy checklist](/part-5/deploy-verification#the-deploy-verification-checklist) every time.
+
+**Prevention:** Never accept "container started" as proof. Check something that only the new code could return.
+
+---
+
+## Pitfall 7: The server disk fills up
+
+**What happens:** After weeks of deploys that pull images onto the server, things start failing. Containers won't start. Logs stop. The database refuses writes. Nothing changed since the last deploy that worked.
 
 **Signs:**
-- "Quick fix" turned into 20 minutes of changes
-- Files modified that weren't related to the original fix
-- Tests that were passing now fail
-- Scope of changes far exceeds what you expected
+- `no space left on device` when containers start.
+- `df -h /` shows 95% or more.
 
+**Why:** Every pull downloads a new image, and Docker never deletes the old one. Each image might be a few hundred megabytes. Fifty deploys later, that adds up to many gigabytes of images you'll never use.
+
+::: everything Terminal route
 **Recovery:**
-Revert the changes. Start fresh. Use plan mode.
+1. SSH into the server.
+2. See the damage: `docker system df` and `df -h /`.
+3. Remove unused images: `docker image prune -f`.
+4. Still full? `docker system prune -f --filter "until=72h"`.
+5. Check with `df -h /`, then `docker compose up -d`.
 
-**Prevention:**
-Plan mode for fixes is MORE important than plan mode for new features. New features have a task spec guiding them. Fixes don't — plan mode is the only checkpoint.
+**Prevention:** Make `docker image prune -f` the last line of your deploy script. Add a weekly cleanup job as a backstop:
 
----
+```bash
+# /etc/cron.d/docker-cleanup (runs every Sunday at 3am)
+0 3 * * 0 root docker system prune -f --filter "until=168h" >> /var/log/docker-prune.log 2>&1
+```
 
-## Pitfall 5: Scope Creep
-
-**What happens:**
-You're building login. AI suggests "while we're here, let's add password reset, OAuth, 2FA..." Three days later you're still on "authentication."
-
-**Signs:**
-- Tasks keep expanding
-- "Quick additions" pile up
-- Original timeline is blown
-- MVP features keep growing
-
-**Recovery:**
-Return to your sprint plan. Is this task done as originally scoped? Yes → close it. New ideas → new tasks for later.
-
-**Prevention:**
-"Good idea. Add it to the backlog. For now, let's finish the original scope."
-
----
-
-## Pitfall 6: Weak Documentation Leading to Bad Output
-
-**What happens:**
-Your .clinerules says "try to write tests." Your ARCHITECTURE.md has vague descriptions instead of schemas. AI takes the path of least resistance: skips tests, guesses at schemas, produces mediocre code.
-
-**Signs:**
-- AI output quality feels inconsistent
-- Schema mismatches between what AI writes and what exists
-- Tests are superficial or missing
-- Different parts of the code use different patterns
-
-**Recovery:**
-Invest a session in strengthening your docs. Add real schemas to ARCHITECTURE.md. Make .clinerules iron-clad ("tests are mandatory" not "try to test"). Add patterns and conventions.
-
-**Prevention:**
-Invest in documentation quality upfront. The time spent writing thorough ARCHITECTURE.md and strict .clinerules pays back 50x in consistent AI output.
-
----
-
-## Pitfall 7: Not Using Claude Projects for New Features
-
-**What happens:**
-You want to add a feature. Instead of going back to Claude with the repo synced in a Project, you just tell Cline "add feature X." Without the strategic brainstorming, the implementation is narrow, misses edge cases, and doesn't fit well with the existing architecture.
-
-**Signs:**
-- New feature feels bolted-on rather than integrated
-- Architectural inconsistencies
-- Missing pieces discovered during testing
-- Rework needed to fit with existing code
-
-**Recovery:**
-Stop. Go to Claude (Opus, Project with repo synced). Have the brainstorming conversation. Generate proper task specs. Then execute.
-
-**Prevention:**
-New features always start with a conversation in Claude. Fixes and tweaks can go straight to Cline. Know the difference.
-
----
-
-## Pitfall 8: Confidence Inflation
-
-**What happens:**
-AI rates everything 8/10. You don't verify. Later, bugs emerge in production.
-
-**Signs:**
-- Every task is 8/10+ with thin justification
-- You're not manually testing
-- "Tests pass" but tests are superficial
-- Bugs appear during integration
-
-**Recovery:**
-For the next few tasks, verify everything yourself. Run the code. Try edge cases. Read the tests — do they test real behavior?
-
-**Prevention:**
-Trust but verify. AI's confidence score is a starting point. Your manual testing confirms it.
-
----
-
-## Pitfall 9: The Phantom Deploy
-
-**What it looks like:** You run a deploy. The output says success. Health checks pass. The AI declares "✅ Deploy complete." But the old code is still running. This is the hardest failure to catch because _every signal says success_.
-
-**Why it happens:** There are at least nine ways a deploy can silently fail — image tag mismatches, Docker cache lies, CI builds that never triggered, bind-mount blind spots. Each one produces "success" output. The AI sees "success" and moves on. You see "success" and trust it.
-
-**The core problem:** Health checks verify "is the process alive?" — not "is the _right_ process alive?" A container running months-old code passes health checks perfectly.
-
-**How to recover:**
-1. **Implement the build-info pattern** — a `/api/build-info` endpoint that returns the git SHA baked into the image. See [Deploy Verification — The Build-Info Pattern](/part-5/deploy-verification#the-build-info-pattern).
-2. **Add AI deploy rules** to your `.clinerules` / `CLAUDE.md` — the AI must check `/api/build-info` and compare SHAs before declaring "done." See [Deploy Verification — AI Deploy Rules](/part-5/deploy-verification#ai-deploy-rules).
-3. **Use the pre-flight checklist** before every deploy. See [Deploy Verification — The Deploy Verification Checklist](/part-5/deploy-verification#the-deploy-verification-checklist).
-
-**Prevention:**
-- Never trust "container started" as proof of a successful deploy
-- Always verify with a code-level check (build-info SHA, grep a known string, check a version endpoint)
-- Add `--force-recreate` to every registry-pull deploy command
-- Check CI build status _before_ deploying, not after
-
-::: tip
-This pitfall is uniquely dangerous in AI-assisted workflows because the AI is _designed_ to report success confidently. It sees Docker output saying "Started" and concludes the deploy worked. The AI has no way to know the container is running old code unless you give it a verification mechanism.
+Add `df -h /` to your deploy checklist. If it's above 80%, prune first. [Deployment Platforms](/part-5/deployment-platforms#docker-image-cleanup-the-silent-disk-killer) has the full pattern.
 :::
 
 ---
 
-## Pitfall 10: Docker Disk Space Exhaustion
+## Pitfall 8: The groundhog-day bug
 
-**What happens:**
-After weeks or months of registry-pull deploys (e.g. pulling from GHCR on a Hetzner VM), the server runs out of disk space. Containers fail to start with errors like `no space left on device`. Logs stop writing. Builds fail halfway. Databases refuse new inserts. Everything was working perfectly on the last deploy — nothing obviously changed.
+**What happens:** Three sessions, three attempts at the same bug. Each one tries much the same thing, hits the same wall and ends with a workaround. The bug comes back. Nobody asks why.
 
-**Signs:**
-- Containers unexpectedly failing to start or restart
-- `docker compose up` exits with `no space left on device`
-- Server logs stop updating
-- CI pulls succeed but the container won't run
-- `df -h /` shows 95%+ disk usage
+This is different from Pitfall 4. That one happens inside a session. This one happens across sessions, and you only notice if something remembers the earlier attempts.
 
-**Why it happens:**
-Every `docker compose pull` downloads a new image but Docker never deletes the old one. Old images become "dangling" — no longer tagged, no longer used — but they stay on disk. Each image is typically 200–800MB. After 50 deploys, that's potentially 40GB of images you'll never use.
+**The real cause is often the instructions, not the code.** A rule in CLAUDE.md that no longer matches the code. An architecture doc describing how things worked two months ago. A lesson that's written down but never applied. Claude follows them faithfully, straight into the same wall.
 
-**Recovery:**
-1. SSH into the server
-2. Check the damage: `docker system df` and `df -h /`
-3. Remove dangling images: `docker image prune -f`
-4. If still full, remove all unused resources: `docker system prune -f --filter "until=72h"`
-5. Verify free space is restored: `df -h /`
-6. Restart containers: `docker compose up -d`
+**Recovery:** Ask for a self-audit. "We've tried to fix this three times. Before touching code, check CLAUDE.md, the architecture doc and your memory for anything that contradicts the code or might be steering us wrong." Fix the rule or the doc, then fix the bug.
 
-**Prevention:**
-Add `docker image prune -f` as the last line of every deploy script. Add a weekly cleanup cron job to catch anything that slips through:
+**Prevention:** Keep [project memory](/part-5/project-memory) so the earlier attempts are on record, and give Claude a rule to suggest a self-audit when the same area fails twice.
 
-```bash
-# /etc/cron.d/docker-cleanup — runs every Sunday at 3am
-0 3 * * 0 root docker system prune -f --filter "until=168h" >> /var/log/docker-prune.log 2>&1
+---
+
+## Quick recovery checklist
+
+When a project feels off track:
+
+1. Are my docs too long? Condense, split, archive.
+2. Have I pushed Claude for its real opinion?
+3. Did I actually read the plan?
+4. Same error three times? Research task file, fresh session.
+5. Am I on a side task? Task file, back to the main one.
+6. Did the deploy really work? Check the build-info commit.
+7. Is this the same bug as last week? Self-audit.
+
+Most problems end the same way: **stop, write it down, start a fresh session.**
+
+## What to add to CLAUDE.md
+
+```markdown
+## When things go wrong
+- If the same error comes back three times, stop. Write a research task file and suggest a fresh session.
+- If an area has failed in two sessions, suggest a self-audit of CLAUDE.md and the docs before more fixes.
+- Recommend things even if I didn't ask: server access, real test data, a bigger rethink. Say why.
+- Put anything that changes what I'll see at the top of every plan.
+- Never call a deploy done until the build-info commit matches.
+- Keep docs short. When a file passes its length limit, condense, split or archive it.
 ```
 
-Add disk space to your pre-deploy checklist: `df -h /` — if above 80%, prune before pulling.
-
-See [Docker Image Cleanup: The Silent Disk Killer](/part-5/deployment-platforms#docker-image-cleanup-the-silent-disk-killer) for the full pattern and cron setup.
-
 ---
 
-## Pitfall 11: The Groundhog Day Bug
-
-**What happens:**
-You've had three separate Cline sessions trying to fix the same bug. Each session, Cline tries similar approaches, hits similar walls, and ends with a partial fix or workaround. There's no connection between sessions — Cline doesn't know it's been here before. It never occurs to Cline to question whether its own instructions or the project architecture might be the root cause.
-
-**Signs:**
-- Same bug keeps reappearing across multiple sessions
-- Cline tries similar (failing) approaches each time
-- The fix works temporarily but the problem comes back
-- Nobody's questioning *why* this keeps happening
-
-**Why it's different from Pitfall 3:**
-Pitfall 3 (going in circles) is within a single session. The Groundhog Day Bug is across sessions — the kind of problem that only becomes visible when you have memory between conversations.
-
-**Recovery:**
-1. If you have the [MCP memory server](/part-5/project-memory) set up, `memory_check_patterns` will catch this automatically after 2+ failed sessions on the same area
-2. Trigger a **self-audit**: Cline reviews `.clinerules`, `ARCHITECTURE.md`, `LEARNINGS.md`, and prior session solutions
-3. The problem is often in the instructions, not the code — contradictory rules, outdated architecture docs, or a LEARNINGS.md entry that's not being applied
-4. Fix the root cause (update rules/docs), not just the symptom
-
-**Prevention:**
-Set up [project memory](/part-5/project-memory). The self-audit trigger catches this pattern before it costs you five sessions instead of two.
-
----
-
-## Pitfall 12: Dev-Docs Bloat
-
-**What happens:**
-Your project is on Sprint 4. The `dev-docs/` folder has 40+ files — old sprint plans, completed task specs, changelogs. You try to sync the repo with Claude Chat for a phase audit, but there's too much noise. The audit is shallow because Claude is processing 40 stale task docs alongside the 5 that matter.
-
-**Signs:**
-- `dev-docs/` folder has more than 15 files
-- Claude Chat audits feel unfocused or surface-level
-- You can't remember which sprint plan is current
-- Old task docs that will never be referenced again still sit in the repo
-- `.clineignore` has to exclude dev-docs to control token costs
-
-**Recovery:**
-1. Set up the [MCP memory server](/part-5/project-memory) and run `memory_archive_sprint` for completed sprints
-2. Move completed sprint folders to `.archive/` or delete them (their content lives in the database)
-3. Only the active sprint's materials should remain as markdown
-
-**Prevention:**
-Build document lifecycle management into your workflow from Sprint 1. When a sprint completes, archive it. See [Project Memory — The Document Lifecycle](/part-5/project-memory#the-document-lifecycle) for the full pattern.
-
----
-
-## Quick Recovery Checklist
-
-When a project feels off-track:
-
-1. [ ] Am I in a conversation that's too long? → Start fresh
-2. [ ] Am I working on a side task? → Write task doc, refocus
-3. [ ] Am I going in circles? → Write task doc, start fresh
-4. [ ] Are my docs up to date? → Quick review and update
-5. [ ] Am I actually testing? → Be honest
-6. [ ] Did I skip plan mode? → Go back to plan mode
-7. [ ] Is scope still reasonable? → Check sprint plan
-8. [ ] Did my deploy actually work? → Check `/api/build-info` SHA
-9. [ ] Is this the same bug from a previous session? → Check project memory, trigger self-audit
-10. [ ] Is my dev-docs folder bloated? → Archive completed sprints
-
-Most problems resolve with: **stop, write a task doc, start a fresh conversation.**
-
----
-
-**Next:** [Team Workflows](/part-5/team-workflows) — Adapting this for multiple people.
+**Next:** [Project Memory](/part-5/project-memory)

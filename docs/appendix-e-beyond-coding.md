@@ -1,1111 +1,385 @@
 ---
 title: Appendix E - Beyond Coding
-description: Adapting this methodology to any complex AI-assisted project across all domains
+description: Using the same method for courses, campaigns, process docs and research, with a worked example built in Claude Code and Cowork
 ---
 
-# Appendix E: Applying the Methodology Beyond Coding
+# Appendix E: Beyond Coding
 
 ## TLDR
 
-**Key Insight:** This methodology works for ANY complex project where AI assists in creation, not just software development.
+This method isn't really about code. It's about getting something big and complicated out of an AI without it turning to mush. That problem shows up everywhere: courses, marketing, process docs, research.
 
-**Why It Works:**
-- Context window limits exist in all domains
-- Quality gates needed regardless of output type
-- Complex projects need phased development
-- Documentation architecture prevents scope creep
-- Confidence scoring ensures output quality
+The same moves work in every one of them:
 
-**Proven Domains:**
-- Education (lesson planning, curriculum design)
-- Marketing (campaigns, content systems)
-- Business processes (workflow design, documentation)
-- Research (analysis pipelines, literature reviews)
-- Content creation (courses, books, multimedia)
+- Talk it through before you make anything.
+- Build one small piece and check it before you build forty.
+- Write down the standards, so every session works to the same rules.
+- One piece of work per session.
+- Score each piece honestly, and have an expert audit the batch.
 
-**Same Principles, Different Outputs:**
-- Coding → Interactive lessons
-- Database → Curriculum structure
-- Tests → Learning assessments
-- Deploy → Deliver to students
+Only the vocabulary changes. Code becomes lessons. Tests become assessments. Deploying becomes delivering to students.
 
 ---
 
-## Why This Methodology is Domain-Agnostic
+## Why it works outside code
 
-### The Core Problem is Universal
+Ask an AI for a whole 40-hour course in one go and you get the course equivalent of a demo app. It looks complete. The activities don't connect, the grammar doesn't build from one lesson to the next, and you spend 50 hours fixing it. You'd have been quicker writing it yourself.
 
-**In Software Development:**
-```
-Problem: Build a dashboard with 20 features
-AI Response: Generates 10,000 lines of code
-Result: Works as demo, breaks in production
-Cost: $2000 wasted
-```
+The causes are the same as in software:
 
-**In Language Education:**
-```
-Problem: Create a 40-hour French course with interactive activities
-AI Response: Generates course outline with generic activities
-Result: Activities lack pedagogical coherence, don't build on each other
-Cost: 50 hours of teacher time wasted reviewing/fixing
-```
+- The job is too big for one conversation.
+- Nothing checks the quality, so mediocre work sails through.
+- Nobody wrote the decisions down, so each session reinvents them.
+- Nothing gets tested until the end, when everything is wrong at once.
 
-**The Pattern:**
-- Scope too large for AI context window
-- No quality gates → mediocre output proceeds
-- No documentation of decisions
-- No phased validation
-- Expensive failure
+So are the fixes:
 
-### The Solution is Also Universal
-
-**Core Principles That Transfer:**
-
-1. **MVP-First Scoping**
-   - Coding: Build core feature before full app
-   - Education: Create one lesson before full course
-   - Marketing: Test one campaign before annual plan
-
-2. **Documentation Architecture**
-   - Coding: Roadmap, rules, learnings
-   - Education: Pedagogical framework, learning objectives, lesson structure
-   - Marketing: Brand guidelines, audience personas, content pillars
-
-3. **Confidence Scoring**
-   - Coding: Does code work? Tests pass?
-   - Education: Does lesson achieve learning objectives? Engagement predicted?
-   - Marketing: Does content match brand? Conversion potential?
-
-4. **Phase Audits**
-   - Coding: Senior developer reviews code
-   - Education: Experienced teacher reviews lesson plans
-   - Marketing: Brand manager reviews campaign assets
-
-5. **Context Management**
-   - Coding: New chat per task, reference docs
-   - Education: New chat per lesson, reference curriculum docs
-   - Marketing: New chat per asset, reference brand guidelines
-
-**Same methodology. Different domain vocabulary.**
+| Idea | In code | In a course | In marketing |
+|------|---------|-------------|--------------|
+| Small first | One core feature | One pilot lesson | One week on one channel |
+| Written standards | CLAUDE.md, ARCHITECTURE.md | Teaching approach, lesson template | Brand voice, audience personas |
+| Confidence score | Does it work? Tests pass? | Does it hit the learning objective? | On brand? Clear call to action? |
+| Audit | A senior developer | An experienced teacher | The brand manager |
+| One task per session | One feature | One activity | One asset |
 
 ---
 
-## Deep Example: Professional Language Training
+## Worked example: a Business French course
 
-Let's walk through applying this methodology to Richard's actual domain: creating AI-assisted interactive language learning content.
+This is my other trade: interactive language training. Here's the method applied to it, start to finish.
 
-### The Traditional Approach (The Problem)
+### The trap
 
-**Language Training Organization's Vision:**
-```
-"We want to create a complete 40-hour Business French course with:
-- Interactive activities (drag-drop, fill-in-blank, scenarios)
-- Grammar explanations adapted to learner level
-- Cultural context notes
-- Pronunciation guides
-- Real business scenarios (meetings, emails, negotiations)
-- Assessment activities
-- Progress tracking
-- Personalized content based on learner industry"
-```
+A training company wants a 40-hour Business French course: interactive activities, grammar adapted to level, cultural notes, pronunciation, real business scenarios, assessments, progress tracking, and content tailored to each learner's industry.
 
-**What Usually Happens:**
-```
-Trainer: "AI, create a 40-hour Business French course..."
-AI: [Generates generic course outline]
-AI: [Creates activities that don't connect]
-AI: [Provides grammatical explanations without pedagogical progression]
-Trainer: [Spends 50 hours reviewing and fixing]
-Result: Mediocre course that could have been made faster traditionally
-```
+The usual approach is one big prompt. The AI produces a generic outline and activities that don't build on each other. The trainer finds out what's wrong only after reviewing all of it.
 
-**Why It Fails:**
-- 40 hours is too large for AI context window
-- No pedagogical framework documented
-- Activities don't build on each other
-- No validation after each lesson
-- Generic content, not industry-specific
-- Trainer doesn't know what's wrong until reviewing everything
+### Step 1: talk it through
 
-### Applying the Methodology (The Solution)
+> **Where:** Claude Chat, Opus. Chat knows you, which helps here.
 
-#### Phase 0: The Brainstorming Session
-
-**Opening Prompt:**
 ```markdown
 I want to create a 40-hour Business French course for professionals.
 
-Full vision:
-- 40 hours of content (20 lessons × 2 hours each)
-- Interactive HTML activities (drag-drop, fill-in-blank, matching)
-- Grammar progression from A2 to B2 level
-- Business scenarios (meetings, presentations, emails, negotiations)
-- Industry-specific vocabulary (finance, tech, healthcare)
-- Cultural notes for international business
-- Pronunciation guides using audio
-- Formative assessments after each unit
-- Summative assessment at end
-- Personalization based on learner's industry
+The full vision:
+- 20 lessons of 2 hours
+- Interactive HTML activities (drag and drop, fill the gap, matching)
+- Grammar from A2 to B2
+- Business scenarios: meetings, presentations, emails, negotiations
+- Industry vocabulary (finance, tech, healthcare)
+- Cultural notes, pronunciation, assessments, personalisation
 
-Constraints:
-- Timeline: Need pilot lesson in 2 weeks for testing
-- Budget: ~$300-500 in AI tokens for development
-- Team: Just me (experienced language trainer, not a coder)
-- Delivery: HTML activities + PDF materials, deploy via LMS
+My situation:
+- I'm an experienced language trainer. I don't code.
+- I need a pilot lesson to test with learners soon.
+- Delivery: HTML activities and PDF handouts, through our LMS.
 
-Help me:
-1. Identify core pedagogical value
-2. Propose an MVP scope (one pilot lesson)
-3. Separate must-have from nice-to-have
-4. Estimate timeline and complexity
-5. Outline full course roadmap (MVP → v1.0 → Production)
+Don't plan it yet. Talk it through with me. What's the core value?
+What's the smallest thing that would prove it works? What am I missing?
 ```
 
-**AI Response (with extended thinking):**
+After a few rounds, the useful answer looks like this:
+
 ```markdown
-# Business French Course - MVP Scoping Analysis
+## Core value
+One coherent lesson that teaches one business skill through
+interactive activities with grammar support. Everything else is
+an extension of that.
 
-## Core Pedagogical Value
+## Pilot: one 2-hour lesson, "Taking part in a business meeting" (B1)
+- Grammar: pouvoir, devoir, falloir for making suggestions
+- 20 meeting terms
+- Four activities: vocabulary warm-up, grammar practice,
+  reading a meeting transcript, a role-play
+- Support: one-page grammar sheet, vocabulary list, a paragraph
+  on French meeting etiquette
+- Assessment: a 5-question quiz and a self-assessment rubric
 
-After analyzing your vision, the essential value is:
+## Deferred
+- The other 19 lessons (only if the pilot works)
+- Industry versions, audio, personalisation, LMS packaging,
+  progress tracking, the final exam
 
-**A coherent lesson that teaches one business skill through 
-interactive activities with grammar support.**
+## Success looks like
+An experienced trainer reviews it and says "this would work
+with real students".
 
-Everything else (40 lessons, personalization, audio, assessments) 
-are enhancements, but the innovation is showing that AI can create 
-pedagogically sound, interactive lessons that actually teach.
+## Questions for you
+1. Is one pilot lesson enough to tell?
+2. Is "meetings" the right topic to start with?
+3. Anything I deferred that you can't live without?
+```
 
-## Recommended MVP Scope (v0.1)
+That cut is the most valuable thing in the whole process. Nineteen lessons just moved to "later", and nobody had to argue about them.
 
-**Goal:** Create ONE complete 2-hour lesson that proves the concept
+### Step 2: mock up one activity
 
-**Timeline:** 2 weeks
-**Estimated Cost:** $200-$300 in tokens
-**Success Criteria:** Experienced trainer reviews and says "this is 
-pedagogically sound and would work with real students"
+Before writing anything, ask [Claude Design](/part-2/mockups-first) to mock up what one activity looks like on a laptop and a phone. Push it until you'd be happy to put it in front of a learner. It's much cheaper to argue about a mockup than about 200 lines of finished HTML.
 
-### MVP - One Pilot Lesson
+### Step 3: write the standards down
 
-**Topic:** "Participating in a Business Meeting" (Common, high-value skill)
+The coding documents all have a course equivalent:
 
-**Components:**
+| Code project | Course project |
+|--------------|----------------|
+| README.md | COURSE_VISION.md |
+| Sprint plan | CURRICULUM_ROADMAP.md |
+| CLAUDE.md rules | CONTENT_STANDARDS.md |
+| TASK_TEMPLATE.md | ACTIVITY_TEMPLATE.md |
+| LEARNINGS.md | LEARNINGS.md (same idea) |
 
-1. **Lesson Structure Document**
-   - Learning objectives (clear, measurable)
-   - Grammar point: Modal verbs (pouvoir, devoir, falloir) for suggestions
-   - Vocabulary set: 20 meeting-related terms
-   - CEFR level: B1
-   - Estimated time: 2 hours
+Put them all in one project folder. If you build in Claude Code, add a short CLAUDE.md that says who you are and tells it to read CONTENT_STANDARDS.md before every task. (Claude Code can pull a file in with `@CONTENT_STANDARDS.md`.)
 
-2. **Interactive Activities (4 activities)**
-   - Warm-up: Match vocabulary to images (HTML drag-drop)
-   - Grammar practice: Fill-in modal verbs in meeting contexts
-   - Scenario: Read meeting transcript, answer comprehension questions
-   - Production: Role-play meeting scenario with prompts
+**CURRICULUM_ROADMAP.md** breaks the pilot into small tasks:
 
-3. **Support Materials**
-   - Grammar explanation (1 page PDF)
-   - Vocabulary list with translations
-   - Cultural notes: French meeting etiquette (1 paragraph)
+```markdown
+## Pilot lesson
 
-4. **Assessment**
-   - 5-question formative quiz
-   - Self-evaluation rubric for role-play
+### Phase 1: Teaching framework
+- 1.1 Teaching principles
+- 1.2 Lesson template
+- 1.3 Activity standards
 
-### MVP Non-Features (Explicitly Deferred)
+### Phase 2: Lesson structure
+- 2.1 Learning objectives
+- 2.2 Vocabulary (20 terms)
+- 2.3 Grammar progression
+- 2.4 Activity sequence
 
-❌ 19 more lessons (build if pilot succeeds)
-❌ Industry-specific vocabulary (generic business for pilot)
-❌ Audio/pronunciation (text-based for MVP)
-❌ Personalization engine (one-size-fits-all)
-❌ LMS integration (standalone HTML files)
-❌ Summative assessment (formative only)
-❌ Progress tracking (manual for pilot)
+### Phase 3: Activities
+- 3.1 Vocabulary warm-up (matching)
+- 3.2 Grammar practice (fill the gap)
+- 3.3 Reading: meeting transcript
+- 3.4 Role-play prompts
 
-## Version 1.0 (If MVP Validates)
+### Phase 4: Support materials
+- 4.1 Grammar sheet   4.2 Vocabulary list   4.3 Cultural notes
 
-If trainer review validates the pilot lesson:
-- Create Unit 1 (5 lessons on Meeting Skills)
-- Add basic audio for key phrases
-- Refine activity templates based on pilot learnings
-- Create unit assessment
+### Phase 5: Assessment and review
+- 5.1 Quiz   5.2 Self-assessment rubric   5.3 Pilot review
+```
 
-## Production Course (If v1.0 Succeeds)
+**CONTENT_STANDARDS.md** does the job CLAUDE.md's unbreakable rules do in code:
 
-- Complete 40 hours (20 lessons, 4 units)
-- Industry-specific versions (finance, tech, healthcare)
-- Full audio integration
-- LMS integration (SCORM package)
-- Adaptive personalization
-- Analytics dashboard
+```markdown
+# Content standards
 
-## Technical Recommendations for MVP
+## Every activity must
+- Have one clear learning objective, tied to a CEFR descriptor
+- Use a real business situation
+- Scaffold: support first, then independence
+- Give immediate feedback that teaches, not just "right/wrong"
+- Fit B1 and take 15 to 30 minutes
 
-**Activity Format: HTML + JavaScript**
-- Pros: Works everywhere, no special tools needed
-- Cons: Requires some coding (AI can generate)
-- Tool: Claude generates interactive HTML files
+## French
+- Natural, current French in a business register
+- Instructions in French, at B1 level
+- No false friends, no cultural mistakes
 
-**Alternative: React Components** (if you want reusable)
-- Pros: Better for later scaling
-- Cons: More complex setup
-- Tool: Claude generates React components, you deploy
+## HTML activities
+- One self-contained file, no outside dependencies
+- Works on a phone
+- Keyboard-friendly and screen-reader friendly
 
-**Recommendation:** Start with HTML files (simpler, proves concept faster)
+## Confidence score (8/10 minimum)
+Objective met, instructions clear, French correct, culture accurate,
+it works, and the timing is realistic.
 
-## Pedagogical Framework Document
+## Ask me before going on if
+- You're unsure the level is right
+- A cultural point might be wrong
+- A grammar explanation feels unclear
+- Your score is below 8
+```
 
-Before building, we need to document:
+**ACTIVITY_TEMPLATE.md** is the task file for one activity: objective, level, type, time, the business situation, the instructions learners will see, the content, the feedback, the scaffolding, then tests (does it work on a phone? is it doable in the time?) and the confidence score with evidence.
 
-**PEDAGOGICAL_PRINCIPLES.md**
-- Communicative approach (focus on real-world tasks)
-- Task-based learning (activities simulate business contexts)
-- Grammar in context (not isolated drills)
-- Scaffolding (support → independence)
-- Formative feedback throughout
+**LEARNINGS.md** catches what you'd otherwise rediscover every session:
 
-**LESSON_TEMPLATE.md**
-- Warm-up (5 min) - Activate prior knowledge
-- Presentation (20 min) - New vocabulary/grammar in context
-- Practice (40 min) - Guided activities
-- Production (40 min) - Free production task
-- Assessment (15 min) - Formative quiz
+```markdown
+## Vocabulary matching
+Learners get lost with more than 10 items.
+Fix: two sets of 8, grouped by theme.
 
-**ACTIVITY_STANDARDS.md**
-- Clear instructions in French (B1 level)
-- Immediate feedback mechanisms
-- Authentic business contexts
-- Progressive difficulty
-- Cultural authenticity
+## Grammar
+B1 learners need the example before the rule.
+Always: example, pattern, rule, practice.
 
-## Estimated Timeline
+## Drag and drop
+Native drag and drop is poor for keyboard users.
+Fix: click to select, with keyboard support.
 
-### Week 1: Documentation + First Activity
-- Day 1-2: Create pedagogical framework docs
-- Day 3-4: Generate lesson structure
-- Day 5-7: Create and test first two activities
+## "Réunion" or "rendez-vous"?
+"Réunion" for internal meetings, "rendez-vous" for clients.
+Check every meeting activity for this.
+```
 
-### Week 2: Remaining Activities + Polish
-- Day 1-3: Create remaining two activities
-- Day 4-5: Create support materials and assessment
-- Day 6-7: Internal review and refinement
+### Step 4: build it, one task per session
 
-**Confidence:** 8/10 this is achievable in 2 weeks
+Here the work splits in two, and so do the tools.
 
-## Budget Estimate
+**The interactive activities are code**, even if they're small. Build them in Claude Code. In the desktop app, that's the Code tab: no terminal, and the activity opens in the Browser pane so you can click through it as it's built.
 
-- Brainstorming & framework: ~$20
-- Lesson structure: ~$30
-- Activity generation (4 activities): ~$120-$160
-- Support materials: ~$30
-- Assessment creation: ~$20
-- Refinement: ~$30
-- **Total: $250-$290**
+**The documents** (the grammar sheet, the vocabulary list, the cultural notes, the rubric) aren't code. Claude Code can write them fine. So can **Cowork**, the desktop app's tab for general work on your files, and if you already do your document work there, stay there. Cowork shares Chat's memory, so it already knows you. Start each Cowork session by pointing it at the project folder and telling it to read CONTENT_STANDARDS.md first.
 
-Well within your $500 budget.
+Either way: a fresh session per task, and a plan before anything gets made.
 
-## Next Steps
+**Task 3.1 in Claude Code:**
 
-If this scope looks good:
-1. Confirm pedagogical framework
-2. Create documentation structure
-3. Generate lesson plan for pilot
-4. Begin activity creation with task-based workflow
+```
+Plan task 3.1: the vocabulary warm-up.
+Read CURRICULUM_ROADMAP.md, ACTIVITY_TEMPLATE.md and LEARNINGS.md first.
+```
+
+**The plan that comes back (shortened):**
+
+```markdown
+# Plan: vocabulary warm-up
+
+## Vocabulary
+8 terms, not 10 (LEARNINGS says more than 10 loses people).
+Nouns first, then verbs.
+l'ordre du jour, le compte-rendu, la réunion, le participant,
+présider, convoquer, reporter, prendre des notes
+
+## Design
+French term to English meaning. Click to select (LEARNINGS:
+drag and drop is poor on a keyboard). Order shuffled each time.
+A "Check" button rather than instant marking, so learners think first.
+Feedback shows the right answer and a short encouraging line.
+
+## Build
+One HTML file, no dependencies. Works on a phone.
+Keyboard navigation and screen-reader labels.
+
+## Checks
+A headless browser run at laptop and phone width: complete it
+by keyboard only, screenshot each state, and I'll look at the shots.
+
+## Confidence target: 8/10
 
 ## Questions
-
-1. Does one pilot lesson feel right for validation?
-2. HTML activities or React components?
-3. Any must-have features I put in "deferred"?
-4. Is "participating in meetings" the right topic for pilot?
+1. Instructions in French only? (I'd say yes, it's B1.)
+2. One worked example at the top? (I'd say yes.)
 ```
 
-#### Phase 1: Documentation Architecture
+**Read it before you say yes.** The plan is where you catch "that term is too formal for B1" or "we said 8, not 10". Once you've answered:
 
-**Core Documents (Adapted for Education):**
+```
+French only is fine. Yes to the example. Go ahead.
+```
 
-**1. README.md** → **COURSE_VISION.md**
+Claude builds the file, runs the check in the background, looks at the screenshots, scores it, and notes anything new in LEARNINGS.md. You open it in the Browser pane and try it yourself. It isn't done until you have.
+
+### Step 5: audit the pilot
+
+When all four activities are done, open a fresh session that didn't build any of it, and ask for a proper review:
+
 ```markdown
-# Business French Course Vision
+You're a Business French teacher with 10 years' experience.
+Review the pilot lesson in this folder: four activities and their support material.
 
-## The Big Picture
-40-hour comprehensive Business French course for professionals...
+Check:
+1. Teaching: clear objectives, sensible scaffolding
+2. Level: is it really B1?
+3. Culture: are the business situations accurate?
+4. Sequence: does each activity build on the last?
+5. French: natural and correct?
+6. Would learners stay interested?
 
-## Current Phase: MVP (v0.1)
-One pilot lesson on "Participating in Business Meetings"
-- 2 hours of content
-- 4 interactive activities
-- B1 level
-- Generic business context
-
-## Future Phases
-- v1.0: Complete Unit 1 (5 lessons on meetings)
-- Production: Full 40-hour course with personalization
+Score it out of 10. Below 9, give me specific fix tasks.
 ```
 
-**2. ROADMAP.md** → **CURRICULUM_ROADMAP.md**
+A typical result:
+
 ```markdown
-# Curriculum Development Roadmap
+## Score: 8/10
 
-## MVP Phase (v0.1) - 2 weeks
+Strengths: clear objectives, good progression, natural French.
 
-### Phase 1: Pedagogical Framework (Week 1, Days 1-2)
-- Task 1.1: Create PEDAGOGICAL_PRINCIPLES.md
-- Task 1.2: Create LESSON_TEMPLATE.md
-- Task 1.3: Create ACTIVITY_STANDARDS.md
+Fix before the pilot:
+- A: "le procès-verbal" is too formal for B1. Swap it for "prendre des notes".
+- B: The modal verbs explanation assumes the subjunctive. Keep it indicative.
+- C: Four role-play scenarios is too many for 40 minutes. Keep the best two.
+- D: The note on "tu" at work needs two lines on when it's acceptable.
 
-### Phase 2: Lesson Structure (Week 1, Days 3-4)
-- Task 2.1: Define learning objectives
-- Task 2.2: Select vocabulary (20 terms)
-- Task 2.3: Design grammar progression
-- Task 2.4: Plan activity sequence
-
-### Phase 3: Activity Development (Week 1 Day 5 - Week 2 Day 3)
-- Task 3.1: Warm-up activity (vocabulary matching)
-- Task 3.2: Grammar practice (fill-in-blank)
-- Task 3.3: Reading comprehension (meeting transcript)
-- Task 3.4: Production activity (role-play prompts)
-
-### Phase 4: Support Materials (Week 2, Days 4-5)
-- Task 4.1: Grammar explanation document
-- Task 4.2: Vocabulary list with translations
-- Task 4.3: Cultural notes
-
-### Phase 5: Assessment & Polish (Week 2, Days 6-7)
-- Task 5.1: Formative quiz (5 questions)
-- Task 5.2: Self-evaluation rubric
-- Task 5.3: Pilot review and refinement
+Expected after fixes: 9/10.
 ```
 
-**3. CLAUDE_RULES.md** → **AI_CONTENT_STANDARDS.md**
+Each fix is a small task in its own session. Then a real trainer reviews it, and then real learners try it. That's your deploy.
+
+---
+
+## Other domains, briefly
+
+### Marketing
+
+**The trap:** "A year of content for five channels." Overwhelming, inconsistent, generic.
+**Small first:** one week on one channel, to prove the tone works.
+**Standards:** brand voice, audience personas, content pillars, a post template, a learnings log.
+**Score:** on brand? Clear call to action? Evidence from similar posts?
+**Audit:** the brand manager reviews the week before anything scales.
+
+### Process documentation
+
+**The trap:** "Document all our processes." It never finishes, and it's out of date by the time it does.
+**Small first:** one critical process, fully written up with a flowchart.
+**Standards:** how we document a process, a glossary, a process template.
+**Score:** checked with the team? Do the people involved understand the flowchart? Are the usual exceptions covered?
+**Audit:** the process owner signs it off before the next one starts.
+
+### A research literature review
+
+**The trap:** "Review 200 papers." The analysis drifts and the connections get missed.
+**Small first:** 20 papers, properly analysed against a framework.
+**Standards:** what we're looking for, how each paper is analysed, how papers link up.
+**Score:** key findings pulled out? Limits noted? Links to other papers found?
+**Audit:** a senior researcher reviews the first 20 before you go to 200.
+
+---
+
+## Adapting it to your field
+
+1. **Name your "code".** What are you actually making? Lessons, campaigns, reports, processes.
+2. **Say what "good" means.** Write the criteria down. That's your standards file, and it's the most important document you'll write.
+3. **Map the documents.** Vision, roadmap, standards, a template for one unit of work, a learnings log.
+4. **Define 8/10.** Five or six checks a piece of work must pass before you move on.
+5. **Find your auditor.** Who in your field would spot what's wrong? If you can't get that person, have a fresh Claude session play them. Then get the person anyway before it goes live.
+6. **Keep the loop.** One piece per session: plan, make, check, score, note what you learned.
+
+A blank to fill in:
+
 ```markdown
-# AI Content Development Standards
-
-## Pedagogical Requirements
-
-### Every Activity Must:
-- [ ] Have clear learning objective (from CEFR descriptors)
-- [ ] Use authentic business context
-- [ ] Provide scaffolding (support → independence)
-- [ ] Include immediate feedback
-- [ ] Be appropriate for B1 level
-- [ ] Take 15-30 minutes to complete
-
-### French Language Standards:
-- [ ] Natural, contemporary French
-- [ ] Business register (formal but not stilted)
-- [ ] Clear instructions in French (B1 level vocabulary)
-- [ ] Example sentence provided for complex structures
-- [ ] Cultural authenticity (no false friends, cultural errors)
-
-### Technical Standards (HTML Activities):
-- [ ] Works on all modern browsers
-- [ ] Mobile-responsive design
-- [ ] Clear visual hierarchy
-- [ ] Accessible (keyboard navigation, screen reader friendly)
-- [ ] No external dependencies (self-contained)
-
-### Confidence Scoring (Adapted):
-
-Every activity must be scored:
-
-**8/10 Minimum Criteria:**
-- ✅ Learning objective clear and measurable
-- ✅ Activity achieves objective
-- ✅ Instructions clear (tested with B1 learner)
-- ✅ Feedback immediate and helpful
-- ✅ French language natural and error-free
-- ✅ Cultural context accurate
-- ✅ Technical functionality works
-- ✅ Completion time appropriate (15-30 min)
-
-**9/10 Criteria (for critical activities):**
-- All 8/10 criteria PLUS:
-- ✅ Exceptional engagement/motivation
-- ✅ Authentic real-world relevance
-- ✅ Innovative activity design
-
-### When to Ask Human Expert:
-
-**Automatic Review Needed:**
-1. Unsure about CEFR level appropriateness
-2. Cultural reference might be inaccurate
-3. Grammar explanation seems unclear
-4. Activity seems too easy or too hard
-5. Confidence score < 8/10
-
-**How to Flag:**
-```markdown
-## Expert Review Requested
-
-Activity: [Name]
-Issue: [Specific concern]
-Context: [Why this is uncertain]
-
-Questions:
-1. [Specific question]
-2. [Another question]
-
-Current confidence: 7/10
-Needs: Experienced trainer review
-```
-```
-
-**4. TASK_TEMPLATE.md** → **ACTIVITY_TASK_TEMPLATE.md**
-```markdown
-# Activity Task Template
-
-## Activity: [Name]
-
-### Learning Objective
-[One sentence: "By the end of this activity, learners will be able to..."]
-
-### CEFR Level: [A2/B1/B2]
-
-### Activity Type: [Vocabulary practice / Grammar drill / Reading / Speaking / Writing]
-
-### Estimated Time: [15-30 minutes]
-
-### Context
-[Business situation where this skill is needed]
-
----
-
-## Activity Design
-
-### Instructions (in French)
-[What learners will see]
-
-### Content
-[The actual activity content - vocabulary list, sentences, scenarios, etc.]
-
-### Feedback Mechanism
-[How learners know if they're correct]
-
-### Scaffolding Provided
-[Support elements: word bank, example, grammar hint, etc.]
-
----
-
-## Implementation (HTML)
-
-### Code Structure
-[Skeleton of HTML structure]
-
-### Interactive Elements
-[Drag-drop? Buttons? Input fields?]
-
-### Styling Notes
-[Visual design considerations]
-
----
-
-## Testing
-
-### Functionality Tests
-- [ ] Drag-drop works smoothly
-- [ ] Feedback displays correctly
-- [ ] All answers validated properly
-- [ ] Mobile responsive
-- [ ] Works in Chrome, Firefox, Safari
-
-### Pedagogical Tests
-- [ ] Instructions clear to B1 learner
-- [ ] Activity achievable in estimated time
-- [ ] Difficulty appropriate for level
-- [ ] Feedback helps learning (not just "correct/incorrect")
-
----
-
-## Confidence Score: [X/10]
-
-### Criteria Met (Must-Have):
-- [ ] Learning objective achieved
-- [ ] Instructions clear
-- [ ] French language correct
-- [ ] Cultural context accurate
-- [ ] Technical functionality works
-- [ ] Time estimate realistic
-
-### Criteria Met (Nice-to-Have):
-- [ ] Exceptional engagement potential
-- [ ] Innovative design
-- [ ] Additional scaffolding options
-
-### Evidence:
-[Screenshots, test results, feedback from pilot tester]
-
-### Justification:
-[Why this score? What would make it higher?]
-
----
-
-## Notes for Future Activities
-[Lessons learned, patterns to reuse, things to avoid]
-```
-
-**5. LEARNINGS.md** → **CONTENT_LEARNINGS.md**
-```markdown
-# Content Development Learnings
-
-## Pedagogical Insights
-
-### 2024-12-12: Vocabulary Activity Design
-**Discovery:** Learners get confused when vocabulary matching has more than 10 items.
-**Solution:** Break into two activities: 8 items each, with thematic grouping.
-**Apply to:** All future vocabulary matching activities.
-
-### 2024-12-13: Grammar Explanations
-**Discovery:** B1 learners need example sentence BEFORE rule explanation.
-**Solution:** Always: Example → Pattern → Rule → Practice
-**Apply to:** All grammar activities going forward.
-
-## Technical Insights
-
-### 2024-12-12: Drag-Drop Implementation
-**Discovery:** Native HTML drag-drop has accessibility issues.
-**Solution:** Use click-to-select approach with keyboard support.
-**Code snippet:** [see /activities/vocabulary-match-v2.html]
-**Apply to:** All interactive activities.
-
-### 2024-12-13: Mobile Layout
-**Discovery:** 3-column layout breaks on mobile devices.
-**Solution:** Use CSS Grid with auto-fit: minmax(250px, 1fr)
-**Apply to:** All activity layouts.
-
-## Cultural/Linguistic Insights
-
-### 2024-12-14: Meeting Vocabulary
-**Discovery:** "RDV" (rendez-vous) not commonly used for internal meetings.
-**Correction:** Use "réunion" for internal, "rendez-vous" for client meetings.
-**Apply to:** Review all meeting-related content.
-
-### 2024-12-14: Formality Levels
-**Discovery:** "Tu" vs "vous" distinction critical in business scenarios.
-**Solution:** All activities use "vous" unless context explicitly informal.
-**Apply to:** Consistent across all lessons.
-```
-
-#### Phase 2: Execution with Cline
-
-**Task 3.1: Create Vocabulary Matching Activity**
-
-**Cline Prompt:**
-```
-Can we please plan task 3.1 - Create vocabulary matching warm-up activity?
-
-Context:
-- Lesson: Participating in Business Meetings
-- Objective: Recognize 20 key meeting vocabulary terms
-- CEFR Level: B1
-- Format: HTML drag-drop or click-select matching
-- Time: 10-15 minutes
-
-Reference documents:
-- CURRICULUM_ROADMAP.md (for lesson context)
-- ACTIVITY_TASK_TEMPLATE.md (for structure)
-- AI_CONTENT_STANDARDS.md (for quality standards)
-- PEDAGOGICAL_PRINCIPLES.md (for teaching approach)
-
-Please create a plan that includes:
-1. Vocabulary selection (10 key terms, not 20 - manageable for activity)
-2. Matching format (French term → English translation? Or term → definition?)
-3. HTML implementation approach
-4. Feedback mechanism
-5. Confidence scoring criteria
-```
-
-**Cline Plan Mode Response:**
-```markdown
-# Plan: Vocabulary Matching Activity
-
-## Vocabulary Selection
-
-**Rationale:** Starting with 8 terms (not 10) based on cognitive load research.
-More manageable for warm-up activity.
-
-**Selected Terms:**
-1. l'ordre du jour (m.) - agenda
-2. le compte-rendu (m.) - minutes/meeting notes
-3. le procès-verbal (m.) - formal minutes
-4. la réunion (f.) - meeting
-5. le participant (m.) - participant
-6. présider - to chair (a meeting)
-7. convoquer - to call/convene (a meeting)
-8. reporter - to postpone
-
-**Grouping:** All nouns first, then verbs (easier cognitive pattern)
-
-## Activity Design
-
-**Format:** French term → English translation
-**Why:** B1 learners need receptive vocabulary before production
-
-**Interface:**
-- Left column: 8 French terms (randomized order)
-- Right column: 8 English translations (randomized order)
-- Click-select approach (accessibility-friendly)
-- Visual feedback: green for correct, red for incorrect
-- "Check Answers" button (not instant feedback - allows reflection)
-
-## HTML Implementation
-
-**Structure:**
-- Semantic HTML5 (article, section elements)
-- CSS Grid for layout (mobile-responsive)
-- Vanilla JavaScript (no dependencies)
-- Self-contained file (~200 lines total)
-
-**Accessibility:**
-- Keyboard navigation (tab, enter, arrow keys)
-- Screen reader friendly (aria-labels)
-- High contrast colors
-- Focus indicators
-
-## Feedback Mechanism
-
-**On "Check Answers":**
-- Correct matches: Green highlight + "Correct!"
-- Incorrect matches: Red highlight + show correct answer
-- Score displayed: "7/8 - Excellent!"
-- Encouragement message based on score:
-  - 8/8: "Parfait! You know these terms well."
-  - 6-7/8: "Très bien! Review the terms you missed."
-  - 4-5/8: "Bon travail! Practice these terms more."
-  - <4/8: "Keep practicing! Review the vocabulary list."
-
-## Confidence Scoring Criteria
-
-**Must-Have for 8/10:**
-- ✅ 8 appropriate B1 vocabulary terms
-- ✅ Accurate translations
-- ✅ Randomized order (different each time)
-- ✅ Clear visual feedback
-- ✅ Mobile responsive
-- ✅ Accessible (keyboard + screen reader)
-- ✅ Completion time: 8-12 minutes
-- ✅ Instructions in French (B1 level)
-
-**Nice-to-Have for 9/10:**
-- ✅ Audio pronunciation (defer to v1.0)
-- ✅ "Try again" without page reload
-- ✅ Hint system
-
-**Target:** 8/10 (sufficient for MVP)
-
-## Questions Before Starting
-
-1. French instructions ok? Or need English option?
-   - Suggest: French only (B1 level should understand)
-   
-2. Include example at top showing how to use?
-   - Recommend: Yes, one example pre-filled
-
-3. Vocabulary list reference document?
-   - Will need separate PDF with all 20 lesson terms
-
-Ready to proceed to Act Mode?
-```
-
-**After Review, Act Mode:**
-```
-You: "French instructions only is fine. Yes to example. We'll create vocabulary PDF in Task 4.2. Please proceed."
-
-[Cline creates activity-1-vocabulary-match.html]
-[Cline tests functionality]
-[Cline documents in task-3-1-activity.md]
-[Cline assigns confidence score: 8/10]
-```
-
-**Result:** One complete, tested, pedagogically-sound activity created in 30-45 minutes.
-
-#### Phase 3: Quality Assurance (Adapted)
-
-**Phase Audit Process for Education:**
-
-After completing all 4 activities:
-
-1. **Push to GitHub** (or share folder)
-
-2. **Expert Teacher Review** (human or AI as "senior educator")
-
-**Audit Prompt:**
-```markdown
-You are an experienced Business French teacher with 10+ years experience.
-
-I've created a pilot lesson "Participating in Business Meetings" with 4 activities.
-
-Please review the lesson for:
-1. Pedagogical soundness (clear objectives, appropriate scaffolding)
-2. CEFR level accuracy (truly B1 or misaligned?)
-3. Cultural authenticity (business context accurate?)
-4. Activity sequencing (logical progression?)
-5. Language accuracy (natural French, no errors)
-6. Engagement potential (will students be motivated?)
-
-Rate overall: X/10
-
-If < 9/10, provide specific "improvement tasks" to fix issues.
-```
-
-**Audit Results:**
-```markdown
-# Lesson Pilot Audit
-
-## Overall Score: 8/10
-
-### Strengths
-✅ Clear learning objectives
-✅ Appropriate activity progression
-✅ Language is natural and error-free
-✅ Cultural context accurate (French business meetings)
-✅ Activities technically functional
-
-### Issues Found
-
-❌ **Important:**
-1. Vocabulary Activity: "procès-verbal" too formal for B1 lesson
-   - Replace with "prendre des notes" (to take notes)
-   
-2. Grammar Activity: Modal verb explanation assumes knowledge of subjunctive
-   - Simplify: focus only on indicative mood for B1
-
-⚠️ **Minor:**
-3. Role-play prompts: 4 scenarios feels rushed for 40 minutes
-   - Recommend: 2 scenarios with more depth
-
-4. Cultural notes: Mention of "tutoiement" in workplace needs context
-   - Add 2-3 sentences about when "tu" acceptable
-
-### Improvement Tasks
-
-**Task 5.A: Revise Vocabulary List** (15 min)
-- Remove "procès-verbal"
-- Add "prendre des notes"
-- Update matching activity
-
-**Task 5.B: Simplify Grammar Explanation** (30 min)
-- Remove subjunctive reference
-- Add more example sentences (indicative only)
-- Update practice activity
-
-**Task 5.C: Reduce Role-Play Scenarios** (20 min)
-- Keep 2 best scenarios
-- Add reflection questions for each
-
-**Task 5.D: Expand Cultural Notes** (15 min)
-- Add context about workplace informality
-- Include example situations
-
-### After Improvements
-Expected score: 9/10 (ready for pilot with students)
+# [Your project]
+
+What I'm making:
+What "good" looks like:
+Who reviews it:
+
+Full vision:
+The small first version (a few weeks at most):
+How I'll know it worked:
+
+| Purpose | File | What goes in it |
+|---------|------|-----------------|
+| Vision | | |
+| Roadmap | | |
+| Standards | | |
+| One unit of work | | |
+| Learnings | | |
+
+8/10 means:
+-
+-
+-
 ```
 
 ---
 
-## Other Domain Examples
-
-### Marketing Campaign Development
-
-**Traditional Problem:**
-"Create a full year of content for 5 social channels" → Overwhelming, inconsistent, generic
-
-**Methodology Applied:**
-
-**MVP:** One week of content for one channel proving tone/engagement
-**Documentation:**
-- BRAND_GUIDELINES.md (voice, values, visual identity)
-- AUDIENCE_PERSONAS.md (who we're talking to)
-- CONTENT_PILLARS.md (themes we focus on)
-- POST_TEMPLATE.md (structure for each post type)
-- CAMPAIGN_LEARNINGS.md (what works, what doesn't)
-
-**Confidence Scoring:**
-- On-brand voice? 8/10 minimum
-- Engagement predicted? Evidence from similar posts
-- Clear CTA? Measurable goal?
-
-**Phase Audit:** Brand manager reviews week of content before expanding
-
----
-
-### Business Process Documentation
-
-**Traditional Problem:**
-"Document all our processes" → Never finishes, outdated immediately
-
-**Methodology Applied:**
-
-**MVP:** One critical process fully documented with flowcharts
-**Documentation:**
-- PROCESS_FRAMEWORK.md (how we document processes)
-- DEPARTMENT_GLOSSARY.md (terms and definitions)
-- PROCESS_TEMPLATE.md (structure for each process doc)
-- PROCESS_LEARNINGS.md (patterns discovered)
-
-**Confidence Scoring:**
-- Process accurate? Validated with team
-- Flowchart clear? Stakeholders understand
-- Edge cases covered? 80% of scenarios
-
-**Phase Audit:** Process owner reviews before documenting next process
-
----
-
-### Research Literature Review
-
-**Traditional Problem:**
-"Review 200 papers on topic" → Inconsistent analysis, missing connections
-
-**Methodology Applied:**
-
-**MVP:** 20 papers thoroughly analyzed with framework
-**Documentation:**
-- RESEARCH_FRAMEWORK.md (what we're looking for)
-- ANALYSIS_TEMPLATE.md (how each paper analyzed)
-- SYNTHESIS_STRUCTURE.md (how papers connect)
-- RESEARCH_LEARNINGS.md (patterns emerging)
-
-**Confidence Scoring:**
-- Analysis thorough? Key findings extracted
-- Connections identified? Papers related properly
-- Critical evaluation? Limitations noted
-
-**Phase Audit:** Senior researcher reviews analysis of 20 before expanding to 200
-
----
-
-## Adaptation Framework
-
-### How to Adapt This Methodology to Your Domain
-
-#### Step 1: Identify Your "Code"
-
-**What are you building with AI?**
-- Coding → Applications
-- Education → Lessons, courses
-- Marketing → Campaigns, content
-- Research → Analysis, reports
-- Business → Processes, documentation
-
-#### Step 2: Define Your Quality Criteria
-
-**What makes output "good" in your domain?**
-- Coding → Works, tested, maintainable
-- Education → Achieves learning objectives, engages students
-- Marketing → On-brand, engaging, converts
-- Research → Rigorous, connected, insightful
-- Business → Accurate, clear, actionable
-
-#### Step 3: Adapt Core Documents
-
-| Coding Document | Your Domain Equivalent |
-|-----------------|------------------------|
-| README.md | [DOMAIN]_VISION.md |
-| ROADMAP.md | [PROJECT]_ROADMAP.md |
-| CLAUDE_RULES.md | [DOMAIN]_STANDARDS.md |
-| TASK_TEMPLATE.md | [UNIT]_TEMPLATE.md |
-| LEARNINGS.md | [PROJECT]_LEARNINGS.md |
-
-#### Step 4: Define Confidence Scoring
-
-**For your domain, what's 8/10?**
-
-Example templates:
-
-**Education:**
-```markdown
-### 8/10 Criteria for Lesson:
-- ✅ Learning objective clear and measurable
-- ✅ Activity achieves objective
-- ✅ Appropriate for level
-- ✅ Engages students
-- ✅ Accurate content
-- ✅ Time estimate realistic
-```
-
-**Marketing:**
-```markdown
-### 8/10 Criteria for Campaign Asset:
-- ✅ On-brand voice and visual identity
-- ✅ Clear value proposition
-- ✅ Target audience appropriate
-- ✅ Strong CTA
-- ✅ Platform-optimized
-- ✅ Legal/compliance checked
-```
-
-**Research:**
-```markdown
-### 8/10 Criteria for Literature Analysis:
-- ✅ Key findings extracted
-- ✅ Methodology evaluated
-- ✅ Limitations noted
-- ✅ Connections to other papers identified
-- ✅ Relevance to research question clear
-- ✅ Critical evaluation present
-```
-
-#### Step 5: Adapt Workflows
-
-**Cline Workflow (Universal):**
-```
-Phase X, Task Y:
-1. Open new chat
-2. "Can we please plan [TASK] according to [STANDARDS.md]?"
-3. Review plan
-4. Execute
-5. Score confidence
-6. Human verification for critical items
-7. Document learnings
-```
-
-**This works for any domain.**
-
----
-
-## Universal Principles (The Core Truth)
-
-### What's Always True Across Domains
-
-**1. Context Windows Are Limited**
-- Can't create 40 hours of content in one conversation
-- Can't write 200-page report in one go
-- Can't design year-long campaign in single prompt
-- **Solution:** Break into manageable chunks (lessons, sections, weeks)
-
-**2. Quality Degrades Without Gates**
-- Code without tests breaks
-- Lessons without review don't teach
-- Content without brand review is off-message
-- **Solution:** Confidence scoring + phase audits
-
-**3. Complex Projects Need Documentation**
-- Code needs architecture docs
-- Lessons need pedagogical framework
-- Campaigns need brand guidelines
-- **Solution:** Documentation architecture
-
-**4. Scope Creep is Universal**
-- Feature creep in coding
-- Activity creep in lessons
-- Channel creep in marketing
-- **Solution:** MVP-first scoping
-
-**5. AI Needs Structure**
-- Vague prompts → vague output
-- No framework → inconsistent output
-- No validation → mediocre output
-- **Solution:** Templates, standards, rubrics
-
-### What Changes Across Domains
-
-**Vocabulary:**
-- Coding: Functions, tests, deployment
-- Education: Objectives, scaffolding, assessment
-- Marketing: Campaigns, assets, conversion
-- Research: Analysis, synthesis, methodology
-
-**Expertise Required:**
-- Coding: Software engineering principles
-- Education: Pedagogical theory
-- Marketing: Brand strategy
-- Research: Domain knowledge
-
-**Validation Methods:**
-- Coding: Unit tests, integration tests
-- Education: Expert teacher review, student pilot
-- Marketing: Brand guidelines, engagement metrics
-- Research: Peer review, methodological rigor
-
-**But the PROCESS is identical.**
-
----
-
-## Template: Adapting to Your Domain
-
-### Your Domain: _______________
-
-**1. What are you creating with AI?**
-[Description of outputs]
-
-**2. What makes output "high quality" in your domain?**
-[Quality criteria]
-
-**3. Who validates quality?**
-[Expert reviewer type]
-
-**4. MVP Scope Exercise:**
-
-Full Vision: [Describe complete project]
-
-MVP (provable in 2-4 weeks): [Minimal proof of concept]
-
-Success Criteria: [How you know MVP worked]
-
-**5. Documentation Needed:**
-
-| Purpose | Document Name | Contents |
-|---------|---------------|----------|
-| Project vision | [NAME] | [What goes in it] |
-| Work breakdown | [NAME] | [How you break it down] |
-| Quality standards | [NAME] | [What good looks like] |
-| Unit template | [NAME] | [Template for one unit of work] |
-| Learnings log | [NAME] | [Insights captured] |
-
-**6. Confidence Scoring Criteria:**
-
-8/10 in my domain means:
-- ✅ [Criterion 1]
-- ✅ [Criterion 2]
-- ✅ [Criterion 3]
-- ✅ [Criterion 4]
-- ✅ [Criterion 5]
-
-**7. Phase Audit Process:**
-
-Who reviews? [Expert type]
-What do they check? [Review criteria]
-When? [After how much work]
-
----
-
-## Summary
-
-This methodology is **fundamentally domain-agnostic** because:
-
-✅ Context window limits affect all domains
-✅ Quality gates needed universally
-✅ Complex projects always need phasing
-✅ Documentation prevents scope creep everywhere
-✅ AI needs structure regardless of output type
-
-**The principles transfer perfectly. Only the vocabulary changes.**
-
-**To adapt:**
-1. Define your "code" (what you're building)
-2. Define quality criteria for your domain
-3. Create domain-specific documentation templates
-4. Define confidence scoring rubric
-5. Identify domain expert for audits
-6. Use exact same workflow (plan → execute → score → audit)
-
-**Result:** You can apply this methodology to build ANYTHING complex with AI assistance.
-
----
-
-::: tip Real-World Validation
-Richard successfully uses this methodology for:
-- Software development (RISE, dashboards, APIs)
-- Language training content (interactive lessons, activities)
-
-Same process. Different outputs. Both work.
+::: tip It works for me in both trades
+I use this for software (RISE, Rocket School, client apps) and for language training (lessons and interactive activities). Same process, different output.
 :::
 
-::: warning The Key Insight
-If AI struggles with context windows in your domain, and you need to build something complex with multiple interconnected parts, **this methodology will help you**.
-
-It's not about coding. It's about managing complexity with AI assistance.
+::: warning The real test
+If your project is too big for one conversation and has lots of parts that depend on each other, this method will help, whatever the field. It's about managing complexity. The code is just where I learned it.
 :::

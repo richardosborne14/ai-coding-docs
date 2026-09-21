@@ -1,6 +1,6 @@
 # Phase 5: Claude-Code-First Audit & Voice Rebrand
 
-**Status:** IN PROGRESS. R0 to R3 are done (2026-09-21). **The next session starts at R4.** Nothing from R3 is deployed yet: deploying is R6.
+**Status:** IN PROGRESS. R0 to R4 are done (2026-09-21). **The next session starts at R5.** Nothing from R3 or R4 is deployed yet: deploying is R6.
 
 **The brief, in Richard's words:** rebrand the whole thing as *"I know so much about Claude I made a whole docs site to show you how to use it, so you don't even need me... or do you?"* The "Book a call" CTA is the punchline to "...or do you?". **Tone only, no swearing on the site** (ruled 2026-09-21).
 
@@ -10,6 +10,7 @@
 3. [R1-NODEGX-REFERENCE.md](R1-NODEGX-REFERENCE.md): documentation practices in Richard's NodeGX repos, with paths. Source material for R4/R5.
 4. [R2-FACTS.md](R2-FACTS.md): F1, F2, F3, F5 checked on Anthropic's own pages. **Overrides R0's "open facts" and parts of R1** (see "Where the earlier plan was wrong").
 5. [R2-VOICE.md](R2-VOICE.md): voice rules and the copy options Richard is picking from.
+6. [R4-WRITER-BRIEF.md](R4-WRITER-BRIEF.md): the brief every R4 page writer followed (method, facts incl. verified Claude Code commands, track containers, voice rules, NDA). Reuse it for R5.
 
 ---
 
@@ -21,8 +22,8 @@
 | R1 | Content audit → written findings, signed off | ✅ 2026-09-21 → R1-AUDIT.md |
 | R2 | Verify F1–F3 + F5, then the voice & positioning spec (hero, tagline, meta, About, CTA punchline, **track names**) | ✅ 2026-09-21 → R2-FACTS.md, R2-VOICE.md (picks recorded at the bottom) |
 | R3 | Restructure IA / sidebar, and build the two-track show/hide mechanism | ✅ 2026-09-21 (see "R3: what was built") |
-| R4 | Rewrite chapters per the audit (incl. 6 new pages, 3 cuts) | ⬜ **next** |
-| R5 | `project-templates/` → CLAUDE.md-only; rewrite `WRITING_GUIDE.md`; replace repo `.clinerules` with a repo `CLAUDE.md` | ⬜ |
+| R4 | Rewrite chapters per the audit (incl. 6 new pages, 3 cuts) | ✅ 2026-09-21 (see "R4: what was done"). Written and build-checked, **not yet read by Richard** |
+| R5 | `project-templates/` → CLAUDE.md-only; rewrite `WRITING_GUIDE.md`; replace repo `.clinerules` with a repo `CLAUDE.md` | ⬜ **next** |
 | R6 | Build, screenshot (light + dark, both tracks, phone width), deploy with `./deploy/deploy.sh`, verify live | ⬜ |
 
 ### R2: start here
@@ -36,7 +37,7 @@
 - **The non-tech track is not "Chat/Cowork end to end".** The Claude desktop app has Claude Code built in (the Code tab), with no terminal and no Node install, and it has a Browser pane showing the running app. No official page says Cowork runs a local app. The recommended N track is therefore "everything in the desktop app: Chat → Design → Code tab". Richard confirms this with the `ntrack` pick. R1's N-track notes for `setting-up-your-computer` and `tool-selection` need adjusting in R3/R4 to match.
 - **Fable is not Max-only.** Pro users can run it on pay-as-you-go credits. On Max it can use up to 50% of the weekly limit at no extra cost.
 - F1: Claude Code does **not** see Chat memory (Chat memory is shared with Cowork only, since 2026-08-25). Richard was right.
-- F3: Claude Design is on paid plans. It is labelled beta in one place and research preview in another. It hands off to Claude Code as a bundle. **What the bundle contains is still unconfirmed**: check this before R4 writes `mockups-first`.
+- F3: Claude Design is on paid plans. It is labelled beta in one place and research preview in another. It hands off to Claude Code as a bundle. The bundle's contents were confirmed in R4 (design files, chat, README): see R2-FACTS › F3.
 
 ### R3: what was built (2026-09-21, verified in a browser, not deployed)
 
@@ -46,15 +47,25 @@
 - **Rename done:** `part-3/cline-workflow.md` → `execution-workflow.md` (git mv, content untouched; the R4 rewrite is still due). Internal links fixed. A 301 for the old URL is in `deploy/learn-ai.caddy`, and `deploy.sh` copies that file on a normal deploy. The repo `.clinerules` still links the old URL; R5 replaces that file anyway.
 - **Mechanism:** `docs/.vitepress/theme/track.ts` (state, localStorage key `db-learn-track`, every read and write in try/catch). `TrackSwitch.vue` sits at the top of the sidebar and in the mobile menu. `TrackChooser.vue` is the two-card chooser for markdown (`<TrackChooser />`). `TrackPageNote.vue` shows a note on a builder-only page when the reader is on "Keep it simple". A head script in `config.ts` sets `<html data-track>` before first paint. With nothing stored, nothing is hidden.
 - **For R4 writers, two containers:** `::: everything` (hidden on the simple track) and `::: simple` (always shown, labelled "Keep it simple"). Both take an optional custom label: `::: everything Terminal route`.
-- **Copy already in place:** the site title is "Build it with Claude", the meta and OG description is M1, `<TrackChooser />` is at the top of `start-here.md` (under a new "Pick your track" heading), and "Setup Guide" is gone from the nav. **Not done:** `index.md` frontmatter still has the old description and hero. That's the R4 home rewrite.
+- **Copy already in place:** the site title is "Build it with Claude", the meta and OG description is M1, `<TrackChooser />` is at the top of `start-here.md` (under a new "Pick your track" heading), and "Setup Guide" is gone from the nav. The `index.md` hero and frontmatter were done in R4.
 - **Checks taken 2026-09-21** (Chrome via Playwright, against `vitepress preview`): with nothing stored it shows everything. Choosing simple sets the attribute and stores it, and the choice survives a reload. The sidebar goes from 21 to 16 visible items. Builder-only blocks hide, and the page note shows on `/part-5/observability` and switches back. The sidebar switch and chooser stay in sync. Desktop and 390px phone: no horizontal scroll and no console errors. With localStorage throwing, the switch still works for the session (the only error is VitePress's own appearance script). Dark mode looked right. `npm run build` passes. Its >500 kB warning is the local search index and isn't new.
 
-### R4: start here
+### R4: what was done (2026-09-21)
 
-1. Rewrite pages in the audit's order (R1-AUDIT › Verdicts). Home first, because it carries the R2 picks (hero H2, 5 cards, CTA C1, M1 in the frontmatter). Put `<TrackChooser />` or card 1 on it.
-2. **Retag while you rewrite.** The `track: 'everything'` tags were copied from R1, which assumed the simple track was Cowork. It's now the desktop app's Code tab, which *is* Claude Code, so CLAUDE.md, task headers and skills apply to simple readers too. Pages worth re-judging: `claude-code-setup`, `task-patterns`, `live-project-overview`, `templates`. Where only part of a page is builder-only, untag the page and wrap that part in `::: everything`.
-3. F3 is still open: check what the Claude Design → Claude Code handoff bundle contains before writing `mockups-first`.
-4. Voice rules from R2-VOICE apply everywhere: `grep -c "—"` must come back 0 on each rewritten page.
+- **Every page in the audit is rewritten or edited.** 40 files, about 6,000 lines out and 3,100 in. Home, introduction, about, plans-and-limits and mockups-first were written by the lead session. The rest came from parallel writers working to [R4-WRITER-BRIEF.md](R4-WRITER-BRIEF.md).
+- **New pages:** `part-0/plans-and-limits`, `part-2/mockups-first`, `part-4/testing`, `part-5/skills`, `appendix-other-tools` (5 of the audit's 6; the sixth "new" item was the execution-workflow rename, rewritten here).
+- **Cut and deleted:** `part-0/cline-and-credits`, `part-5/token-economics`, `part-6/setup-guide`. 301s to appendix-other-tools, plans-and-limits and setting-up-your-computer are in `deploy/learn-ai.caddy`.
+- **Retagged for both tracks** (the simple track is the Code tab, so it is Claude Code too): `claude-code-setup`, `task-patterns` (sidebar label now "Task Patterns"), `testing`, `project-memory`, `templates`. Still builder-only: live-project-overview, commenting-philosophy, project-brain, team-workflows, the part-5 builder pages, appendix-other-tools.
+- **F3 closed** in R2-FACTS: the Design → Code bundle holds the design files, the chat and a README. Still unknown whether it holds HTML/CSS or screenshots, and the site doesn't claim either.
+- **Checks taken 2026-09-21 on the working tree (before the R4 commit):** `grep` finds **0** em or en dashes in `docs/**/*.md` (was 855). "Cline" appears only in appendix-other-tools (21), case-studies (4, "built in the Cline era"), templates (3, pointer to other-tools/cline) and glossary (1). `npm run build` passes (no dead links). A script checked every `](...#anchor)` against the built HTML: 0 broken. Chrome via Playwright on `vitepress preview`: 8 pages × both tracks × 1280/390px, no horizontal scroll, no console errors, `::: everything` blocks hidden on simple and shown otherwise, the builder-only page note shows on the appendix. Phone screenshots of home and setting-up looked right.
+- **Not checked:** a human read of the copy. Dark mode wasn't re-screenshotted (R6 does the full screenshot pass).
+
+### R5: start here
+
+1. `project-templates/`: rewrite `CLAUDE.md` as the primary template (user-techiness profile, unbreakable rules, learnings habit, doc-length rules, testing incl. headless browser, model-per-task, "rule via artifact"). Add a "Recommended model" line to `TASK_TEMPLATE.md`. Move `.clinerules` and `.clineignore` to `project-templates/other-tools/cline/`. **`docs/part-6/templates.md` already describes the set as it will be after R5**, so match it (read it first).
+2. Rewrite `WRITING_GUIDE.md` for the new voice (R2-VOICE rules).
+3. Replace the repo `.clinerules` with a repo `CLAUDE.md` (it still links the old `/part-3/cline-workflow` URL).
+4. Then R6: build, screenshots (light + dark, both tracks, phone), `./deploy/deploy.sh`, then verify live, including the four 301s.
 
 ---
 
@@ -81,6 +92,12 @@
 ## Still Richard's call (not asked or not approved yet)
 1. Redirect or take down the old `ai-coding.visualhive.co` (not approved 2026-09-21).
 2. Rename the GitHub repo (not approved 2026-09-21).
+3. **Read the R4 copy** before R6 deploys it. The points below are where writers had to guess:
+   - `part-6/case-studies`: three case studies ("simple dashboard", "legacy refactor", "failed project") have no name or link, and the writer couldn't confirm they're real. Keep, rename or cut?
+   - `part-2/documentation-architecture`: the doc-length budgets (CLAUDE.md under 200 lines, other docs under 400) are the writer's examples, not Richard's numbers.
+   - `part-5/project-memory`: "Given the choice, I'd start with Route B" (Markdown tree over an MCP vector server) is written in Richard's voice.
+   - `part-5/pitfalls-recovery`: the 2,000-line learnings file is told as Richard's own (it's OpenNoodl's; no repo named).
+   - `part-6/case-studies`: VH Toolkit is marked "built in the Cline era" from its March 2026 date, not from its repo. RISE keeps its "about $400 of pay-as-you-go API spend" as history.
 3. (Ruled 2026-09-21: voice, track names and N-track shape. See R2-VOICE.md.)
 
 ## Verify before trusting

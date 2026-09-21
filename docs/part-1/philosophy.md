@@ -1,160 +1,137 @@
 ---
 title: Philosophy & Approach
-description: The mindset that makes AI-assisted development actually work
+description: Why 99% of building with Claude is documentation, and the few habits that make the rest work
 ---
 
 # Philosophy & Approach
 
 ## TLDR
 
-**Start every project with a conversation, not a prompt.** Use Claude Opus in a Project. Brainstorm, debate, scope. The initial conversation quality determines everything.
+**99% of it is docs.** A well-documented repo beats every hook, plugin and MCP server you could install. The rest is garnish.
 
-**Documentation is the product.** Your docs are what make AI effective. Without them, every session starts from zero. With them, AI can execute autonomously.
+**Talk before you build.** Discuss the idea in Chat, settle the screens in mockups, and only then pick a stack and write tasks.
 
-**Quality rules are iron-clad.** Mandatory testing, plan-before-act, no scope creep. These aren't suggestions — they're the contract that prevents garbage output.
+**One task per session.** Finish a task, then start a fresh session for the next one. Stick to that and you'll rarely lose context.
 
-**Fresh conversations beat long ones.** When in doubt, start a new conversation. It's cheaper and more effective than carrying polluted context.
-
----
-
-## The Real Mental Model
-
-Claude isn't a junior developer you babysit. It's more like a highly capable contractor who needs three things:
-
-1. **Clear spec** — What to build, why, and how it fits with what exists
-2. **Quality standards** — What "done" means, what's not acceptable
-3. **Continuity** — What was decided, what was learned, what exists
-
-Give it those three things (via your documentation) and it produces excellent work. Skip them and it produces expensive garbage.
-
-**Your job:** Be the architect. Set direction, define standards, review output. Don't write the code — write the spec and the rules.
+**Proof before done.** Code written is not a feature working. Claude proves it with tests, or you confirm it yourself.
 
 ---
 
-## The Process (Why Each Step Matters)
+## 99% docs, the rest is garnish
 
-### 1. Brainstorm with Opus
+People ask me which hooks, plugins and MCP servers they should set up. My honest answer: hardly any, at first. What makes Claude good on a project is a repo that explains itself.
 
-The initial conversation quality is infinitely better with Opus. Not marginally — fundamentally. The resulting scope, architecture decisions, and foundation documents are 10X better. This is where you invest in quality.
+Claude starts every session knowing nothing about your project. Everything it knows comes from what it reads. So I write down:
 
-### 2. Generate Thorough Documentation
+- **Who I am** and how I want to be talked to. How techie I am decides how Claude explains things and how much it does without asking.
+- **The rules it must never break**, like "no task is done without tests".
+- **The architecture**, with real schemas, so it doesn't guess at column names.
+- **What went wrong before**, so the same bug doesn't bite twice.
+- **The plan**: phases, and one task file per job.
 
-AI's memory lives in your docs. The ARCHITECTURE.md with real schemas. The .clinerules with strict quality standards. The sprint plan with specific task specs. These documents are what allow AI to "just get started" on any task without needing hand-holding.
+Give Claude that and it does excellent work. Skip it and you'll spend your evenings explaining the same things over and over.
 
-### 3. Execute in Focused Tasks
+My biggest project has no hooks and no project slash commands. It does have a lot of docs. How to set them up is in [Documentation Architecture](/part-2/documentation-architecture).
 
-One task per conversation. Plan before acting. Test after completing. Score confidence. Close the conversation. Next task, fresh start.
-
-### 4. Know When to Start Fresh
-
-This is the skill most people lack. A conversation going in circles costs more than starting over. A side-task in the wrong conversation creates confusion. **9 times out of 10, starting a new conversation is the better choice.**
+::: tip Your job
+Be the architect. Set the direction, write down the standards, check the result. You don't write the code. You write what the code has to do.
+:::
 
 ---
 
-## Validate First, Build Second
+## The process, and why each step is there
 
-Most AI coding fails because people try to build everything at once.
+1. **Talk it through in Chat.** Opus, a real conversation, lots of pushback. See [Brainstorming](/part-2/brainstorming).
+2. **Mockups until you'd be happy.** Claude Design draws the screens. Keep changing them until "if this existed, I'd be happy". See [Mockups First](/part-2/mockups-first).
+3. **Then the stack, the docs and the tasks.** Now that the screens are settled, the technical choices get easier.
+4. **Build a V1 locally.** One task per session, tested as you go.
+5. **Lots of bug-fix rounds.** This is normal. The first version is never the last.
+6. **Deploy to a real server and domain.** Only once the local version works.
 
-**The pattern:**
-> "Build me a platform with tools, resources, AI assistant, community..."
+Each step is cheaper than the one after it. Changing your mind in a chat costs nothing. Changing it after deploy costs a week.
+
+---
+
+## Validate first, build second
+
+Most AI projects go wrong because people try to build everything at once.
+
+**The pattern that fails:**
+> "Build me a platform with tools, resources, an AI assistant, a community..."
 >
-> *8 weeks and $3000 later: half-built mess*
+> *Eight weeks later: a half-built mess.*
 
-**Better pattern:**
+**The pattern that works:**
 > "I want to build a community platform for event professionals."
 >
-> Claude: "That's broad. What's the ONE thing that makes this different?"
+> Claude: "That's broad. What's the one thing that makes this different?"
 >
 > "Easy access to open-source event tools with custom branding."
 >
-> Claude: "Let's build just the tool library and deployment first. If organizers love it, then add community features."
+> Claude: "Let's build just the tool library first. If organisers love it, add the community features."
 
-**Result:** $300 and 4 weeks to validate the core concept. If yes, continue. If no, you learned cheap.
-
----
-
-## Documentation Is the Product
-
-Your docs aren't overhead. They're the mechanism that makes everything work.
-
-**Without docs:**
-- Day 1: "Let's use cookie-based auth"
-- Day 7: AI suggests JWT
-- Day 14: Half the code uses cookies, half uses JWT
-
-**With ARCHITECTURE.md:**
-- Day 1: Auth decision documented with rationale
-- Day 7: AI reads the doc, stays consistent
-- Day 14: Still consistent
-
-**Without .clinerules:**
-- AI skips tests "to save time"
-- AI starts refactoring code outside the task
-- AI adds unasked-for features
-- Quality degrades invisibly
-
-**With iron-clad .clinerules:**
-- Tests are mandatory. No exceptions.
-- Plan mode first. Always.
-- Stay in scope. Write a task doc for side issues.
-- Update LEARNINGS.md when you discover something.
+Build the core, put it in front of real people, then decide. If they don't want it, you found out cheaply.
 
 ---
 
-## Confidence Scoring
+## One task per session
 
-Every completed task needs a score out of 10.
+A long session collects noise: old debugging tangents, decisions you've since changed, half-abandoned approaches. Claude reads all of it on every turn. It also eats your [limits](/part-0/plans-and-limits) faster.
+
+**The rules:**
+- One task, one session. When it's done, start a fresh one.
+- Going in circles? Write down what you know in a task file and start fresh.
+- Found a side issue? Write it up as its own task. Don't fix it here.
+
+Starting fresh is cheap, because Claude re-reads your docs in a few seconds. That's the whole point of having them.
+
+---
+
+## Proof before done
+
+"Code written" and "feature working" are two different things. My rules file says it plainly:
+
+> NEVER declare "done" without proof. Either tests pass or the user confirms it works.
+
+In practice Claude is good at this now. It asks me to test things and chases me when I haven't ("still waiting on your check of the login page"). The bigger risk is me. If I say "just get it done" without reading the plan it wrote, I usually end up unhappy with the result. Read the plan.
+
+Claude also errs on the cautious side. It will avoid things like connecting to your server over SSH or testing with real data unless you tell it that's fine. If you want it to go further, say so.
+
+---
+
+## Confidence scoring
+
+Every finished task gets a score out of 10.
 
 ```markdown
 ## Confidence: 8/10
 
 **Met:**
 - [x] Login endpoint works
-- [x] Error handling for invalid credentials
+- [x] Error message for a wrong password
 - [x] Unit tests passing (6/6)
-- [x] Smoke test verified in browser
+- [x] Checked in the browser
 
 **Deferred:**
-- [ ] Rate limiting (Sprint 2)
+- [ ] Rate limiting (Phase 2)
 ```
 
-**8/10 minimum to proceed.** Below 8 means fix it before moving on.
-
-This prevents cascade failure: broken auth → broken database calls → broken everything. Catch it early, fix it immediately.
+**8 out of 10 is the minimum to move on.** Below that, fix it first. A shaky login breaks everything built on top of it, and you want to catch that now. More in [Confidence Scoring](/part-3/confidence-scoring).
 
 ---
 
-## The Fresh Conversation Principle
+## Quick reference
 
-Long conversations accumulate noise:
-- Old debugging tangents
-- Superseded decisions
-- Conflicting context from abandoned approaches
-
-By message 80, AI is working with polluted context and producing worse output than a fresh start would.
-
-**Rules:**
-- One task = one conversation
-- Going in circles? Write a task doc, start fresh.
-- Side issue discovered? Write a task doc, handle it separately.
-- Been in the same conversation for 2+ hours? Probably time to start fresh.
-
-The cost of reloading context (AI re-reads your docs) is far less than the cost of confused, context-polluted output.
+| Principle | What it means |
+|-----------|---------------|
+| 99% docs | A repo that explains itself beats extra tooling |
+| Talk, then mock up, then build | Settle the idea and the screens before the code |
+| Validate first | Build the core, test it on people, then grow |
+| One task per session | Fresh session for each task |
+| Proof before done | Tests pass or you've checked it yourself |
+| Confidence scoring | 8/10 minimum before moving on |
+| Phase audits | A fresh look between big milestones ([Phase Audits](/part-4/phase-audits)) |
 
 ---
 
-## Quick Reference
-
-| Principle | Action |
-|-----------|--------|
-| Opus for brainstorming | Best reasoning produces best foundations |
-| Documentation is memory | Thorough docs = autonomous AI execution |
-| Iron-clad quality rules | Mandatory testing, plan mode, no scope creep |
-| Focused tasks | One task per conversation, plan before act |
-| Fresh conversations | When in doubt, start over — it's almost always better |
-| Confidence scoring | 8/10 minimum, fix before moving on |
-| Phase audits | Fresh AI eyes between major milestones |
-
----
-
-**Next:** [Tool Selection](/part-1/tool-selection) — Choosing the right tools for each phase.
+**Next:** [Which Claude, Where](/part-1/tool-selection)

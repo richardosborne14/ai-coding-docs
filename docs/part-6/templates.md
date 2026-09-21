@@ -1,264 +1,168 @@
 ---
 title: Project Templates
-description: Drop-in files to start any AI-assisted project
+description: The starter files I drop into every new repo, with CLAUDE.md at the centre
 ---
 
 # Project Templates
 
-Drop these files into any repo and AI will know how to build your project. Each template is ready to customize — fill in the brackets, adjust the rules to your stack, and go.
+These are the files I start every project with. They live in the `project-templates/` folder of this guide's repo. Copy the lot into your project, fill in the brackets, and Claude Code has what it needs from the first session.
 
-**Quick start:** Copy the entire `project-templates/` directory from this repo into your project root. Customize each file. Point Cline or Claude Code at it and start working.
+One file does most of the work: **CLAUDE.md**. Claude Code reads it at the start of every session, whether you're in the desktop app's Code tab, VS Code or a terminal. Everything else is there to keep CLAUDE.md short.
 
----
-
-## What's Included
-
-| File | Purpose | Customize? |
-|------|---------|-----------|
-| **README.md** | Project overview, vision, scope, tech stack, setup | Yes — fill in your project details |
-| **ARCHITECTURE.md** | System design, DB schemas, components, API, deployment | Yes — critical to get right |
-| **LEARNINGS.md** | Empty log for solutions and gotchas | Minimal — just start using it |
-| **.clinerules** | Quality rules for Cline (VS Code) | Yes — add tech-specific rules |
-| **CLAUDE.md** | Quality rules for Claude Code (CLI) | Yes — same content as .clinerules |
-| **GLOBAL_MEMORY.md** | User preferences and universal rules (cross-project) — lives at `~/.cline/` | Yes — fill in your preferences |
-| **TASK_TEMPLATE.md** | Format for individual task specifications | Light customization |
-| **SPRINT_PLAN_TEMPLATE.md** | Format for sprint planning documents | Light customization |
-| **SPRINT_RULES.md** | Rules for sizing sprints, writing tasks, managing scope | Review and adjust |
-| **convention-files/** | Frontend Tweaker starter files (design tokens, i18n, links, meta) | Yes — adjust to your stack |
-| **overview/** | Live Project Overview folder — generated, committed, AI reads selectively | Run `pnpm generate:overview` to populate |
-| **scripts/generate-overview.js** | Generator that builds `overview/` from `package.json`, `domain.config.js`, route scan, flow registry | Customise paths if your project layout differs |
-| **domain.config.js** | Declarative entity definitions feeding `overview/entities.md` | Yes — declare your real entities |
-| **.clineignore** | Paths Cline excludes from context — saves 20-30% per turn | Yes — add project-specific paths |
-| **scripts/deploy.sh** | Build-on-server deploy script — runs on the server, not on AI's machine | Yes — set `APP_DIR`, `PM2_NAME`, `BRANCH` |
-| **Dockerfile** | Multi-stage Node Dockerfile with `/api/health` healthcheck | Adjust runtime command for your framework |
-| **.dockerignore** | Keeps the Docker build context small and secret-free | Light customization |
-
-
-
-
-### Prompt Templates
-
-| File | When to Use |
-|------|------------|
-| **prompts/01-initial-brainstorm.md** | Starting a new project (Claude Opus, in a Project) |
-| **prompts/02-generate-foundation-docs.md** | After brainstorming — generate all docs at once |
-| **prompts/03-generate-task-docs.md** | Generate individual task specs for a sprint |
-| **prompts/04-new-feature-brainstorm.md** | Adding features to an existing project |
-| **prompts/05-fix-and-debug.md** | Debugging workflow with the 30-minute rule |
-| **prompts/06-context-rescue.md** | When to start fresh and how to hand off context |
-| **prompts/07-phase-audit.md** | Code review after completing a phase |
+::: simple
+You don't have to copy files by hand. Put the `project-templates/` folder next to your project, open the Code tab and say: "Copy the templates into this project and fill them in from our brainstorm notes. Ask me about anything you can't fill in." Then read what it wrote.
+:::
 
 ---
 
-## How to Use These
+## What's in the folder
 
-### For a Brand New Project
+| File | What it's for | How much to change |
+|------|---------------|--------------------|
+| **CLAUDE.md** | The rules Claude reads every session. The main file. | A lot. It's about you and your project. |
+| **TASK_TEMPLATE.md** | The shape of one task file, including the model that should run it | A little |
+| **LEARNINGS.md** | Bugs and traps Claude has hit, so it doesn't hit them twice | Nothing. Claude fills it in. |
+| **GLOBAL_MEMORY.md** | Starter for your personal, all-projects rules file | Once, then leave it |
+| **ARCHITECTURE.md** | Schemas, components, API, key decisions | A lot, and keep it true |
+| **SPRINT_PLAN_TEMPLATE.md** | The shape of a sprint or phase plan | A little |
+| **SPRINT_RULES.md** | How big a sprint is, how to write a task, what to do with surprise work | Read it, tweak it |
+| **README.md** | Vision, scope, stack, setup | A lot |
+| **prompts/** | The prompts from [Prompts](/part-6/prompts), one file each | Nothing |
+| **convention-files/** | Starter design tokens, text, links and meta for the [Frontend Tweaker](/part-5/frontend-tweaker) | Adjust to your stack |
+| **overview/**, **domain.config.js**, **scripts/generate-overview.js** | The [Live Project Overview](/part-2/live-project-overview): a generated map of your app that Claude reads selectively | Declare your real entities |
+| **scripts/deploy.sh**, **Dockerfile**, **.dockerignore** | Build-on-the-server deploys with a health check | Set your app's names and paths |
 
-1. **Brainstorm first** — Use `prompts/01-initial-brainstorm.md` in Claude (Opus, in a Project)
-2. **Generate docs** — Use `prompts/02-generate-foundation-docs.md` to have Claude fill in all templates based on your brainstorming conversation
-3. **Review and adjust** — Claude generates good first drafts, but review everything. Push back on vague schemas, weak rules, oversized sprints.
-4. **Generate task specs** — Use `prompts/03-generate-task-docs.md` for detailed task documents
-5. **Push to GitHub** — Add all docs and any starter code to your repo
-6. **Start executing** — Point Cline or Claude Code at the repo and start with Task 1
-
-### For an Existing Project
-
-1. Add the templates you're missing (especially ARCHITECTURE.md and .clinerules/CLAUDE.md)
-2. Fill them in based on your current codebase
-3. Create a sprint plan for your next batch of work
-4. Start using the task-per-conversation workflow
+::: tip Using Cline instead?
+The Cline rules files (`.clinerules` and `.clineignore`) are moving to `project-templates/other-tools/cline/`. See [Other AI Coding Tools](/appendix-other-tools).
+:::
 
 ---
 
-## The Templates
+## CLAUDE.md: the file that matters
 
-### README.md
+I've said it before and I'll keep saying it: 99% of getting good work out of Claude is the docs. Hooks, MCP servers and plugins are garnish. CLAUDE.md is the main course.
+
+The template has seven parts. Here's what each one does and why it's there.
+
+### 1. Who you are
+
+A short, honest statement of how techie you are. This sets how Claude talks to you, how much it explains, and how much it does without asking.
 
 ```markdown
-# [Project Name]
-
-[One sentence: what this does and who it's for]
-
-## Vision
-
-[2-3 paragraphs: full picture of what this could become]
-
-## Current Phase: MVP
-
-Building the minimum to validate [core concept].
-
-**In scope:**
-- [Feature 1 — why it's essential]
-- [Feature 2]
-- [Feature 3]
-
-**Deferred:**
-- [Feature] → v1.0 (reason)
-- [Feature] → Production (reason)
-
-**Success criteria:**
-- [Measurable criteria]
-
-## Tech Stack
-
-| Layer | Technology | Rationale |
-|-------|-----------|-----------|
-| Frontend | [X] | [Why] |
-| Backend | [X] | [Why] |
-| Database | [X] | [Why] |
-| Hosting | [X] | [Why] |
-
-## Setup
-
-[Install and run instructions]
-
-## Key Documentation
-
-| Document | Purpose |
-|----------|---------|
-| `ARCHITECTURE.md` | System design, DB schema |
-| `.clinerules` / `CLAUDE.md` | AI development rules |
-| `dev-docs/sprints/` | Sprint plans and task specs |
-| `LEARNINGS.md` | Solutions and gotchas |
+## Who I am
+- I run a small events business. I don't code.
+- Explain in plain words. No jargon unless you define it.
+- Report in three lines: what you did, what you checked, what I need to do.
+- Take initiative on anything technical. Ask me about anything a user would see.
 ```
 
----
+A CTO would write something very different, and Claude would behave very differently. That's the point.
 
-### ARCHITECTURE.md (Key Sections)
+### 2. Unbreakable rules
+
+The handful of rules Claude must never break. Short, strict and specific. "Tests are mandatory" beats "try to write tests". Claude may propose changes to these rules when it learns something, but it asks first.
 
 ```markdown
-# Architecture
-
-## System Overview
-[High-level diagram and description]
-
-## Database Schema
-### [table_name]
-| Column | Type | Constraints | Notes |
-|--------|------|-------------|-------|
-| id | UUID | PK | |
-| [field] | [type] | [constraints] | [notes] |
-
-### Relationships
-[Entity relationship descriptions]
-
-## Component Architecture
-[Component hierarchy and responsibilities]
-
-## API Design
-| Method | Path | Purpose | Auth |
-|--------|------|---------|------|
-| POST | /api/auth/login | Authenticate | No |
-
-## Key Technical Decisions
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| [Decision] | [Choice] | [Why] |
-
-## Control Panel (if applicable)
-[Convention files, routes, and registered automation flows]
-[See The Project Control Panel](/part-5/control-panel) for the full pattern]
-
-## Observability & Error Tracking (if applicable)
-[Maturity checklist with Phase and "Irreversible if missing" columns]
-[See Observability & Error Tracking](/part-5/observability) for the full pattern]
-
-## Accessibility (if project has a UI)
-[WCAG 2.2 AA target, Sprint 1 checklist, and an honest known-gaps list]
-[See Accessibility by Default](/part-5/accessibility) for the full pattern]
+## Unbreakable rules
+- One task per session. No side quests.
+- Read the task file before you start. Plan before you build.
+- Never declare a task done without proof: tests pass, or I've checked it.
+- Never overwrite a production .env.
+- Same error three times? Stop, write up what you tried, and ask me.
+- You may suggest changes to these rules. Ask before you make them.
 ```
+
+### 3. The learnings habit
+
+Claude reads `LEARNINGS.md` at the start of each task and adds to it when it finds a trap that would waste a fresh session half an hour. This is how it stops making the same mistake.
+
+### 4. Doc-length rules
+
+This is the one people skip, and it's the one that bites. Docs grow. A 2,000-line learnings file costs you on every read and still gets skimmed. The template sets limits: when a file passes a set length, Claude summarises it, splits it, or moves old material into an `archive/` folder with a one-line pointer left behind. Pick your own numbers. Just have some.
+
+### 5. Testing
+
+Backend tests for the logic, and **headless browser tests** for the screens. Headless means Claude drives a real browser in the background, clicks through your app, takes screenshots and checks them. You don't watch it happen. The template asks for these after every change that touches a screen. More in [Testing](/part-4/testing).
+
+### 6. Model per task
+
+Every task file names the model that should run it. Claude writes that line when it writes the task. You read it at the start of the session and switch model before you begin. I use Opus for nearly everything and Fable when something is fundamentally wrong or the design is fighting me. On Pro, plan and write tasks with Opus, then run the simpler ones on Sonnet. See [Plans & Limits](/part-0/plans-and-limits).
+
+### 7. Rule via artifact
+
+When Claude needs me to decide several things at once, I don't want a wall of questions in the chat. The template tells it to build an artifact I can click through instead. Artifacts can store my answers, so they come back to Claude Code when I'm done.
+
+### Plus your stack's rules
+
+Below those seven, the template has short sections that point at the relevant chapters: [deploy rules](/part-5/deployment-platforms), [observability](/part-5/observability), [accessibility](/part-5/accessibility), the [control panel](/part-5/control-panel), the [Frontend Tweaker](/part-5/frontend-tweaker) and the [Live Project Overview](/part-2/live-project-overview). Keep the ones that apply and delete the rest. Then add a few lines per framework you use.
+
+::: tip Keep CLAUDE.md short
+If a section grows past a screen, move the detail into its own file and point to it. Claude Code can import a file into CLAUDE.md with `@path/to/file`, or you can just tell it where to look. A short CLAUDE.md that Claude actually follows beats a long one it skims.
+:::
 
 ---
 
-### .clinerules / CLAUDE.md (Key Sections)
+## The other files
+
+### TASK_TEMPLATE.md
+
+One task, one file. The header now has a **Recommended model** line:
 
 ```markdown
-## Iron-Clad Developer Rules
+# [TASK-ID]: [Task title]
 
-### Quality Standards
-- Unit tests mandatory for all business logic
-- Smoke test after every change
-- Browser testing for UI changes
-- Assume authenticated session exists — navigate to the target URL, not the login page. The human uses Cline's remote browser connection to preserve login state. Only authenticate if bounced. Log out explicitly for signup/onboarding tests.
-- Handle errors explicitly — no silent failures
-- Comment the "why" on non-obvious decisions
-- Every function gets a docstring
-
-### Development Workflow
-- Plan mode FIRST — always
-- One task at a time — no side quests
-- Commit working code only
-- Update docs after every task
-
-### Prohibited
-- Do NOT skip tests
-- Do NOT refactor outside current task scope
-- Do NOT add unspecified features
-- Do NOT use `any` types
-
-### Confidence Scoring
-After each task: rate 1-10, 8 minimum to proceed.
-
-### Ask Human When
-- Security decisions
-- Architectural changes
-- Ambiguous requirements
-- Confidence below 8
-
-### Live Project Overview Conventions (all projects)
-[Read `overview/README.md` at task start, update `domain.config.js` on entity changes, JSDoc all routes, append decision stubs, run `pnpm generate:overview` before commit]
-[See The Live Project Overview](/part-2/live-project-overview) for the full rules]
-
-### Cost Hygiene Rules (all projects)
-[`.clineignore` mandatory, hard stop after 3 failures, Plan-mode default, `new_task` for long sessions, never poll long-running operations, auto-approve OFF]
-[See Token Economics](/part-5/token-economics) for the full rules]
-
-### Deploy Rules (any project that ships to a server)
-[Build on the server not on AI's machine, return immediately after kicking off, hand the human a one-line status command, `max_requests_per_task` cap, never overwrite production `.env`, dev only, `deployment.json` mandatory, every deploy is a clean build]
-[See Deployment & Platform Targets](/part-5/deployment-platforms) for the full rules]
-
-### Control Panel Conventions (if project has a backend)
-[Deployment monitoring, automation flow annotations, user journey testing, security checks]
-[See The Project Control Panel](/part-5/control-panel) for the full rules]
-
-### Observability (Sprint 1 defaults — non-negotiable)
-[7 rules: error capture, source maps (irreversible), release tagging (irreversible), environment split, no Prometheus for app errors, investigate before guessing, update ARCHITECTURE.md]
-[See Observability & Error Tracking](/part-5/observability) for the full rules]
-
-### Frontend Tweaker Conventions (all projects with a UI)
-[i18n text management, @tweak style tokens, link management, SEO meta content]
-[See The Frontend Tweaker](/part-5/frontend-tweaker) for the full rules]
-
-### Accessibility Conventions (all projects with a UI) — non-negotiable
-[Real elements not `<div onClick>`, never remove focus indicators, alt on every image, labels on every input, semantic headings and landmarks, never colour alone, 4.5:1 contrast, 24×24px targets, `prefers-reduced-motion`, focus moves on route change, a11y linter + axe-core before any UI task is complete, no overlay widgets]
-[See Accessibility by Default](/part-5/accessibility) for the full rules]
+**Status:** BACKLOG | IN_PROGRESS | DONE
+**Recommended model:** Opus | Sonnet | Fable (and one line on why)
+**Priority:** P0 | P1 | P2 | P3
+**Dependencies:** [Other task IDs, or "None"]
 ```
 
+Then context (why the task exists), numbered requirements, the technical approach with the files to touch, and acceptance criteria you can check. The criteria include the tests, a screenshot check for anything visual, and "LEARNINGS.md updated if something bit". More in [Task Patterns](/part-3/task-patterns).
+
+### LEARNINGS.md
+
+An empty log with one test for what goes in: "Would a fresh session hitting this waste 30 minutes without this entry?" If yes, it goes in. If no, it doesn't. Fixed traps graduate out, either into CLAUDE.md as a rule or into the archive. The doc-length rules keep it in check.
+
+### GLOBAL_MEMORY.md
+
+The starter for your personal rules, the ones that apply to every project: how you like to be spoken to, never estimate time, stop after three failed attempts. Claude Code reads a user-level file at `~/.claude/CLAUDE.md` in every project, so that's where this content goes. Keep it to half a page.
+
+### ARCHITECTURE.md
+
+The file that saves the most rework. Real table names, real column types, real routes, and a table of key decisions with the reason for each. Claude with a real schema gets it right first time. Claude without one guesses.
+
+### SPRINT_PLAN_TEMPLATE.md and SPRINT_RULES.md
+
+The plan lists the tasks, their order and what "done" means for the whole sprint. The rules say how big a sprint and a task should be, and what to do with work you find along the way (new bug elsewhere? New task file. Don't fix it inline). I still work in sprints and phases, with an [audit](/part-4/phase-audits) at the end of each.
+
+::: everything The deploy and overview files
+- `scripts/deploy.sh` runs **on the server**, not on your machine. It pulls, builds and restarts. Set `APP_DIR`, `PM2_NAME` and `BRANCH` at the top.
+- `Dockerfile` is a multi-stage Node build with an `/api/health` check. Change the run command for your framework.
+- `overview/` is generated. Run the generator before each commit so Claude always has a current map. See [The Live Project Overview](/part-2/live-project-overview).
+:::
+
 ---
 
-## Real-World Example: VH Conference Toolkit
+## How to use them
 
-The [VH Conference Toolkit](https://github.com/Visual-Hive/vh-conference-toolkit) demonstrates these templates in production:
+### New project
 
-- Thorough architecture documentation with full schemas and component specifications
-- Strict development rules with mandatory testing, prohibited behaviors, and tech-specific conventions
-- Sprint-based task documentation with individual task specs and architectural decision records (ADRs)
-- Each tool built as an independent, well-documented module following the same methodology
+1. [Talk it through](/part-2/brainstorming) in Chat and get [mockups](/part-2/mockups-first) you'd be happy with.
+2. Copy `project-templates/` into your new repo.
+3. Use the foundation-docs prompt from [Prompts](/part-6/prompts) to have Claude fill in CLAUDE.md, README, ARCHITECTURE and the first sprint plan.
+4. **Read what it wrote.** Push back on vague schemas, soft rules and sprints that are too big. Fix the "Who I am" section yourself: only you know how techie you are.
+5. Start the first task in a fresh session.
 
-Browse the repo to see what thorough project documentation looks like.
+### Existing project
 
----
-
-## Tips
-
-**Don't skip ARCHITECTURE.md.** It's the single most impactful document. AI with real schemas writes correct code on the first try. AI without them guesses and you spend hours debugging.
-
-**Make .clinerules strict.** "Tests are mandatory" not "try to write tests." AI follows explicit rules. Vague suggestions get ignored.
-
-**Review Claude's output.** When you use the prompts to generate these docs, Claude produces good first drafts. But review everything — push back on vague schemas, weak rules, and oversized sprints.
-
-**Keep docs updated.** After every task, check: is ARCHITECTURE.md still accurate? Is LEARNINGS.md up to date? Stale docs cause stale output.
+Run `/init` in Claude Code to get a starter CLAUDE.md from your codebase. Then paste in the seven sections above and fill them in. Add ARCHITECTURE.md next if you don't have one. Then write a sprint plan for your next batch of work.
 
 ---
 
-**Next:** [Prompts](/part-6/prompts) — Copy-paste prompts for every phase.
+## A real example
+
+The [VH Conference Toolkit](https://github.com/Visual-Hive/vh-conference-toolkit) (an open-source set of event tools) was built with an earlier version of these templates, back when this guide was built around Cline. The public repo holds the finished tools and their READMEs rather than the planning docs, but it shows what one well-scoped tool per folder looks like.
+
+---
+
+**Next:** [Prompts](/part-6/prompts). The prompts I use at each step.

@@ -1,13 +1,13 @@
 ---
-title: Adding Files & Styling Basics
-description: How to add images to your project and understand colours, fonts, and styles
+title: Adding Files and Styling Basics
+description: Where images go in your project, and enough about colours, fonts and CSS to ask Claude for what you want
 ---
 
-# Adding Files & Styling Basics
+# Adding Files and Styling Basics
 
 ## TLDR
 
-Your project needs images, icons, and other files? They go in a specific folder (usually `static/` or `public/`) so the build tool knows to include them when the app is deployed. Colours in code are defined with hex codes like `#FF5733` or named formats like `rgb(255, 87, 51)`. CSS (Cascading Style Sheets) is the language that controls how everything looks — fonts, colours, spacing, layout. You don't need to master CSS because Cline writes it for you, but understanding the basics helps you ask for the right changes.
+Images, icons and other files go in a specific folder (usually `static/` or `public/`) so the build tool includes them when the app is deployed. Colours in code are written as hex codes like `#FF5733` or formats like `rgb(255, 87, 51)`. CSS (Cascading Style Sheets) is the language that controls how everything looks: fonts, colours, spacing, layout. You don't need to master CSS, because Claude writes it. Knowing the basics helps you ask for the right changes.
 
 ---
 
@@ -15,7 +15,7 @@ Your project needs images, icons, and other files? They go in a specific folder 
 
 ### Where Files Go
 
-When you want to include an image, a PDF, a font file, or any other asset in your app, it needs to go in the right folder. Different frameworks use different names, but the concept is the same: there's a special folder for "files that should be served as-is, without being processed by the build tool."
+Images, PDFs, fonts and other assets need to go in the right folder. Frameworks use different names, but the idea is the same. There's a special folder for "files served as they are, untouched by the build tool."
 
 | Framework | Static files folder | Example URL in browser |
 |-----------|-------------------|----------------------|
@@ -28,9 +28,11 @@ If you put `logo.png` in the `static/` folder (for SvelteKit), it becomes availa
 
 ### How to Add an Image
 
-1. Find your project's static folder in VS Code's file explorer (left sidebar)
-2. Drag and drop your image file into that folder
+1. Find your project's static folder (in VS Code it's in the file explorer on the left)
+2. Drag your image file into that folder
 3. Reference it in your code using the path from the static folder root
+
+Or skip all that. Tell Claude where the file is on your computer and ask it to copy it into the static folder and use it.
 
 **Example in HTML:**
 ```html
@@ -68,23 +70,23 @@ static/
     CustomFont-Regular.woff2
 ```
 
-### Image Formats — Which to Use
+### Image Formats: Which to Use
 
-- **`.jpg` / `.jpeg`** — Good for photos. Small file size, but quality degrades if compressed too much
-- **`.png`** — Good for graphics, logos, screenshots, anything that needs crisp edges or transparency (see-through backgrounds)
-- **`.svg`** — Ideal for icons and logos. SVGs are made of maths, not pixels, so they scale to any size without getting blurry. They're also tiny in file size
-- **`.webp`** — Modern format that's smaller than JPG and PNG with similar quality. Good for web performance, supported by all modern browsers
-- **`.gif`** — For simple animations. Large file sizes, limited colours. Consider using a video or CSS animation instead for anything complex
+- **`.jpg` / `.jpeg`.** Good for photos. Small files, but quality drops if you compress too hard
+- **`.png`.** Good for graphics, logos and screenshots. Anything that needs crisp edges or a see-through background
+- **`.svg`.** Ideal for icons and logos. SVGs are made of maths, not pixels, so they scale to any size without going blurry. They're tiny too
+- **`.webp`.** A modern format, smaller than JPG and PNG at similar quality. Every modern browser supports it
+- **`.gif`.** For simple animations. Big files, limited colours. For anything complex, use a video or CSS animation instead
 
 ### File Sizes Matter
 
 Large images slow down your app. A 5MB photo that's 4000x3000 pixels is overkill for a web page. Before adding images:
 
-- Resize to the actual display size (if the image displays at 400px wide on screen, a 400px-wide file is enough — 800px at most for high-DPI screens)
+- Resize to the size it actually shows at. If it displays 400px wide, a 400px-wide file is enough (800px at most for high-DPI screens)
 - Compress using a free tool like [squoosh.app](https://squoosh.app) or [tinypng.com](https://tinypng.com)
 - Aim for under 200KB per image for most web use
 
-Cline can help optimise images too — just ask: "Can you help me optimise the images in the static folder for web?"
+Claude can optimise images too. Just ask: "Can you optimise the images in the static folder for the web?"
 
 ---
 
@@ -100,7 +102,7 @@ The most common format. A `#` followed by 6 characters (0-9 and A-F):
 color: #FF5733;
 ```
 
-The six characters are actually three pairs: **RR GG BB** — Red, Green, Blue. Each pair ranges from `00` (none) to `FF` (maximum).
+The six characters are three pairs: **RR GG BB**, for Red, Green and Blue. Each pair ranges from `00` (none) to `FF` (maximum).
 
 - `#FF0000` = maximum red, no green, no blue = **red**
 - `#00FF00` = no red, maximum green, no blue = **green**
@@ -110,7 +112,7 @@ The six characters are actually three pairs: **RR GG BB** — Red, Green, Blue. 
 - `#808080` = middle everything = **grey**
 - `#FF5733` = lots of red, some green, a little blue = **an orange-red**
 
-**You don't need to memorise this.** Use a colour picker tool. Google "colour picker" and one appears right in the search results. Or search for "hex colour picker" to find interactive tools. Pick a colour visually and it gives you the hex code.
+**You don't need to memorise this.** Use a colour picker. Google "colour picker" and one appears in the search results. Pick a colour by eye and it gives you the hex code.
 
 ### RGB
 
@@ -120,9 +122,9 @@ Same concept, different notation:
 color: rgb(255, 87, 51);
 ```
 
-The three numbers are Red, Green, Blue — each from 0 to 255. `rgb(255, 87, 51)` is the same colour as `#FF5733`.
+The three numbers are Red, Green and Blue, each from 0 to 255. `rgb(255, 87, 51)` is the same colour as `#FF5733`.
 
-### RGBA — Colours with Transparency
+### RGBA: Colours with Transparency
 
 Add an alpha (transparency) value:
 
@@ -130,9 +132,9 @@ Add an alpha (transparency) value:
 background-color: rgba(255, 87, 51, 0.5);
 ```
 
-The fourth number goes from `0` (completely transparent / invisible) to `1` (completely solid). `0.5` means 50% see-through. Useful for overlay effects, subtle backgrounds, and shadows.
+The fourth number goes from `0` (invisible) to `1` (solid). `0.5` means 50% see-through. Useful for overlay effects, subtle backgrounds, and shadows.
 
-### HSL — Hue, Saturation, Lightness
+### HSL: Hue, Saturation, Lightness
 
 Some developers prefer HSL because it's more intuitive for making colour variations:
 
@@ -158,7 +160,7 @@ color: papayawhip;
 
 There are 140+ named colours. They're fine for prototyping but most projects use hex codes or design system variables for consistency.
 
-### Using Colours Consistently — CSS Variables
+### Using Colours Consistently: CSS Variables
 
 Instead of writing `#FF5733` everywhere (and then having to change it in 50 places), good practice is to define colours once:
 
@@ -180,13 +182,13 @@ Then use them throughout:
 }
 ```
 
-Now if you want to change the primary colour, you change it in one place. Cline typically sets this up for you, but knowing the pattern helps you ask for colour changes: "Can you change the primary colour to a darker blue?"
+Now you change the primary colour in one place. Claude usually sets this up for you. Knowing the pattern helps you ask for changes: "Can you change the primary colour to a darker blue?"
 
 ---
 
-## CSS Basics — How Styling Works
+## CSS Basics: How Styling Works
 
-CSS controls how HTML elements look. Every visual property you can think of — colour, size, position, font, spacing, borders, shadows, animations — is set with CSS.
+CSS controls how HTML elements look. Colour, size, position, font, spacing, borders, shadows and animations are all set with CSS.
 
 ### The Structure of a CSS Rule
 
@@ -202,9 +204,9 @@ CSS controls how HTML elements look. Every visual property you can think of — 
 
 Breaking this down:
 
-- `.button` — the **selector** (what to style). The `.` means "any element with the class name 'button'"
-- `{ }` — the curly braces contain the style rules
-- `background-color: #FF5733;` — a **property** and its **value**, ended with a semicolon
+- `.button` is the **selector** (what to style). The `.` means "any element with the class name 'button'"
+- `{ }`, the curly braces, hold the style rules
+- `background-color: #FF5733;` is a **property** and its **value**, ended with a semicolon
 - Each line is one styling instruction
 
 ### Common CSS Properties
@@ -231,21 +233,21 @@ This confuses everyone at first:
 
 Think of it like a picture frame: the padding is the matting inside the frame, the margin is the wall space between frames.
 
-### Units — px, rem, em, %
+### Units: px, rem, em, %
 
-- **`px`** (pixels) — fixed size. `16px` is 16 pixels regardless of anything else. Good for borders and small details
-- **`rem`** — relative to the root font size (usually 16px). `1rem` = 16px, `2rem` = 32px. Good for text sizes and spacing because it scales if the user changes their browser font size
-- **`em`** — relative to the parent element's font size. Can cascade unexpectedly, so `rem` is generally preferred
-- **`%`** — percentage of the parent element. `width: 50%` means half the width of the container
-- **`vh` / `vw`** — viewport height / viewport width. `100vh` = full height of the browser window
+- **`px`** (pixels). Fixed size. `16px` is 16 pixels, whatever else happens. Good for borders and small details
+- **`rem`.** Relative to the root font size (usually 16px). `1rem` = 16px, `2rem` = 32px. Good for text and spacing, because it scales if the reader changes their browser font size
+- **`em`.** Relative to the parent element's font size. It can cascade in surprising ways, so `rem` is usually preferred
+- **`%`.** A percentage of the parent element. `width: 50%` means half the width of the container
+- **`vh` / `vw`.** Viewport height and width. `100vh` = the full height of the browser window
 
-For most things, stick with `px` for small values (borders, shadows) and `rem` for text and spacing. Cline handles this, but understanding why sometimes things are in `px` and sometimes in `rem` helps you read the code.
+For most things, `px` suits small values (borders, shadows) and `rem` suits text and spacing. Claude handles this. Knowing why helps you read the code.
 
 ---
 
-## Telling Cline What You Want
+## Telling Claude what you want
 
-You don't need to write CSS yourself — that's Cline's job. But knowing the vocabulary helps you give clear instructions:
+You don't need to write CSS yourself. That's Claude's job. Knowing the words just helps you give clear instructions:
 
 Instead of: *"Make the button look different"*
 
@@ -253,13 +255,13 @@ Try: *"Make the button background a darker blue, increase the border-radius to 1
 
 Instead of: *"The spacing is weird"*
 
-Try: *"The cards need more margin between them — maybe 24px gap. And the text inside each card needs more padding, especially at the top and bottom"*
+Try: *"The cards need more margin between them, maybe a 24px gap. And the text inside each card needs more padding, especially at the top and bottom"*
 
 Instead of: *"Change the colours"*
 
 Try: *"I want the primary colour to be #2563EB (a medium blue) and the background to be #F8FAFC (a very light grey). Update the CSS variables"*
 
-The more specific you are, the fewer back-and-forth iterations Cline needs, which saves time and API costs.
+The more specific you are, the fewer rounds it takes. That saves time and eats less of your session limit. A screenshot with an arrow on it works wonders too.
 
 ### Finding Colours You Like
 
@@ -270,11 +272,11 @@ If you see a colour on another website and want to use it:
 3. In the Elements panel, look at the CSS on the right side for `color` or `background-color` values
 4. Copy the hex code
 
-Or use a browser extension like **ColorZilla** (Chrome/Firefox) — it gives you an eyedropper tool to click on any colour and copy the hex code.
+Or use a browser extension like **ColorZilla** (Chrome/Firefox). It gives you an eyedropper to click any colour and copy its hex code.
 
 ---
 
-## Tailwind CSS — A Shortcut
+## Tailwind CSS: A Shortcut
 
 Many modern projects use **Tailwind CSS** instead of writing traditional CSS. Instead of separate CSS files, you add class names directly to HTML elements:
 
@@ -288,15 +290,15 @@ Many modern projects use **Tailwind CSS** instead of writing traditional CSS. In
 <!-- All styling is right here in the class names -->
 ```
 
-Each Tailwind class maps to a CSS property: `bg-blue-500` = blue background, `px-6` = horizontal padding, `rounded-lg` = rounded corners, etc.
+Each Tailwind class maps to a CSS property: `bg-blue-500` = blue background, `px-6` = horizontal padding, `rounded-lg` = rounded corners.
 
-**You don't need to learn Tailwind** — Cline knows it thoroughly and will use it if your project is set up with it. But if you see class names that look like `flex items-center gap-4 text-sm font-medium` in your code, that's Tailwind, and it's normal.
+**You don't need to learn Tailwind.** Claude knows it well and will use it if your project is set up for it. If you see class names like `flex items-center gap-4 text-sm font-medium`, that's Tailwind, and it's normal.
 
 ---
 
-## Quick Reference for Talking to Cline About Styles
+## Quick Reference for Talking to Claude About Styles
 
-| What you want | What to say to Cline |
+| What you want | What to say to Claude |
 |--------------|---------------------|
 | Change a colour | "Change the primary colour to [hex code or description]" |
 | More/less space | "Increase/decrease the padding/margin on [element]" |
@@ -306,8 +308,8 @@ Each Tailwind class maps to a CSS property: `bg-blue-500` = blue background, `px
 | Centre something | "Centre this element horizontally" |
 | Side by side | "Display these items in a row using flexbox" |
 | Stacked vertically | "Stack these elements vertically with 16px gap between them" |
-| Responsive (works on mobile) | "Make this layout responsive — stack vertically on mobile, side by side on desktop" |
+| Responsive (works on mobile) | "Make this layout responsive: stack vertically on mobile, side by side on desktop" |
 
 ---
 
-**You've finished Part 0!** You now have all the tools installed, your AI connected, and the vocabulary to communicate about what your app looks like and how it works. Head to the [Introduction](/introduction) to learn the methodology, or jump to the [Setup Guide](/part-6/setup-guide) for the quick-reference version.
+**That's Part 0 done.** You've got Claude set up and enough vocabulary to talk about how your app looks and works. Head to the [Introduction](/introduction) for the method. If you skipped the setup, it's in [Setting Up Your Computer](/part-0/setting-up-your-computer).

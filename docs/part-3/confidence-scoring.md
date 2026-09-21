@@ -1,31 +1,33 @@
 ---
 title: Confidence Scoring
-description: The quality gate that keeps your project solid
+description: The 8/10 rule that stops a shaky task from breaking everything built on top of it
 ---
 
 # Confidence Scoring
 
 ## TLDR
 
-After every task, rate your confidence from 1-10. If it's below 8, fix it before moving on.
+After every task, Claude rates its confidence from 1 to 10. Below 8, you fix it before moving on.
 
-This one habit prevents the cascade failure where broken foundations corrupt everything built on top.
+This one habit stops broken foundations from quietly wrecking everything you build on top.
 
 ---
 
 ## How It Works
 
-When you finish a task, ask yourself (or have AI ask itself):
+At the end of each task, Claude answers one question:
 
-> "How confident am I that this is done right?"
+> "How confident are you that this is done right?"
 
-**8/10 means:** It works, it's tested, errors are handled, code is clean. Solid enough to build on.
+**8/10:** it works, it's tested, errors are handled, the code is clean. Solid enough to build on.
 
-**9/10 means:** All of the above, and it's genuinely good work. You'd show it to someone.
+**9/10:** all of that, and it's good work. You'd show it to someone.
 
-**7/10 means:** Something's off. Maybe tests are thin, edge cases unhandled, or you're not sure about a decision. Fix it.
+**7/10:** something's off. Thin tests, unhandled edge cases, or a decision nobody's sure about. Fix it.
 
-**6/10 or below:** Stop. Something is fundamentally wrong.
+**6/10 or below:** stop. Something is fundamentally wrong.
+
+Put the rule in your `CLAUDE.md` so every task ends with a score without you asking.
 
 ---
 
@@ -39,7 +41,7 @@ Keep it simple:
 **Must-haves (met):**
 - [x] Core functionality works
 - [x] Errors handled
-- [x] Tests pass
+- [x] Tests pass (backend and browser)
 - [x] Code readable
 
 **Deferred:**
@@ -47,91 +49,91 @@ Keep it simple:
 - [ ] Advanced validation (v1.0)
 ```
 
-That's it. 10 lines. Don't over-engineer this.
+Ten lines. Don't over-engineer it.
 
 ---
 
 ## What Counts as 8/10
 
-The bar isn't perfection. It's "solid enough to build on."
+The bar is "solid enough to build on", not perfection.
 
 **8/10 code:**
 - Does what it's supposed to do
 - Handles the obvious error cases
 - Has tests for the important paths
-- Is readable by someone else (or AI next session)
-- Doesn't have known bugs you're ignoring
+- Can be read by someone else (or by Claude next session)
+- Has no known bugs you're ignoring
 
-**8/10 is NOT:**
+**8/10 doesn't need:**
 - Every edge case handled
 - 100% test coverage
-- Perfectly optimized
-- Production-hardened
+- Perfect performance
+- Production hardening
 
-Those are 9/10 or 10/10. For MVP, 8/10 is the target.
+Those are 9s and 10s. For an MVP, 8 is the target.
 
 ---
 
 ## When You're Below 8
 
-Don't negotiate with yourself. If you're at 7/10, something's wrong.
+Don't haggle with yourself. At 7/10, something's wrong.
 
 **Common gaps:**
-- "Tests pass but I'm not sure they test the right things" → Write better tests
-- "It works but error handling is sketchy" → Add error handling
-- "I'm not sure about this architectural decision" → Think it through or ask
-- "There's a bug I haven't fixed" → Fix the bug
+- "Tests pass but I'm not sure they test the right things." Write better tests.
+- "It works but the error handling is sketchy." Add error handling.
+- "I'm not sure about this architectural decision." Think it through, or ask.
+- "There's a bug I haven't fixed." Fix the bug.
 
-**The conversation:**
+**How it sounds:**
 ```
-AI: "Confidence: 7/10. The login works but I haven't 
-tested what happens when the database is unavailable."
+Claude: "Confidence: 7/10. Login works, but I haven't
+tested what happens when the database is down."
 
-You: "Add that test and handling before we continue."
+You: "Add that test and the handling before we move on."
 
-AI: [adds test, adds handling]
+Claude: [adds test, adds handling]
 
-AI: "Confidence: 8/10. Database errors now return 503 
-with retry guidance. Test added."
+Claude: "Confidence: 8/10. Database errors now return 503
+with a retry message. Test added."
 ```
 
 Now you can move on.
 
 ---
 
-## Why This Matters
+## Why It Matters
 
-Without confidence scoring, broken code accumulates:
+Without scoring, broken code piles up:
 
 ```
-Task 1: Auth (buggy) → "good enough, continue"
-Task 2: Database (built on buggy auth) → "some issues, continue"  
+Task 1: Auth (buggy) → "good enough, carry on"
+Task 2: Database (built on buggy auth) → "some issues, carry on"
 Task 3: API (built on buggy database) → "not sure why this fails"
 Task 4: UI (nothing works) → "everything is broken"
 ```
 
-With confidence scoring:
+With scoring:
 
 ```
-Task 1: Auth → 7/10 → Fix → 8/10 → Continue
-Task 2: Database → 8/10 → Continue
-Task 3: API → 8/10 → Continue
-Task 4: UI → Works because foundation is solid
+Task 1: Auth → 7/10 → Fix → 8/10 → Carry on
+Task 2: Database → 8/10 → Carry on
+Task 3: API → 8/10 → Carry on
+Task 4: UI → Works, because the foundation is solid
 ```
 
-The extra hour fixing Task 1 saves days debugging Task 4.
+The extra hour on Task 1 saves days of debugging on Task 4.
 
 ---
 
-## Honest Self-Assessment
+## Be Honest
 
-The scoring only works if you're honest.
+The score only works if it's honest.
 
-**Temptation:** "It's probably fine, I'll call it 8/10 and move on."
+**Temptation:** "It's probably fine. Call it 8 and move on."
 
-**Reality check:** Would you bet $100 that this task is solid? If not, it's not 8/10.
+**Reality check:** would you bet £100 this task is solid? If not, it isn't an 8.
 
-**AI tends to be optimistic.** When AI says 8/10, verify. Run the tests. Try the edge cases. Check the error handling yourself.
+**Don't take the number on trust.** When Claude says 8/10, look at the screenshots, try it yourself, and poke at the edge cases. The score is Claude's view. Your replay is the one that counts.
 
 ---
 
@@ -139,12 +141,12 @@ The scoring only works if you're honest.
 
 | Score | Meaning | Action |
 |-------|---------|--------|
-| 9-10 | Excellent | Continue, maybe celebrate |
-| 8 | Solid | Continue |
-| 7 | Gaps exist | Fix before continuing |
-| 6 | Significant issues | Stop and fix |
-| ≤5 | Fundamentally broken | Reconsider approach |
+| 9-10 | Excellent | Carry on, maybe celebrate |
+| 8 | Solid | Carry on |
+| 7 | Gaps | Fix before carrying on |
+| 6 | Real problems | Stop and fix |
+| 5 or less | Fundamentally broken | Rethink the approach |
 
 ---
 
-**Next:** [Phase Audits](/part-4/phase-audits) — Fresh eyes between major milestones.
+**Next:** [Phase Audits](/part-4/phase-audits): fresh eyes between major milestones.

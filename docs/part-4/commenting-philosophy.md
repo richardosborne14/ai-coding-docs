@@ -1,74 +1,71 @@
 ---
 title: Commenting Philosophy
-description: Why heavy commenting pays off in AI-assisted development
+description: Why heavy commenting pays off when Claude reads your code fresh every session
 ---
 
 # Commenting Philosophy
 
 ## TLDR
 
-Aim for 50% comments. Sounds excessive—it's not.
+Aim for about 50% comments. It sounds excessive. It isn't.
 
-Future you, future developers, and AI in future sessions all need to understand *why* you made decisions, not just *what* the code does.
+Future you, future developers and Claude in its next session all need to know *why* you made a decision, not just *what* the code does.
 
 ---
 
 ## The Case for Heavy Comments
 
-Traditional wisdom: "Good code is self-documenting. Minimize comments."
+The traditional advice is "good code documents itself, so keep comments to a minimum".
 
 That advice assumes:
 - The same person maintains the code
 - They remember their decisions
-- They have full context
+- They have the full picture
 
-AI-assisted development breaks all three:
-- AI has no memory between sessions
-- You forget decisions after a few weeks
-- Context gets lost
+Building with Claude breaks all three. Each session starts without the last session's conversation. You forget decisions after a few weeks. The reasons behind the code get lost.
 
-Comments are how you preserve context.
+Comments are how you keep them.
 
 ---
 
 ## What to Comment
 
-**The "why" behind decisions:**
+**The "why" behind a decision:**
 
 ```python
 # Skills weighted 2x because professional connections
 # matter more than hobby overlap at business events.
-# Revisit weighting after user feedback in v1.0.
+# Revisit the weighting after user feedback in v1.0.
 score = (skills_overlap * 2) + interests_overlap
 ```
 
-Without that comment, someone later asks "why multiply by 2?" and nobody knows.
+Without that comment, someone later asks "why times two?" and nobody knows.
 
-**Non-obvious behavior:**
+**Behaviour that isn't obvious:**
 
 ```javascript
-// Intentionally delay 100ms before redirect.
-// Immediate redirect causes flash of unstyled content
-// on slower connections. See LEARNINGS.md 2024-12-10.
+// Deliberately wait 100ms before redirecting.
+// An immediate redirect flashes unstyled content
+// on slow connections. See LEARNINGS.md 2024-12-10.
 await sleep(100);
 window.location.href = '/dashboard';
 ```
 
-**Trade-offs you considered:**
+**Trade-offs you weighed:**
 
 ```python
-# Using simple tag matching instead of vector similarity.
-# Vectors are more accurate but 10x slower for 1000+ users.
-# Good enough for MVP. Upgrade path: switch to Qdrant in v1.0.
+# Simple tag matching instead of vector similarity.
+# Vectors are more accurate but 10x slower past 1000 users.
+# Good enough for the MVP. Upgrade path: Qdrant in v1.0.
 def match_users(user1, user2):
     ...
 ```
 
-**Deferred decisions:**
+**Decisions you put off:**
 
 ```javascript
 // TODO(v1.0): Add rate limiting here.
-// For MVP, we trust our small user base.
+// For the MVP we trust our small user base.
 // Before public launch, add express-rate-limit.
 app.post('/api/login', async (req, res) => {
     ...
@@ -77,12 +74,12 @@ app.post('/api/login', async (req, res) => {
 
 ---
 
-## What NOT to Comment
+## What Not to Comment
 
 **The obvious:**
 
 ```python
-# Bad: explains what, not why
+# Bad: says what, not why
 i = i + 1  # increment i
 
 # Also bad
@@ -94,36 +91,36 @@ user = get_user(id)  # get the user
 ```python
 # Connects to production database
 def connect():
-    return connect_to_staging()  # Comment is wrong!
+    return connect_to_staging()  # The comment is wrong!
 ```
 
-Outdated comments are worse than no comments. When you change code, update comments.
+An out-of-date comment is worse than none. When the code changes, the comment changes with it. Put that rule in your `CLAUDE.md`.
 
 ---
 
 ## Function Documentation
 
-Every function gets a docstring explaining:
+Every function gets a docstring that says:
 - What it does (one sentence)
-- Why it exists (if not obvious)
-- Parameters and return value
-- Example if helpful
+- Why it exists (if that isn't obvious)
+- Its parameters and return value
+- An example, if it helps
 
 ```python
 def calculate_match_score(user1, user2):
     """
-    Calculate networking match score between two users.
-    
-    Higher scores = better match for business networking.
+    Calculate the networking match score between two users.
+
+    Higher score = better match for business networking.
     Skills weighted 2x because professional overlap matters more.
-    
+
     Args:
         user1: User dict with 'skills' and 'interests' lists
         user2: User dict with 'skills' and 'interests' lists
-    
+
     Returns:
         int: Score from 0-20 (typical range)
-    
+
     Example:
         >>> calculate_match_score(
         ...     {'skills': ['python'], 'interests': ['hiking']},
@@ -136,15 +133,15 @@ def calculate_match_score(user1, user2):
     return (skills_overlap * 2) + interests_overlap
 ```
 
-Takes 60 seconds to write. Saves hours of "what does this do?" later.
+A minute to write. Hours saved later.
 
 ---
 
-## The AI Memory Problem
+## Why Claude Needs This
 
-When you start a new task session, AI reads your code. 
+Every fresh session, Claude reads your code as if for the first time.
 
-**Uncommented code:**
+**Uncommented:**
 ```python
 def process(data):
     if len(data) > 1000:
@@ -154,104 +151,104 @@ def process(data):
     return result
 ```
 
-AI thinks: "Why truncate at 1000? Why sleep? What does transform do?" It guesses, often wrong.
+Claude wonders why it cuts off at 1000 and why it sleeps. It guesses, and it often guesses wrong. Then it "tidies up" the sleep and you hit the rate limit.
 
-**Commented code:**
+**Commented:**
 ```python
 def process(data):
-    # Limit to 1000 items - API rate limit is 1000/minute
+    # Cap at 1000 items: the API allows 1000 per minute
     if len(data) > 1000:
         data = data[:1000]
-    
+
     result = transform(data)
-    
-    # Brief delay prevents hitting rate limit on rapid successive calls
+
+    # Short pause so rapid calls don't trip the rate limit
     time.sleep(0.1)
-    
+
     return result
 ```
 
-AI knows exactly what's happening and why. It makes better decisions.
+Now Claude knows what's going on and leaves the important bits alone.
 
 ---
 
 ## The Three-Month Test
 
-When writing comments, ask: "Will I understand this in three months?"
+Ask yourself: "Will I understand this in three months?"
 
-If you're writing something clever or non-obvious, you won't remember why. Comment it now.
+If it's clever or odd, you won't remember why. Comment it now.
 
 ```javascript
-// This regex looks insane but it handles:
-// - International phone formats (+1, +44, etc.)
-// - Optional parentheses around area code
-// - Spaces, dashes, or dots as separators
+// This regex looks mad but it handles:
+// - International formats (+1, +44, etc.)
+// - Optional brackets around the area code
+// - Spaces, dashes or dots as separators
 // Tested against 500 real phone numbers from user data.
 const phoneRegex = /^\+?[\d\s\-().]{10,}$/;
 ```
 
-Future you will be grateful.
-
 ---
 
-## Making the Codebase AI-Navigable
+## Make the Code Easy to Find
 
-Comments explain "why." But there's a deeper layer: making the codebase a map that AI can navigate to find its own past work and translate the user's understanding of the app into the code itself.
+Comments explain "why". There's a second job: helping Claude find the right code from the words you use.
 
-**The problem:** What the user sees ("the pricing section on the homepage") and what exists in code (`src/components/landing/FeatureGrid.svelte`) are completely different languages. When the user says "the pricing cards are misaligned," Cline needs to find the right file, the right component, the right CSS rule. In a large project, this is surprisingly hard.
+**The problem:** what you see ("the pricing section on the homepage") and what's in the code (`src/components/landing/FeatureGrid.svelte`) use different words. When you say "the pricing cards are misaligned", Claude has to find the right file, component and CSS rule. In a big project that's harder than it sounds.
 
-**The solution:** Build identification into the code from the start.
+**The fix:** build the names in from the start.
 
-**Meaningful element IDs and data attributes:**
+**Meaningful IDs and data attributes:**
 
 ```html
-<!-- Bad: AI can't find this from "the pricing section" -->
+<!-- Bad: nothing links this to "the pricing section" -->
 <div class="grid grid-cols-3 gap-4">
 
-<!-- Good: AI can grep for this -->
+<!-- Good: Claude can search for this -->
 <div id="pricing-cards-section" data-component="PricingCards" class="grid grid-cols-3 gap-4">
 ```
 
-**Component-level comments that describe what the user sees:**
+**A comment at the top of each component saying what the user sees:**
 
 ```svelte
 <!--
   COMPONENT: PricingCards
   USER-FACING: The three pricing tier cards on the homepage (/pricing section)
-  DISPLAYS: Free, Pro, and Enterprise tiers with feature lists
+  DISPLAYS: Free, Pro and Enterprise tiers with feature lists
   DATA SOURCE: static-data/pricing-tiers.json
 -->
 ```
 
-**The control panel reinforces this pattern.** When using the [Project Control Panel](/part-5/control-panel), the conventions around `deployment.json`, `flow-registry.js`, and `USER_JOURNEYS.json` all serve the same purpose — creating a structured, searchable index of the application that both human and AI can navigate.
+The same names help your browser tests too: a test that clicks `#pricing-cards-section` doesn't break when someone changes the CSS classes. See [Testing](/part-4/testing).
 
-In advanced projects, you can take this further: baking descriptions into element attributes that an AI assistant can read at runtime, enabling it to understand which part of the application the user is interacting with. This makes the codebase a living, interactive map of the application — and it makes future AI work dramatically more efficient.
+**The control panel works the same way.** With the [Project Control Panel](/part-5/control-panel), `deployment.json`, `flow-registry.js` and `USER_JOURNEYS.json` all build a searchable index of the app that you and Claude can both use.
 
 ---
 
 ## Quick Checklist
 
-Before finishing a task:
+Before a task closes:
 
 - [ ] Every function has a docstring
-- [ ] Non-obvious code has inline comments explaining "why"
-- [ ] Trade-offs are documented
-- [ ] TODOs reference when they should be done (v1.0, Phase 2, etc.)
-- [ ] No commented-out code (delete it, git has history)
+- [ ] Odd code has an inline comment saying why
+- [ ] Trade-offs are written down
+- [ ] Every TODO says when (v1.0, Phase 2, and so on)
+- [ ] No commented-out code (delete it, Git remembers)
+
+Add this list to your `CLAUDE.md` and Claude will check it for you.
 
 ---
 
-## The ROI
+## Is It Worth It?
 
-Heavy commenting adds maybe 20% to writing time. It saves:
+Heavy commenting adds maybe 20% to the time it takes to write the code. In return you get:
 
-- Hours debugging "why does this work this way?"
-- Rework from AI misunderstanding your code
-- Onboarding time for new developers
-- Your own confusion returning after a break
+- Less time asking "why does this work like that?"
+- Less rework from Claude misreading your code
+- Faster onboarding for new developers
+- Less confusion when you come back after a break
 
-20% more effort for 10x less pain. Good trade.
+20% more effort for a lot less pain. Good trade.
 
 ---
 
-**Next:** [Context Management](/part-5/context-management) — Keeping AI focused across sessions.
+**Next:** [Context Management](/part-5/context-management): keeping Claude focused across sessions.

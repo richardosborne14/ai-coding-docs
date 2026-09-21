@@ -1,251 +1,134 @@
 ---
-title: Claude Code — Setup & Customisation
-description: Installing Claude Code, seeing what it's doing, and configuring it to follow your methodology
+title: Claude Code Setup
+description: The handful of Claude Code settings that matter. CLAUDE.md, memory, permission modes, models and a few commands. The rest is garnish.
 ---
 
-# Claude Code: Setup & Customisation
-
-::: warning This page is for advanced users
-The CLI is where Claude Code shows you its live reasoning — but it's a demanding environment (see [Tool Selection](/part-1/tool-selection#which-to-use)). If you're a beginner-to-intermediate builder, stay in the GUI (desktop app or VS Code extension) and skip to the customisation sections below, which apply to both.
-:::
+# Claude Code Setup
 
 ## TLDR
 
-Install the standalone CLI and run it **inside VS Code's integrated terminal** — you keep your editor and get Claude Code's **live reasoning, which the GUI hides**. The thinking streams by default; you don't need a keystroke to switch it on.
+Claude Code is the tool that builds your app. It's the Code tab in the Claude desktop app, and it's also what runs in a terminal or in VS Code. Same engine, different windows. Everything on this page applies to both tracks unless it's marked otherwise.
 
-Then customise in this order: **`CLAUDE.md`** (project rules) → **permissions** (stop the constant prompts) → **hooks** (enforce rules instead of suggesting them) → **skills** (your prompt library as slash commands) → **subagents** → **MCP servers**.
+What's worth setting up, in order of how much it matters:
 
-The single highest-value thing here: a **`Stop` hook** can block Claude Code from finishing a task until your documentation is updated. That turns "please remember to update the docs" from a hope into a rule.
+1. **CLAUDE.md.** The rules file Claude reads at the start of every session. This is where most of the value is.
+2. **Permission modes.** How much Claude asks before it acts, and plan mode for "show me first".
+3. **Models.** Opus for almost everything. Switch when a task says so.
+4. **A few commands.** `/clear`, `/usage`, `/rewind` and the Esc key.
 
----
-
-## Install the CLI
-
-The VS Code extension bundles its own private copy of Claude Code for the chat panel. To run `claude` in a terminal you need the standalone install:
-
-```bash
-npm install -g @anthropic-ai/claude-code
-```
-
-::: danger Get the package name exactly right
-It's `@anthropic-ai/claude-code`. There is an unrelated `claude` package on npm that is **not** the official CLI — its own description says so. Check what you installed with `npm ls -g --depth=0`.
-:::
-
-Then, in VS Code, open the integrated terminal (`Ctrl+`` ` ``) and run:
-
-```bash
-claude
-```
-
-**Why the integrated terminal?** It's the CLI — full live reasoning, full terminal output — but you never leave VS Code. Your file tree and editor are right there, and you keep the IDE integration: Claude Code opens diffs in VS Code's native diff viewer and can read your **Problems** panel for errors.
-
-That said, don't mistake "in VS Code" for "beginner-friendly." Working effectively in the CLI still means being fluent with the file tree, keyboard shortcuts and the terminal itself. It's the advanced surface.
-
-::: warning The terminal and the panel are separate sessions
-A CLI session and the extension panel don't share context or history. If you started something in the panel and want to continue it in the terminal, run `claude --resume` and pick the session from the list.
-:::
+Hooks, MCP servers and subagents exist. Most people don't need them early. A well-documented repo does more than all three put together.
 
 ---
 
-## See it think
+## CLAUDE.md: the file that makes Claude behave
 
-This is the whole reason to be in the CLI. Unlike the GUI, the CLI **streams the model's reasoning live as it works** — no toggle needed. That's the visibility you came for.
+CLAUDE.md is a plain Markdown file. Claude reads it at the start of every session, so anything in it is a standing instruction: how to run the app, what the rules are, who you are and how you like to be spoken to.
 
-If you want more control over thinking:
+It can live in a few places:
 
-| Control | Effect |
-|---------|--------|
-| `Option+T` (macOS) / `Alt+T` | Toggle extended thinking for this session |
-| `/config` → thinking | Set the default without any keystroke (saves `alwaysThinkingEnabled`) |
-| `Ctrl+O` | Opens a **read-only transcript** of the steps so far — *not* the live thinking |
+| Where | What it's for |
+|-------|---------------|
+| `~/.claude/CLAUDE.md` | You, across every project |
+| `./CLAUDE.md` or `./.claude/CLAUDE.md` | This project. Commit it so it travels with the code |
+| `./CLAUDE.local.md` | Your personal notes for this project, kept out of Git |
 
-::: warning `Ctrl+O` is not the "show me the reasoning" button
-It's easy to assume `Ctrl+O` reveals the thinking. It doesn't — the live reasoning is already streaming, and `Ctrl+O` just opens a static, scrollable transcript of what's happened. Different tool for a different job.
-:::
+**Start with `/init`.** Type it in a new session and Claude writes a starter CLAUDE.md from what it finds in your folder. It's a first draft. Read it and fix what's wrong.
 
-::: tip Shortcuts and non-US keyboards
-On a French/AZERTY or other non-US layout, some `Ctrl`/`Option` combinations don't reach Claude Code cleanly. Two fixes: use the **`/config`** menu (no keystrokes at all — the safest route for any layout), or run **`/keybindings`** to remap the shortcut to something your keyboard sends reliably.
-:::
-
----
-
-## Attaching files and screenshots
-
-In the GUI you drag a file in. The CLI is fiddlier, and it's worth knowing before you're stuck mid-task.
-
-| To attach… | Do this |
-|------------|---------|
-| A project file | Type `@` and use the autocomplete to pick it |
-| A screenshot / image | Copy it to the clipboard, then paste — `Cmd+V` in iTerm2, `Ctrl+V` in Apple Terminal. You'll see an `[Image #1]` chip |
-
-Two limits to expect:
-
-- **`@` is scoped to the project.** Referencing a file *outside* the repo is awkward — the autocomplete won't help you. Keep what you need inside the working tree.
-- **Drag-and-drop into the terminal isn't a documented CLI feature.** If it doesn't work, that's expected — use `@` or clipboard paste instead.
-
-This friction is a real part of why the CLI is the advanced surface. For a beginner pasting browser screenshots to debug the UI all day, the GUI is genuinely the better tool.
-
----
-
-## CLAUDE.md
-
-Same job as `.clinerules`: the file Claude reads at the start of every session. Build commands, coding standards, architecture rules, "don't estimate timelines."
-
-Where it can live, least to most specific:
-
-| Location | Scope |
-|----------|-------|
-| `~/.claude/CLAUDE.md` | All your projects |
-| `./CLAUDE.md` | The project — commit this, it's your team's rules |
-| `./CLAUDE.local.md` | Your personal overrides (git-ignored) |
-| `packages/api/CLAUDE.md` | Loaded only when Claude works in that folder |
-
-Two features worth using:
-
-**Imports.** Pull other files in with `@path`, so you don't duplicate content:
+**Use imports so it stays short.** You can pull other files in with `@path`, instead of pasting everything into one file:
 
 ```markdown
-See @docs/ARCHITECTURE.md for the schema.
-Follow the conventions in @docs/CONVENTIONS.md.
+The architecture is in @docs/ARCHITECTURE.md.
+Follow the house style in @docs/CONVENTIONS.md.
 ```
 
-**Nested files.** In a monorepo, put a `CLAUDE.md` in each package. Frontend rules load when Claude edits the frontend, not before.
-
-Run `/memory` to browse and edit everything Claude is currently remembering.
-
-📄 [Official docs — CLAUDE.md](https://code.claude.com/docs/en/claude-md.md)
+**Keep it short on purpose.** The failure I actually see is docs getting too long. Put a rule in CLAUDE.md about it: when a doc passes a certain length, Claude summarises it, splits it, or moves old material to an archive folder. [Documentation Architecture](/part-2/documentation-architecture) covers what goes in and how to keep it lean. Each chapter in this guide ends with "What to add to CLAUDE.md".
 
 ---
 
-## Stop the permission prompts
+## Auto memory: notes Claude keeps for itself
 
-If you're approving `npm test` for the fiftieth time, allowlist it in `.claude/settings.json`:
+Separately from CLAUDE.md, Claude Code writes its own notes as you work. Correct it, or tell it how you like things done, and it can save that for next time. The first 200 lines (or 25KB) of its memory index load at the start of every session.
 
-```json
-{
-  "permissions": {
-    "allow": [
-      "Bash(npm run test)",
-      "Bash(npm run lint)"
-    ],
-    "deny": [
-      "Read(./.env)",
-      "Read(./secrets/**)"
-    ]
-  }
-}
-```
+Two things to know:
 
-Deny rules always beat allow rules. Denying `.env` and secrets is worth doing on day one.
+- **It's machine-local.** It lives on this computer. It isn't shared with your other machines or with anyone else on the project. Anything the whole project needs belongs in CLAUDE.md.
+- **It isn't Chat's memory.** Claude Chat remembers you. Claude Code doesn't see any of that. Chat knows you, Code knows your repo. If something you told Chat matters for the build, write it into the repo.
 
-Settings live at `~/.claude/settings.json` (you, everywhere), `.claude/settings.json` (the project, committed), and `.claude/settings.local.json` (you, this project, git-ignored).
-
-📄 [Official docs — Settings](https://code.claude.com/docs/en/settings.md)
+[Project Memory](/part-5/project-memory) goes further with this.
 
 ---
 
-## Enforce your own rules with hooks
+## Permission modes: how much Claude asks first
 
-This is the answer to Claude Code being loose about documentation.
+The three you'll use:
 
-`CLAUDE.md` *asks*. Hooks *enforce* — they're shell commands that fire on lifecycle events, and some of them can block.
+| Mode | What it does |
+|------|--------------|
+| `default` | Asks before it edits files or runs commands |
+| `acceptEdits` | Edits files without asking, still asks before running commands |
+| `plan` | Reads and plans only. Changes nothing until you approve the plan |
 
-| Event | Fires | Can block? |
-|-------|-------|-----------|
-| `PreToolUse` | Before a tool runs | Yes |
-| `PostToolUse` | After a tool succeeds | No |
-| `Stop` | When Claude finishes a turn | **Yes** |
-| `SubagentStop` | When a subagent finishes | Yes |
+There are also `auto`, `dontAsk` and `bypassPermissions`. They cut down the questions in different ways. Leave them until you know exactly what you're letting through.
 
-A `Stop` hook that refuses to let a task finish undocumented:
+Switch modes with the **mode selector** in the desktop app or the **mode indicator** in VS Code.
 
-```bash
-#!/bin/bash
-# .claude/hooks/require-docs.sh
-if git diff --name-only | grep -q '^src/' && \
-   git diff --name-only | grep -qv '\.md$'; then
-  echo '{"decision":"block","reason":"Update the task doc before finishing."}'
-fi
-exit 0
-```
+::: everything In the terminal
+Press **Shift+Tab** to cycle through the modes. `/permissions` manages allow and deny rules, so you can stop approving the same safe command fifty times and block things like reading your `.env` file.
+:::
 
-Wire it up in `settings.json`:
-
-```json
-{
-  "hooks": {
-    "Stop": [
-      { "type": "command", "command": "${CLAUDE_PROJECT_DIR}/.claude/hooks/require-docs.sh" }
-    ]
-  }
-}
-```
-
-Now the methodology's documentation requirement is a rule, not a reminder.
-
-📄 [Official docs — Hooks](https://code.claude.com/docs/en/hooks.md)
+**Use plan mode for anything bigger than a small fix.** Claude writes out what it's going to do and waits. Then *read the plan*. The most common way I see projects go wrong is the person saying "just do it" without reading what Claude spelled out, and then being unhappy with the result. The plan is your chance to catch that for free.
 
 ---
 
-## Skills: your prompt library as slash commands
+## Models: which one, and how to switch
 
-Every prompt in [the prompt library](/part-6/prompts) can become a slash command.
+I use **Opus** for about 99% of my work. I call in **Fable** when an app has a fundamental problem or a design problem that Opus keeps going round in circles on. **Sonnet** and **Haiku** are the lighter models.
 
-Create `.claude/skills/phase-audit/SKILL.md`:
+On the **Pro** plan, alternate. Use Opus to plan and write the tasks, and Sonnet to run the simpler ones. That makes your limits go further. Each task file should say which model runs it, so the first thing you do in a session is read the top of the task and switch. [Plans and Limits](/part-0/plans-and-limits) explains what each plan includes.
 
-```markdown
----
-name: phase-audit
-description: Run a fresh-eyes audit of the completed phase. Use when a sprint finishes.
----
+Switch with **`/model`**.
 
-## Changes since last tag
-!`git log --oneline $(git describe --tags --abbrev=0)..HEAD`
-
-## Instructions
-Audit the work above against ARCHITECTURE.md. Flag scope creep,
-missing tests, and undocumented decisions. Score confidence /10.
-```
-
-Now `/phase-audit` runs it. The `` !`command` `` line injects live output *before* Claude reads the skill, so it starts with the real git log in hand.
-
-Put skills in `.claude/skills/` to share with your team, or `~/.claude/skills/` for yourself.
-
-📄 [Official docs — Skills](https://code.claude.com/docs/en/skills.md)
+::: everything Keyboard shortcut
+In the terminal, **Option+P** (Mac) or **Alt+P** switches model without typing a command.
+:::
 
 ---
 
-## Worth knowing later
+## Commands worth knowing on day one
 
-**Subagents** — specialist agents with their own context window, defined in `.claude/agents/<name>.md`. Useful when research floods your main conversation. Setting `isolation: worktree` gives an agent its own copy of the repo, so parallel sessions can't collide.
-📄 [Docs](https://code.claude.com/docs/en/sub-agents.md)
+| Command | What it does | When I use it |
+|---------|--------------|---------------|
+| `/clear` | Starts a fresh conversation | Between tasks. One task per session |
+| `/usage` | Shows your usage and limits | When a session feels long |
+| `/rewind` | Rolls back to an earlier checkpoint | When Claude went off in the wrong direction |
+| **Esc** | Stops Claude mid-step | The moment you see it doing the wrong thing |
+| **Esc Esc** | Opens rewind | Same as `/rewind`, faster |
+| `/init` | Writes a starter CLAUDE.md | Once, at the start of a project |
 
-**MCP servers** — connect Claude to GitHub, Jira, Figma, databases, or a browser for real UI testing. `claude mcp add`, then `/mcp` to manage.
-📄 [Docs](https://code.claude.com/docs/en/mcp.md)
+A few more for later: `/compact` squashes a long conversation, `/context` shows what's taking up space, `/resume` reopens an earlier session and `/status` shows your setup.
 
-**Statusline** — a script that shows live session cost, context usage, and git branch at the bottom of the screen. Given how much this guide cares about budget, seeing `total_cost_usd` tick up in real time is more useful than it sounds.
-📄 [Docs](https://code.claude.com/docs/en/statusline.md)
+If a command doesn't respond in the desktop app, look for the matching button. I haven't checked every one there, so treat the table as the terminal version.
 
----
-
-## Quick Reference
-
-| Want to… | Use |
-|----------|-----|
-| See the live reasoning | Just run the CLI — it streams by default |
-| Toggle extended thinking | `Option+T` / `Alt+T`, or `/config` |
-| Read a transcript of steps so far | `Ctrl+O` |
-| Fix a dead shortcut (AZERTY etc.) | `/keybindings`, or use `/config` |
-| Attach a project file | `@` autocomplete |
-| Paste a screenshot | `Cmd+V` (iTerm2) / `Ctrl+V` (Apple Terminal) |
-| Give Claude project rules | `CLAUDE.md` |
-| Stop repeated approvals | `permissions.allow` |
-| **Force docs to be written** | **`Stop` hook** |
-| Reuse a prompt | Skill (`/name`) |
-| Keep research out of context | Subagent |
-| Connect external tools | MCP server |
-| Watch your spend | Statusline |
+**One more habit: send screenshots.** Drop them into the conversation constantly. A screenshot of the bug beats a paragraph describing it.
 
 ---
 
-**Next:** [Tool Selection](/part-1/tool-selection) — how Claude Code and Cline actually compare.
+## Skills: instructions you'd otherwise retype
+
+A skill is a small folder with a `SKILL.md` file inside. It holds instructions for one job, plus a description of when to use it. Claude loads it when the job comes up, or you call it by name with `/skill-name`. The first one worth making is a copywriting skill, because Claude's own prose is easy to spot. [Skills](/part-5/skills) shows how, with examples.
+
+---
+
+## Garnish: hooks, MCP servers and subagents
+
+You'll read a lot about these. They're real and they work. You don't need any of them to build your first few apps.
+
+- **Hooks** run a script automatically at set moments, for example when Claude finishes a turn.
+- **MCP servers** connect Claude to outside tools and services.
+- **Subagents** are extra Claude workers with their own context, handy for big searches.
+
+My projects that run best have almost none of this. What they have is extensive docs: a CLAUDE.md with clear rules, task files, and notes Claude re-reads. Get that right first. Come back to the garnish when you hit a specific problem it solves.
+
+---
+
+**Next:** [Browser DevTools](/part-0/browser-devtools).

@@ -23,7 +23,8 @@
 
 - Launched 2026-04-17 "in research preview for Claude Pro, Max, Team, and Enterprise subscribers" ([anthropic.com news](https://www.anthropic.com/news/claude-design-anthropic-labs)). The newer help page says "available in beta … It isn't available on the Free plan" ([support: Claude Design](https://support.claude.com/en/articles/14604416-get-started-with-claude-design)). **Say "paid plans, still in beta/preview". Don't pick one label.**
 - Hand-off: "Claude packages everything into a handoff bundle that you can pass to Claude Code with a single instruction" (news). Export options include "Send to local coding agent" and "Send to Claude Code Web" (help page). The product page mentions `/design` and `/design-sync` for moving work between the two.
-- **Not confirmed:** exactly what's in the bundle. Before R4 writes `mockups-first`, open the tutorial at claude.com/resources/tutorials/using-claude-design-for-prototypes-and-ux, or have Richard describe what he sees.
+- **Bundle contents (confirmed in R4, 2026-09-21):** "By default, we bundle the project's design files, chat, and a README which tells the model to interpret the designs" ([academy tutorial](https://academy.claude.com/tutorials/using-claude-design-for-prototypes-and-ux)). Export → "Hand off to Claude Code" gives a prompt to paste into local Claude Code; there's also a Claude Code Web option. `/design-sync` sends a repo's React design system to Claude Design ([commands](https://code.claude.com/docs/en/commands)). **Still not found:** whether the bundle holds HTML/CSS or screenshots. The site doesn't claim either.
+- Iterating: chat, inline comments on the canvas, direct edits, sliders; ask for 2–3 alternative layouts. Private until shared; link viewers need a Claude account (support page).
 
 ## F5: Plans, models, limits (confirmed)
 

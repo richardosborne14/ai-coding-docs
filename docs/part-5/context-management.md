@@ -1,220 +1,167 @@
 ---
 title: Context Management
-description: The art of fresh conversations and focused work
+description: One task per session, a handoff between sessions, and a clean start every time
 ---
 
 # Context Management
 
 ## TLDR
 
-AI's context window is limited. Long conversations degrade quality. The solution isn't fighting the limit — it's working with it: one task per conversation, documentation for continuity, and the discipline to start fresh when things drift.
+Claude works best with a short, focused conversation. So I run **one task per session**. When the task is done, I write a handoff, clear the session and start the next one fresh.
 
-**The single most important skill in AI-assisted development is knowing when to start a new conversation.**
+Two skills do the handoff for me. `/next` writes it. `/next-go` picks it up in a cleared session. There's one handoff file per phase, and it gets overwritten each time.
 
----
+Work this way and you'll rarely see Claude compact a conversation, because no conversation lives long enough to need it.
 
-## The Context Problem
-
-Think of context as AI's working memory. It includes:
-- Your conversation so far (every message)
-- Files AI has read
-- Code it's analyzing
-- Documentation it's referencing
-
-As this fills up, quality degrades. AI starts contradicting itself, forgetting patterns, and producing increasingly generic output. Worse: you're paying for all that accumulated context on every single response.
-
-**Signs you've hit the limit:**
-- AI contradicts earlier decisions
-- AI re-asks questions you already answered
-- AI "forgets" patterns it was following
-- Responses get slower or more generic
-- AI starts suggesting approaches you already rejected
+**The most useful habit in this whole guide is knowing when to start a new session.**
 
 ---
 
-## The Fresh Conversation Solution
+## Why long sessions go wrong
 
-Don't fight context limits. Work with them.
+Everything in the conversation stays in front of Claude: every message, every file it read, every failed attempt. As that pile grows, the task you care about gets a smaller share of Claude's attention.
 
-**One task = one conversation.**
+You'll recognise the signs:
+
+- Claude contradicts a decision it made an hour ago.
+- It asks a question you already answered.
+- It drifts back to an approach you rejected.
+- The answers get vaguer.
+
+Long sessions also eat into your plan's session limit faster, because every new reply carries the whole history with it. You don't need to count anything. Just know that a fresh session is cheaper as well as sharper. See [Plans and Limits](/part-0/plans-and-limits).
+
+---
+
+## One task, one session
 
 ```
-Task 1: Database setup
-└─ New conversation → Complete → Close
-
-Task 2: Auth endpoints
-└─ New conversation → Complete → Close
-
-Task 3: User interface
-└─ New conversation → Complete → Close
+Task 1: Database setup    → fresh session → done → handoff → /clear
+Task 2: Login page        → fresh session → done → handoff → /clear
+Task 3: Settings screen   → fresh session → done → handoff → /clear
 ```
 
-Each task gets AI's full attention without pollution from previous work.
+Each task gets Claude's full attention, with nothing left over from the last one.
 
-**But what about continuity?**
+**What about continuity?** That's the job of your docs. CLAUDE.md, the architecture doc, the task file and the handoff carry everything the next session needs. Decisions live in files, not in chat history. Claude reads them at the start and it's back up to speed in a minute.
 
-That's what your documentation is for. AI reads ARCHITECTURE.md, .clinerules, LEARNINGS.md, and the task spec at the start of each conversation. Decisions persist in docs, not chat history.
+### Why you rarely hit compaction
 
----
+When a conversation gets very long, Claude Code compacts it: it replaces the older part with a summary and carries on. That works, but a summary always loses detail. You don't choose which detail.
 
-## When to Start Fresh (The 9/10 Rule)
+With one task per session, you almost never get there. A well-sized task finishes long before the conversation fills up. If you do see compaction happening often, your tasks are too big. Split them.
 
-**9 times out of 10, starting a fresh conversation is the better choice** over carrying on. Here's when:
+### Sizing a task for one session
 
-### Going in circles on a bug
-If you've been debugging the same issue for 30+ minutes with no progress:
-1. Ask AI to write a task doc capturing what's been tried and what remains
-2. Close the conversation
-3. Start fresh with the task doc as context
+- It touches a handful of files, not the whole app.
+- It has a clear "done" you can check.
+- Claude doesn't have to hold two unrelated problems in mind.
 
-The new conversation approaches the problem without the weight of failed attempts. It often solves it immediately.
-
-### Tempted to start a side task
-You're working on Task 5 and notice a bug in a different part of the app:
-1. Ask AI to write a quick task doc for the side issue
-2. Stay focused on Task 5
-3. Handle the side issue in a separate conversation later
-
-**Don't** fix it in the current conversation. You'll be paying for Task 5's context while only 20% of it is relevant to the side fix. And if the side fix goes wrong, it pollutes your Task 5 context.
-
-### Conversation is 2+ hours old
-Even if things are going well, long conversations accumulate noise. If you've been in the same conversation for over 2 hours, consider whether it's time to close and start fresh for the remaining work.
-
-### AI output quality is dropping
-If responses feel increasingly generic, confused, or inconsistent — don't try to fix it by adding more messages. That makes it worse. Start fresh.
+"Build the whole login system" is too big. "Build the login form with validation and tests" is about right. [Task Patterns](/part-3/task-patterns) goes into this properly.
 
 ---
 
-## The Context Cost Math
+## When to start fresh
 
-Every message in a conversation adds to what AI processes on the next response.
+Nine times out of ten, starting fresh beats carrying on.
 
-**Short conversation (10 messages):** AI reads ~20k tokens → fast, focused, cheap.
+**The task is done.** Hand off and clear, even if the next task looks related.
 
-**Long conversation (80 messages):** AI reads ~150k tokens → slow, confused, expensive.
+**You spot a side issue.** You're on the login page and notice the footer is broken. Don't fix it here. Ask Claude to write a short task file for the footer, stay on the login page, and do the footer in its own session.
 
-If you're on message 80 and working on a small side fix, you're paying for 150k tokens of context that's mostly irrelevant. A fresh conversation with just the docs and the side-fix description would cost ~20k tokens and produce better output.
+**You're going round in circles.** If the same error has come back three times, stop. Ask Claude to write down what was tried and what's left, then start a fresh session with that note. The new session isn't weighed down by the failed attempts, and it often solves it quickly. [Common Pitfalls](/part-5/pitfalls-recovery) has more on this.
 
-**The math always favors fresh conversations for unrelated work.**
+**The answers are getting worse.** Adding more messages won't fix a muddled conversation. It makes it worse. Start fresh.
 
----
-
-## Sizing Tasks for Context
-
-Each task should be completable within a single focused conversation.
-
-**Rules of thumb:**
-- Task touches ≤5 files significantly
-- Task takes 30 minutes to half a day
-- Task has a clear "done" state
-- Task doesn't require AI to hold two unrelated problems in mind
-
-**Too big:**
-> "Implement the entire authentication system"
-
-**Right size:**
-> "Create the login endpoint with validation and tests"
+The one exception: a quick follow-up straight after finishing a task. "Also make that button blue" can stay in the same session.
 
 ---
 
-## What to Load, What to Skip
+## Handoffs between sessions
 
-AI doesn't need your entire codebase for every task.
+A handoff is a short note from one session to the next. It says what's done, what isn't, what was decided and what to do next.
 
-**Always loaded (via docs):**
-- `.clinerules` / `CLAUDE.md` (rules)
-- `ARCHITECTURE.md` (system design)
-- `README.md` (project context)
-- `LEARNINGS.md` (gotchas)
-- Current task spec
+I don't write these by hand. I use two skills (see [Skills](/part-5/skills) for how they're built):
 
-**AI will find as needed:**
-- Source files relevant to the task
-- Dependencies and imports
-- Related test files
+- **`/next`** closes out the session. It works out what the session was doing and writes or updates the handoff file for that phase.
+- **`/next-go`** runs in the cleared session. It reads the handoff, checks the claims in it against the code, and carries on from the "what to do next" list.
 
-**Don't pre-load:**
-- Entire directories "just in case"
-- Old task documentation
-- Files unrelated to the current task
+So the end of every session looks like this:
 
-Trust AI to ask for what it needs.
+1. Type `/next`. Read the handoff it writes.
+2. Type `/clear` to start a fresh conversation.
+3. Type `/next-go`.
 
----
-
-## The Task Doc Handoff
-
-When you need to transfer context between conversations, write a task doc:
+A good handoff says:
 
 ```markdown
-# Context Handoff: [Issue/Task Name]
+# Next session: Phase 3, settings screen
 
-## Original Objective
-[What we were trying to accomplish]
+## Done and seen working
+- Profile form saves and reloads (checked in the browser)
 
-## What Was Done
-- [Change 1 — file path, what changed]
-- [Change 2 — file path, what changed]
+## Written but not yet seen working
+- Password change endpoint (tests pass, not tried in the app)
 
-## What Remains
-- [Specific thing still needed]
-- [Specific thing still needed]
+## Decided
+- Email changes need a confirmation link. The plan said instant, that was wrong.
 
-## What Was Tried (and didn't work)
-- [Approach 1 — why it failed]
-- [Approach 2 — why it failed]
+## Next, in order
+1. Try the password change in the browser
+2. Build the delete-account button
 
-## Files to Review
-- `src/[path]` — [what's relevant here]
-- `src/[path]` — [what's relevant here]
-
-## Recommended Next Steps
-1. [First thing the new conversation should do]
-2. [Second thing]
+## Needs a human decision
+- Should deleting an account keep invoices for tax reasons?
 ```
 
-This gives the new conversation everything it needs without carrying the weight of the old one.
+The split between "seen working" and "only written" is the bit that matters most. Passing tests and working in the app are two different claims.
+
+### One handoff file per phase, overwritten
+
+Keep one handoff file per phase, for example `dev-docs/tasks/phase-3/NEXT-SESSION.md`, and overwrite it each time.
+
+Don't let it stack up. I've seen a folder with `HANDOVER-SESSION-1.md` all the way to `HANDOVER-SESSION-18.md`. Nobody reads eighteen handoffs. Claude reads the wrong one, or all of them, and gets confused by advice that stopped being true a week ago. The latest state is all the next session needs. Anything worth keeping for longer belongs in [project memory](/part-5/project-memory) or the phase's README.
+
+::: simple In the desktop app
+The Code tab works the same way. Type `/next`, then `/clear`, then `/next-go` in the message box. Skills live in your project folder, so they're there whichever way you run Claude Code.
+:::
 
 ---
 
-## Session Continuity via Project Memory
+## What to load, what to skip
 
-Starting fresh conversations is the right move — but it creates a gap: **what happened in previous sessions?** Without continuity, Cline approaches every problem as if it's brand new, even if you solved something similar last week.
+Claude doesn't need your whole codebase for every task.
 
-The [Project Memory system](/part-5/project-memory) bridges this gap with an MCP-backed database that persists session data across conversations:
+**Always there:** CLAUDE.md, which Claude Code loads by itself at the start of every session. Point it at the other docs that matter: the architecture doc, the current task file and the handoff.
 
-**At the start of each session**, Cline queries project memory:
-- "Have we had recent failures in this area?" → catches the [Groundhog Day Bug](/part-5/pitfalls-recovery#pitfall-11-the-groundhog-day-bug)
-- "Are there prior solutions tagged for this task?" → avoids rediscovering known fixes
-- "Should I self-audit before proceeding?" → catches systematic issues in rules or architecture
+**Found as needed:** source files, tests and dependencies for the task in hand. Claude is good at finding these.
 
-**At the end of each session**, Cline logs:
-- What was attempted and the outcome
-- Any reusable solutions discovered
-- Errors encountered and approaches tried
-
-This means every fresh conversation gets the *benefits* of continuity (prior solutions, pattern detection) without the *costs* of long-running conversations (context pollution, token waste). The best of both worlds.
-
-**Ad-hoc sessions are captured too.** Previously, "just fix this bug" sessions were invisible — no task doc, no record. With session memory, even spontaneous debugging sessions leave a trace that future sessions can learn from.
-
-See [Project Memory & Self-Improvement](/part-5/project-memory) for the full architecture.
+**Leave out:** old task files, finished phases and whole folders "just in case". If Claude reads a finished phase's plan, it may follow it.
 
 ---
 
-## Quick Reference
+## Quick reference
 
-| Situation | Action |
-|-----------|--------|
-| Starting a new task | New conversation |
-| Going in circles (30+ min) | Write task doc, start fresh |
-| Side issue discovered | Write task doc, handle separately |
-| Conversation 2+ hours old | Consider starting fresh |
-| AI quality dropping | Start fresh immediately |
-| Quick follow-up to just-completed work | Continue (exception to the rule) |
-| Same bug across multiple sessions | Check project memory, trigger self-audit |
+| Situation | What to do |
+|-----------|------------|
+| Starting a new task | Fresh session |
+| Task finished | `/next`, `/clear`, `/next-go` |
+| Same error three times | Write a research note, fresh session |
+| Side issue spotted | Task file for it, handle it later |
+| Answers getting worse | Fresh session now |
+| Compaction keeps happening | Tasks are too big, split them |
+| Tiny follow-up to the task you just finished | Stay put |
 
-**When in doubt, start fresh.** The cost of reloading context is always lower than the cost of confused AI.
+## What to add to CLAUDE.md
+
+```markdown
+## Sessions
+- One task per session. If I raise something unrelated, offer to write a task file for it instead.
+- At the end of a task, remind me to run /next.
+- Keep one handoff file per phase. Overwrite it. Never add a numbered or dated copy.
+- In the handoff, keep "seen working" separate from "written but not yet seen working".
+- If the same error comes back three times, stop and write a research note before trying again.
+```
 
 ---
 
-**Next:** [Common Pitfalls](/part-5/pitfalls-recovery) — What goes wrong and how to fix it.
+**Next:** [Skills](/part-5/skills)
