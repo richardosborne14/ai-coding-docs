@@ -8,10 +8,17 @@
     "build": "vitepress build docs",
     "preview": "vitepress preview docs"
   },
-  "keywords": ["ai", "development", "vibe-coding", "claude", "cline"],
+  "keywords": [
+    "ai",
+    "development",
+    "vibe-coding",
+    "claude",
+    "cline"
+  ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "markdown-it-container": "^4.0.0",
     "vitepress": "^1.6.4"
   }
 }

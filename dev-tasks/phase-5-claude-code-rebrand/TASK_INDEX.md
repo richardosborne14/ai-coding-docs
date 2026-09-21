@@ -1,6 +1,6 @@
 # Phase 5: Claude-Code-First Audit & Voice Rebrand
 
-**Status:** IN PROGRESS. R0 and R1 are done and signed off. R2 is done: facts verified and voice picked (2026-09-21). **The next session starts at R3.**
+**Status:** IN PROGRESS. R0 to R3 are done (2026-09-21). **The next session starts at R4.** Nothing from R3 is deployed yet: deploying is R6.
 
 **The brief, in Richard's words:** rebrand the whole thing as *"I know so much about Claude I made a whole docs site to show you how to use it, so you don't even need me... or do you?"* The "Book a call" CTA is the punchline to "...or do you?". **Tone only, no swearing on the site** (ruled 2026-09-21).
 
@@ -20,8 +20,8 @@
 | R0 | Interview Richard | ✅ 2026-09-21 → R0-INTERVIEW.md |
 | R1 | Content audit → written findings, signed off | ✅ 2026-09-21 → R1-AUDIT.md |
 | R2 | Verify F1–F3 + F5, then the voice & positioning spec (hero, tagline, meta, About, CTA punchline, **track names**) | ✅ 2026-09-21 → R2-FACTS.md, R2-VOICE.md (picks recorded at the bottom) |
-| R3 | Restructure IA / sidebar, and build the two-track show/hide mechanism | ⬜ **next** |
-| R4 | Rewrite chapters per the audit (incl. 6 new pages, 3 cuts, redirect for `/part-3/cline-workflow`) | ⬜ |
+| R3 | Restructure IA / sidebar, and build the two-track show/hide mechanism | ✅ 2026-09-21 (see "R3: what was built") |
+| R4 | Rewrite chapters per the audit (incl. 6 new pages, 3 cuts) | ⬜ **next** |
 | R5 | `project-templates/` → CLAUDE.md-only; rewrite `WRITING_GUIDE.md`; replace repo `.clinerules` with a repo `CLAUDE.md` | ⬜ |
 | R6 | Build, screenshot (light + dark, both tracks, phone width), deploy with `./deploy/deploy.sh`, verify live | ⬜ |
 
@@ -38,9 +38,23 @@
 - F1: Claude Code does **not** see Chat memory (Chat memory is shared with Cowork only, since 2026-08-25). Richard was right.
 - F3: Claude Design is on paid plans. It is labelled beta in one place and research preview in another. It hands off to Claude Code as a bundle. **What the bundle contains is still unconfirmed**: check this before R4 writes `mockups-first`.
 
-### R3 notes
-- Track names are **"Keep it simple" / "Show me everything"** (T3). "Everything" hides nothing; "simple" hides builder-only blocks. The simple track is the desktop app's Code tab (Richard ruled `ntrack` = code-tab), so adjust R1's N-track notes for `setting-up-your-computer` and `tool-selection` to match.
-- Two tracks, chosen on the first page, with show/hide. The proposed mechanism is in R1-AUDIT › Tracks: localStorage wrapped in try/catch, the default shows everything, and the pages must read fine with nothing stored.
+### R3: what was built (2026-09-21, verified in a browser, not deployed)
+
+- **The IA lives in one list:** `IA` at the top of `docs/.vitepress/config.ts`. The sidebar and the builder-only page list are both built from it. Each page has an optional `track: 'everything'`, which means builder-only.
+- **New pages already have a sidebar slot.** An entry whose `.md` file doesn't exist is left out of the sidebar. So in R4, writing `part-0/plans-and-limits.md`, `part-2/mockups-first.md`, `part-4/testing.md`, `part-5/skills.md` or `appendix-other-tools.md` makes it appear. No config edit needed.
+- **Cut pages are out of the sidebar and nav but still on disk** (`part-0/cline-and-credits`, `part-5/token-economics`, `part-6/setup-guide`). R4 folds their content in, deletes them, and adds `redir` lines to `deploy/learn-ai.caddy` (suggested targets: appendix-other-tools, plans-and-limits, setting-up-your-computer).
+- **Rename done:** `part-3/cline-workflow.md` → `execution-workflow.md` (git mv, content untouched; the R4 rewrite is still due). Internal links fixed. A 301 for the old URL is in `deploy/learn-ai.caddy`, and `deploy.sh` copies that file on a normal deploy. The repo `.clinerules` still links the old URL; R5 replaces that file anyway.
+- **Mechanism:** `docs/.vitepress/theme/track.ts` (state, localStorage key `db-learn-track`, every read and write in try/catch). `TrackSwitch.vue` sits at the top of the sidebar and in the mobile menu. `TrackChooser.vue` is the two-card chooser for markdown (`<TrackChooser />`). `TrackPageNote.vue` shows a note on a builder-only page when the reader is on "Keep it simple". A head script in `config.ts` sets `<html data-track>` before first paint. With nothing stored, nothing is hidden.
+- **For R4 writers, two containers:** `::: everything` (hidden on the simple track) and `::: simple` (always shown, labelled "Keep it simple"). Both take an optional custom label: `::: everything Terminal route`.
+- **Copy already in place:** the site title is "Build it with Claude", the meta and OG description is M1, `<TrackChooser />` is at the top of `start-here.md` (under a new "Pick your track" heading), and "Setup Guide" is gone from the nav. **Not done:** `index.md` frontmatter still has the old description and hero. That's the R4 home rewrite.
+- **Checks taken 2026-09-21** (Chrome via Playwright, against `vitepress preview`): with nothing stored it shows everything. Choosing simple sets the attribute and stores it, and the choice survives a reload. The sidebar goes from 21 to 16 visible items. Builder-only blocks hide, and the page note shows on `/part-5/observability` and switches back. The sidebar switch and chooser stay in sync. Desktop and 390px phone: no horizontal scroll and no console errors. With localStorage throwing, the switch still works for the session (the only error is VitePress's own appearance script). Dark mode looked right. `npm run build` passes. Its >500 kB warning is the local search index and isn't new.
+
+### R4: start here
+
+1. Rewrite pages in the audit's order (R1-AUDIT › Verdicts). Home first, because it carries the R2 picks (hero H2, 5 cards, CTA C1, M1 in the frontmatter). Put `<TrackChooser />` or card 1 on it.
+2. **Retag while you rewrite.** The `track: 'everything'` tags were copied from R1, which assumed the simple track was Cowork. It's now the desktop app's Code tab, which *is* Claude Code, so CLAUDE.md, task headers and skills apply to simple readers too. Pages worth re-judging: `claude-code-setup`, `task-patterns`, `live-project-overview`, `templates`. Where only part of a page is builder-only, untag the page and wrap that part in `::: everything`.
+3. F3 is still open: check what the Claude Design → Claude Code handoff bundle contains before writing `mockups-first`.
+4. Voice rules from R2-VOICE apply everywhere: `grep -c "—"` must come back 0 on each rewritten page.
 
 ---
 

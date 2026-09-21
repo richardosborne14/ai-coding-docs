@@ -136,7 +136,7 @@ Rule 5 is the most important. It prevents a whole class of plausible hallucinati
 
 Projects without a backend — static sites, client-only SPAs — don't need it.
 
-The right time to build it is Sprint 1, after the basic backend is running. Building it later works, but you'll have already shipped bugs it would have caught. See [The Cline Workflow](/part-3/cline-workflow) for how to slot this into your sprint structure.
+The right time to build it is Sprint 1, after the basic backend is running. Building it later works, but you'll have already shipped bugs it would have caught. See [The Execution Workflow](/part-3/execution-workflow) for how to slot this into your sprint structure.
 
 ---
 

@@ -5,6 +5,12 @@ description: Plain-English explanations of the words Claude, Cline and Claude Co
 
 # Start Here (For Non-Techies)
 
+## Pick your track
+
+There are two ways through this guide. Pick one now and the site hides what you don't need. You can switch whenever you like.
+
+<TrackChooser />
+
 ## TLDR
 
 When you build an app with AI, it'll throw words at you that nobody explained — *stack*, *localhost*, *port*, *framework*, *deploy*, *DNS*. None of them are as scary as they sound. This page walks you through the whole picture in plain English, in roughly the order you'll meet each term, so the jargon stops being a wall and starts being a map. Read it once, top to bottom. You don't need to memorise anything — just come back when a word trips you up. When you're ready for the full dictionary, that's the [Concepts Glossary](/part-0/glossary).

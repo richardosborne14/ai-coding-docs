@@ -31,7 +31,7 @@ Copy `project-templates/` into your repo. It includes:
 3. Choose [your tools](/docs/part-1/tool-selection.md)
 4. Have the [brainstorming session](/docs/part-2/brainstorming.md)
 5. Set up your [documentation](/docs/part-2/documentation-architecture.md)
-6. Start executing with the [workflow](/docs/part-3/cline-workflow.md)
+6. Start executing with the [workflow](/docs/part-3/execution-workflow.md)
 
 ## Project Structure
 

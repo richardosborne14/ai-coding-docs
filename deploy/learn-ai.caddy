@@ -4,6 +4,10 @@ learn-ai.digitalbricks.io {
 	root * /srv/learn-ai/site
 	encode zstd gzip
 
+	# Renamed pages (phase 5). Old URLs are linked from outside, so keep them working.
+	redir /part-3/cline-workflow /part-3/execution-workflow 301
+	redir /part-3/cline-workflow.html /part-3/execution-workflow 301
+
 	# VitePress builds with cleanUrls: /part-1/philosophy -> part-1/philosophy.html
 	try_files {path} {path}.html {path}/index.html
 	file_server

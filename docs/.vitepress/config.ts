@@ -1,26 +1,184 @@
-import { defineConfig } from 'vitepress'
+import { existsSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import { defineConfig, type DefaultTheme } from 'vitepress'
+import container from 'markdown-it-container'
 
-export default defineConfig({
-  title: 'AI-Assisted Software Engineering Guide',
-  description: 'Build production-ready apps with AI — systematically, not randomly',
+const TITLE = 'Build it with Claude'
+const DESCRIPTION = 'How I build real apps with Claude, from first chat to live site. Free, practical, and honest about what it costs.'
+
+// ---- Two tracks (phase 5, R3) -------------------------------------------------
+// "Keep it simple" = everything in the Claude desktop app (Chat, Design, Code tab).
+// "Show me everything" = the full kit, and hides nothing.
+// A page tagged `everything` is hidden from the simple track's sidebar and pager.
+// Pages whose .md file doesn't exist yet are left out, so R4 can add a page by
+// writing the file: its sidebar slot is already here.
+
+type Track = 'both' | 'everything'
+type Page = { text: string; link: string; track?: Track }
+type Section = { text: string; collapsed?: boolean; items: Page[] }
+
+const IA: Section[] = [
+  {
+    text: 'Start Here',
+    items: [
+      { text: 'Start Here', link: '/start-here' },
+      { text: 'Introduction', link: '/introduction' },
+    ]
+  },
+  {
+    text: 'Part 0: Before You Start',
+    collapsed: false,
+    items: [
+      { text: 'Setting Up Your Computer', link: '/part-0/setting-up-your-computer' },
+      { text: 'Plans & Limits', link: '/part-0/plans-and-limits' },
+      { text: 'Claude Code: Setup & Customisation', link: '/part-0/claude-code-setup', track: 'everything' },
+      { text: 'Browser DevTools', link: '/part-0/browser-devtools' },
+      { text: 'How Apps Run', link: '/part-0/how-apps-run' },
+      { text: 'Files & Styling Basics', link: '/part-0/files-and-styles' },
+      { text: 'Concepts Glossary', link: '/part-0/glossary' },
+    ]
+  },
+  {
+    text: 'Part I: Foundation',
+    collapsed: false,
+    items: [
+      { text: 'Philosophy & Approach', link: '/part-1/philosophy' },
+      { text: 'Which Claude, Where', link: '/part-1/tool-selection' },
+    ]
+  },
+  {
+    text: 'Part II: Before You Build',
+    collapsed: false,
+    items: [
+      { text: 'The Brainstorming Session', link: '/part-2/brainstorming' },
+      { text: 'Mockups First', link: '/part-2/mockups-first' },
+      { text: 'Documentation Architecture', link: '/part-2/documentation-architecture' },
+      { text: 'The Live Project Overview', link: '/part-2/live-project-overview', track: 'everything' },
+    ]
+  },
+  {
+    text: 'Part III: Execution',
+    collapsed: false,
+    items: [
+      { text: 'The Execution Workflow', link: '/part-3/execution-workflow' },
+      { text: 'Task Documentation', link: '/part-3/task-patterns', track: 'everything' },
+      { text: 'Confidence Scoring', link: '/part-3/confidence-scoring' },
+    ]
+  },
+  {
+    text: 'Part IV: Quality Assurance',
+    collapsed: false,
+    items: [
+      { text: 'Phase Audits', link: '/part-4/phase-audits' },
+      { text: 'Testing', link: '/part-4/testing', track: 'everything' },
+      { text: 'Commenting Philosophy', link: '/part-4/commenting-philosophy', track: 'everything' },
+    ]
+  },
+  {
+    text: 'Part V: Advanced Topics',
+    collapsed: true,
+    items: [
+      { text: 'Context Management', link: '/part-5/context-management' },
+      { text: 'Skills', link: '/part-5/skills' },
+      { text: 'Common Pitfalls', link: '/part-5/pitfalls-recovery' },
+      { text: 'Project Memory & Self-Improvement', link: '/part-5/project-memory', track: 'everything' },
+      { text: 'The Project Brain', link: '/part-5/project-brain', track: 'everything' },
+      { text: 'Team Workflows', link: '/part-5/team-workflows', track: 'everything' },
+      { text: 'The Project Control Panel', link: '/part-5/control-panel', track: 'everything' },
+      { text: 'Observability & Error Tracking', link: '/part-5/observability', track: 'everything' },
+      { text: 'The In-App Feedback Loop', link: '/part-5/feedback-loop', track: 'everything' },
+      { text: 'Accessibility by Default', link: '/part-5/accessibility', track: 'everything' },
+      { text: 'The Frontend Tweaker', link: '/part-5/frontend-tweaker', track: 'everything' },
+      { text: 'Deployment & Platform Targets', link: '/part-5/deployment-platforms', track: 'everything' },
+      { text: 'Deploy Verification', link: '/part-5/deploy-verification', track: 'everything' },
+    ]
+  },
+  {
+    text: 'Part VI: Resources',
+    collapsed: false,
+    items: [
+      { text: 'Project Templates', link: '/part-6/templates', track: 'everything' },
+      { text: 'Prompt Library', link: '/part-6/prompts' },
+      { text: 'Case Studies', link: '/part-6/case-studies' },
+    ]
+  },
+  {
+    text: 'Appendices',
+    collapsed: true,
+    items: [
+      { text: 'Beyond Coding', link: '/appendix-e-beyond-coding' },
+      { text: 'Other AI Coding Tools', link: '/appendix-other-tools', track: 'everything' },
+      { text: 'About', link: '/about' },
+    ]
+  },
+]
+
+// Cut in the audit and waiting for R4 to fold their content elsewhere and delete them.
+// They still build, but nothing in the sidebar or nav points at them:
+// /part-0/cline-and-credits, /part-5/token-economics, /part-6/setup-guide
+
+const docsDir = fileURLToPath(new URL('..', import.meta.url))
+const written = (p: Page) => existsSync(`${docsDir}${p.link.slice(1)}.md`)
+
+// The marker span is how CSS finds builder-only entries (sidebar and prev/next pager).
+const MARK = '<span class="track-mark" aria-hidden="true"></span>'
+const label = (p: Page) => (p.track === 'everything' ? p.text + MARK : p.text)
+
+const sidebar: DefaultTheme.SidebarItem[] = IA
+  .map(s => {
+    const items = s.items.filter(written)
+    const allBuilder = items.every(p => p.track === 'everything')
+    return {
+      text: allBuilder ? s.text + MARK : s.text,
+      collapsed: s.collapsed,
+      items: items.map(p => ({ text: label(p), link: p.link })),
+    }
+  })
+  .filter(s => s.items.length > 0)
+
+const builderOnlyPages = IA.flatMap(s => s.items)
+  .filter(p => p.track === 'everything')
+  .map(p => p.link)
+
+// Runs before first paint so the sidebar doesn't flash builder pages on reload.
+const trackBootScript = `try{if(localStorage.getItem('db-learn-track')==='simple')document.documentElement.dataset.track='simple'}catch(e){}`
+
+// ::: everything  -> hidden on the simple track
+// ::: simple      -> always shown, labelled so full-track readers know who it's for
+function trackContainer(name: 'simple' | 'everything', defaultLabel: string) {
+  return [container, name, {
+    render(tokens: any[], idx: number) {
+      const t = tokens[idx]
+      if (t.nesting !== 1) return '</div>\n'
+      const custom = t.info.trim().slice(name.length).trim()
+      const title = custom || defaultLabel
+      return `<div class="track-block track-${name}"><p class="track-block-label">${title}</p>\n`
+    },
+  }] as const
+}
+
+export default defineConfig<DefaultTheme.Config & { builderOnlyPages: string[] }>({
+  title: TITLE,
+  description: DESCRIPTION,
 
   sitemap: { hostname: 'https://learn-ai.digitalbricks.io' },
   cleanUrls: true,
   lastUpdated: true,
 
   head: [
+    ['script', {}, trackBootScript],
     ['link', { rel: 'icon', href: '/brand/db-icon.svg', type: 'image/svg+xml' }],
     ['link', { rel: 'icon', href: '/brand/favicon-32.png', sizes: '32x32', type: 'image/png' }],
     ['link', { rel: 'apple-touch-icon', href: '/brand/apple-touch-icon.png' }],
     ['meta', { name: 'author', content: 'Richard Osborne, Digital Bricks' }],
     ['meta', { name: 'theme-color', content: '#0A192B' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:title', content: 'AI-Assisted Software Engineering Guide' }],
-    ['meta', { property: 'og:description', content: 'Build production-ready apps with AI — systematically, not randomly' }],
+    ['meta', { property: 'og:title', content: TITLE }],
+    ['meta', { property: 'og:description', content: DESCRIPTION }],
   ],
 
   themeConfig: {
-    siteTitle: 'AI-Assisted SE Guide',
+    siteTitle: TITLE,
     logo: {
       light: '/brand/db-lockup-navy-nav.svg',
       dark: '/brand/db-lockup-nav.svg',
@@ -28,7 +186,7 @@ export default defineConfig({
     },
 
     nav: [
-      { text: '👋 Start Here', link: '/start-here' },
+      { text: 'Start Here', link: '/start-here' },
       { text: 'Guide', link: '/introduction' },
       { text: 'Templates', link: '/part-6/templates' },
       {
@@ -36,111 +194,14 @@ export default defineConfig({
         items: [
           { text: 'Prompt Library', link: '/part-6/prompts' },
           { text: 'Case Studies', link: '/part-6/case-studies' },
-          { text: 'Setup Guide', link: '/part-6/setup-guide' },
         ]
       },
       { text: 'About', link: '/about' }
     ],
 
-    sidebar: [
-      {
-        text: '👋 New Here? Start Here',
-        collapsed: false,
-        items: [
-          { text: 'Start Here (For Non-Techies)', link: '/start-here' },
-        ]
-      },
-      {
-        text: 'Getting Started',
-        items: [
-          { text: 'Introduction', link: '/introduction' },
-        ]
-      },
-      {
-        text: 'Part 0: Before You Start',
-        collapsed: false,
-        items: [
-          { text: 'Setting Up Your Computer', link: '/part-0/setting-up-your-computer' },
-          { text: 'Cline & AI Credits', link: '/part-0/cline-and-credits' },
-          { text: 'Claude Code: Setup & Customisation', link: '/part-0/claude-code-setup' },
-          { text: 'Browser DevTools', link: '/part-0/browser-devtools' },
-          { text: 'How Apps Run', link: '/part-0/how-apps-run' },
-          { text: 'Files & Styling Basics', link: '/part-0/files-and-styles' },
-          { text: 'Concepts Glossary', link: '/part-0/glossary' },
-        ]
-      },
-      {
-        text: 'Part I: Foundation',
-        collapsed: false,
-        items: [
-          { text: 'Philosophy & Approach', link: '/part-1/philosophy' },
-          { text: 'Tool Selection', link: '/part-1/tool-selection' },
-        ]
-      },
-      {
-        text: 'Part II: Pre-Development',
-        collapsed: false,
-        items: [
-          { text: 'The Brainstorming Session', link: '/part-2/brainstorming' },
-          { text: 'Documentation Architecture', link: '/part-2/documentation-architecture' },
-          { text: 'The Live Project Overview', link: '/part-2/live-project-overview' },
-        ]
-      },
-      {
-        text: 'Part III: Execution',
-        collapsed: false,
-        items: [
-          { text: 'The Execution Workflow', link: '/part-3/cline-workflow' },
-          { text: 'Task Documentation', link: '/part-3/task-patterns' },
-          { text: 'Confidence Scoring', link: '/part-3/confidence-scoring' },
-        ]
-      },
-      {
-        text: 'Part IV: Quality Assurance',
-        collapsed: false,
-        items: [
-          { text: 'Phase Audits', link: '/part-4/phase-audits' },
-          { text: 'Commenting Philosophy', link: '/part-4/commenting-philosophy' },
-        ]
-      },
-      {
-        text: 'Part V: Advanced Topics',
-        collapsed: true,
-        items: [
-          { text: 'Context Management', link: '/part-5/context-management' },
-          { text: 'Project Memory & Self-Improvement', link: '/part-5/project-memory' },
-          { text: 'The Project Brain', link: '/part-5/project-brain' },
-          { text: 'Common Pitfalls', link: '/part-5/pitfalls-recovery' },
-          { text: 'Team Workflows', link: '/part-5/team-workflows' },
-          { text: 'The Project Control Panel', link: '/part-5/control-panel' },
-          { text: 'Observability & Error Tracking', link: '/part-5/observability' },
-          { text: 'The In-App Feedback Loop', link: '/part-5/feedback-loop' },
-          { text: 'Accessibility by Default', link: '/part-5/accessibility' },
-          { text: 'The Frontend Tweaker', link: '/part-5/frontend-tweaker' },
-          { text: 'Token Economics', link: '/part-5/token-economics' },
-          { text: 'Deployment & Platform Targets', link: '/part-5/deployment-platforms' },
-          { text: 'Deploy Verification', link: '/part-5/deploy-verification' },
-        ]
-      },
-      {
-        text: 'Part VI: Resources',
-        collapsed: false,
-        items: [
-          { text: 'Project Templates', link: '/part-6/templates' },
-          { text: 'Prompt Library', link: '/part-6/prompts' },
-          { text: 'Case Studies', link: '/part-6/case-studies' },
-          { text: 'Setup Guide', link: '/part-6/setup-guide' },
-        ]
-      },
-      {
-        text: 'Appendices',
-        collapsed: true,
-        items: [
-          { text: 'Beyond Coding', link: '/appendix-e-beyond-coding' },
-          { text: 'About', link: '/about' },
-        ]
-      }
-    ],
+    sidebar,
+
+    builderOnlyPages,
 
     socialLinks: [
       { icon: 'github', link: 'https://github.com/richardosborne14/ai-coding-docs' }
@@ -169,6 +230,10 @@ export default defineConfig({
   },
 
   markdown: {
+    config(md) {
+      md.use(...trackContainer('simple', 'Keep it simple'))
+      md.use(...trackContainer('everything', 'Show me everything'))
+    },
     lineNumbers: false,
     theme: {
       light: 'github-light',

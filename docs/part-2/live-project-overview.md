@@ -182,4 +182,4 @@ Because `overview/` is committed, every change to entities, routes, or automatio
 
 ---
 
-**Next:** [The Execution Workflow](/part-3/cline-workflow) — How to actually run AI-assisted tasks.
+**Next:** [The Execution Workflow](/part-3/execution-workflow) — How to actually run AI-assisted tasks.
