@@ -319,3 +319,35 @@ html[data-track="simple"] .track-block.track-everything {
 }
 
 .track-page-note button:hover { background: var(--vp-button-brand-hover-bg); }
+
+/* ========================================
+   Copy / download the page as Markdown
+   ======================================== */
+
+.page-md-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.page-md-actions button,
+.page-md-actions a {
+  padding: 4px 12px;
+  border: 1px solid var(--vp-c-divider);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.6;
+  color: var(--vp-c-text-2);
+  background: var(--vp-c-bg-soft);
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.page-md-actions button:hover,
+.page-md-actions a:hover {
+  border-color: var(--vp-c-brand-1);
+  color: var(--vp-c-brand-1);
+}

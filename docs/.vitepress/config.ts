@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { defineConfig, type DefaultTheme } from 'vitepress'
 import container from 'markdown-it-container'
+import { writeMarkdownCopies, markdownCopiesDevPlugin } from './llm-markdown'
 
 const TITLE = 'Build it with Claude'
 const DESCRIPTION = 'How I build real apps with Claude, from first chat to live site. Free, practical, and honest about what it costs.'
@@ -164,6 +165,14 @@ export default defineConfig<DefaultTheme.Config & { builderOnlyPages: string[] }
   sitemap: { hostname: 'https://learn-ai.digitalbricks.io' },
   cleanUrls: true,
   lastUpdated: true,
+
+  // Each page also ships as .md for pasting into Claude, plus /llms.txt (see llm-markdown.ts).
+  buildEnd(site) {
+    writeMarkdownCopies(site.srcDir, site.outDir, site.pages, TITLE, DESCRIPTION)
+  },
+  vite: {
+    plugins: [markdownCopiesDevPlugin(() => docsDir)],
+  },
 
   head: [
     ['script', {}, trackBootScript],
